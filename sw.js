@@ -1,4 +1,4 @@
-const CACHE='waywhales-static-v6';
+const CACHE='waywhales-static-v7';
 const ASSETS=['./','./index.html','./manifest.webmanifest','./icon.svg'];
 self.addEventListener('install',event=>event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(ASSETS)).then(()=>self.skipWaiting())));
 self.addEventListener('activate',event=>event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(key=>key.startsWith('waywhales-static-')&&key!==CACHE).map(key=>caches.delete(key)))).then(()=>self.clients.claim())));
