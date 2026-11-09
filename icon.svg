@@ -1,1 +1,19 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><rect width="512" height="512" rx="120" fill="#173d31"/><path d="M256 390C116 337 111 190 256 98c145 92 140 239 0 292Z" fill="#dce9d7"/><path d="M256 393V173m0 104c-36-51-68-70-104-84m104 133c35-51 66-68 101-82" fill="none" stroke="#547b5e" stroke-width="17" stroke-linecap="round"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+<defs>
+ <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#315c40"/><stop offset="1" stop-color="#0b2419"/></linearGradient>
+ <linearGradient id="leaf" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f1f4d9"/><stop offset=".48" stop-color="#b9d29b"/><stop offset="1" stop-color="#789d6b"/></linearGradient>
+ <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#e9d7a2"/><stop offset="1" stop-color="#a98b51"/></linearGradient>
+ <filter id="shadow" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="9"/></filter>
+</defs>
+<rect width="512" height="512" rx="112" fill="url(#bg)"/>
+<circle cx="256" cy="248" r="184" fill="none" stroke="#d9e5c4" stroke-opacity=".12" stroke-width="2"/>
+<circle cx="256" cy="248" r="164" fill="none" stroke="url(#gold)" stroke-opacity=".48" stroke-width="2"/>
+<path d="M256 394c-4-71 1-130 18-184" fill="none" stroke="#d6dfbd" stroke-width="13" stroke-linecap="round" opacity=".85"/>
+<path d="M270 230c-16-79 18-139 111-157 9 91-28 149-111 157Z" fill="#000" opacity=".22" filter="url(#shadow)"/>
+<path d="M263 228c-16-79 18-139 111-157 9 91-28 149-111 157Z" fill="url(#leaf)" stroke="#e7edcf" stroke-width="3"/>
+<path d="M249 293c-77 4-126-37-136-123 83-10 135 29 136 123Z" fill="url(#leaf)" stroke="#e7edcf" stroke-width="3"/>
+<path d="M256 390c-4-70 9-136 31-197M256 319c-31-50-73-86-123-120M270 224c31-54 64-92 102-128" fill="none" stroke="#456e49" stroke-width="7" stroke-linecap="round"/>
+<path d="M256 390c-4-70 9-136 31-197" fill="none" stroke="#dbe8c9" stroke-width="3" stroke-linecap="round"/>
+<path d="M160 176c31 14 62 49 83 99M286 203c24-43 48-71 75-91" fill="none" stroke="#f4f2d9" stroke-opacity=".75" stroke-width="3" stroke-linecap="round"/>
+<circle cx="256" cy="414" r="5" fill="url(#gold)"/>
+</svg>
