@@ -178,6 +178,19 @@ body:before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opac
  .nav button{min-height:64px!important;padding-top:7px!important;padding-bottom:7px!important}
 }
 
+
+/* iOS safe-area header: keep the Waywhales wordmark fully visible */
+.shell{padding-top:calc(18px + env(safe-area-inset-top))!important}
+.top{position:relative;z-index:2;min-height:48px;align-items:center;margin-bottom:24px;padding:5px 2px}
+.brand{color:#173b2d!important;font-size:22px!important;font-weight:800!important;letter-spacing:.35px!important;line-height:1.2;text-shadow:0 1px 0 rgba(255,255,255,.65)}
+.brand-mark{width:42px!important;height:42px!important;flex:0 0 42px;border-radius:15px!important;font-size:23px!important;box-shadow:0 5px 16px rgba(5,28,17,.16)!important}
+.date-pill{color:#4f6657!important;font-weight:600}
+@media(max-width:720px){
+ .shell{padding-top:calc(14px + env(safe-area-inset-top))!important;padding-left:16px;padding-right:16px}
+ .top{min-height:50px;margin-bottom:20px}
+ .brand{font-size:21px!important}
+}
+
 </style></head>
 <body><main class="shell">
 <header class="top"><div class="brand"><span class="brand-mark">🌿</span> Waywhales</div><div class="date-pill" id="todayLabel"></div></header>
