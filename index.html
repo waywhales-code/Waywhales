@@ -233,12 +233,20 @@ body:before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opac
 </style><script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
 <script>
 window.OneSignalDeferred = window.OneSignalDeferred || [];
-OneSignalDeferred.push(async function(OneSignal) {
-  await OneSignal.init({
-    appId: "5b20cccb-1f73-499a-bba3-34459d37d7bb",
-    serviceWorkerPath: "./sw.js",
-    serviceWorkerParam: { scope: "/Waywhales/" },
-    notifyButton: { enable: false }
+window.waywhalesOneSignalReady = new Promise(resolve => {
+  OneSignalDeferred.push(async function(OneSignal) {
+    try {
+      await OneSignal.init({
+        appId: "5b20cccb-1f73-499a-bba3-34459d37d7bb",
+        serviceWorkerPath: "./sw.js",
+        serviceWorkerParam: { scope: "/Waywhales/" },
+        notifyButton: { enable: false }
+      });
+      resolve(OneSignal);
+    } catch (error) {
+      console.error("Waywhales OneSignal init failed:", error);
+      resolve(null);
+    }
   });
 });
 </script>
@@ -302,52 +310,88 @@ document.querySelectorAll('.nav button').forEach(b=>b.addEventListener('click',(
 $('saveProfile').addEventListener('click',()=>{data.name=$('nameInput').value.trim();save();render();notify('Профиль сохранён')});
 $('photoInput').addEventListener('change',e=>{const f=e.target.files&&e.target.files[0];if(!f)return;if(f.type&&!f.type.startsWith('image/')){notify('Пожалуйста, выберите фотографию');e.target.value='';return}const reader=new FileReader();reader.onload=()=>{const img=new Image();img.onload=()=>{try{const maxSide=640,scale=Math.min(1,maxSide/Math.max(img.width,img.height)),c=document.createElement('canvas');c.width=Math.max(1,Math.round(img.width*scale));c.height=Math.max(1,Math.round(img.height*scale));const ctx=c.getContext('2d');ctx.fillStyle='#ffffff';ctx.fillRect(0,0,c.width,c.height);ctx.drawImage(img,0,0,c.width,c.height);let quality=.78,result=c.toDataURL('image/jpeg',quality);while(result.length>550000&&quality>.48){quality-=.08;result=c.toDataURL('image/jpeg',quality)}data.photo=result;save();renderProfile();notify('Фото добавлено и автоматически уменьшено')}catch(err){notify('Не удалось сохранить фото. Попробуйте другое изображение')}};img.onerror=()=>notify('Формат фото не поддерживается. Выберите JPG или PNG');img.src=reader.result};reader.onerror=()=>notify('Не удалось открыть файл фото');reader.readAsDataURL(f);e.target.value=''});
 $('removePhoto').addEventListener('click',()=>{data.photo='';save();renderProfile();notify('Фото удалено')});
-const pushToggle=$('pushToggle');const pushStatus=$('pushStatus');const pushRow=pushToggle.closest('.push-switch-row');
-const PUSH_PREF_KEY='waywhales_push_enabled_v1';
-const getPushPref=()=>localStorage.getItem(PUSH_PREF_KEY)==='true';
-const setPushState=(enabled,message)=>{pushToggle.checked=!!enabled;pushRow.classList.toggle('is-on',!!enabled);pushStatus.textContent=message;};
-const supported=('Notification'in window);
-const savedPush=getPushPref();
-setPushState(savedPush,savedPush?(supported&&Notification.permission==='granted'?'Разрешение выдано':'Нужно разрешить уведомления'):'Выключены');
+const pushToggle=$('pushToggle');
+const pushStatus=$('pushStatus');
+const pushRow=pushToggle.closest('.push-switch-row');
+let pushBusy=false;
+let pushClient=null;
+const isIOS=/iPhone|iPad|iPod/i.test(navigator.userAgent);
+const isInstalled=()=>window.matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
+const paintPush=(enabled,message)=>{
+  pushToggle.checked=!!enabled;
+  pushRow.classList.toggle('is-on',!!enabled);
+  pushStatus.textContent=message;
+};
+const actualPushState=()=>{
+  const sub=pushClient?.User?.PushSubscription;
+  return !!(sub&&sub.optedIn===true);
+};
+const refreshPushState=()=>{
+  if(!pushClient){paintPush(false,'Не удалось подключиться к сервису уведомлений');return}
+  const permission=('Notification'in window)?Notification.permission:'unsupported';
+  if(actualPushState())paintPush(true,'Устройство подписано на уведомления');
+  else if(permission==='denied')paintPush(false,'Уведомления запрещены в настройках устройства');
+  else paintPush(false,'Устройство пока не подписано');
+};
+const setPushBusy=value=>{pushBusy=value;pushToggle.disabled=value;};
+(async()=>{
+  try{
+    pushClient=await window.waywhalesOneSignalReady;
+    if(!pushClient){paintPush(false,'Не удалось загрузить OneSignal. Обновите страницу');return}
+    refreshPushState();
+    const sub=pushClient.User?.PushSubscription;
+    if(sub?.addEventListener)sub.addEventListener('change',refreshPushState);
+  }catch(error){
+    console.error('Waywhales push status error:',error);
+    paintPush(false,'Не удалось проверить подписку');
+  }
+})();
 pushToggle.addEventListener('change',async()=>{
- const wanted=pushToggle.checked;
- pushToggle.disabled=true;
- if(!wanted){
-  localStorage.setItem(PUSH_PREF_KEY,'false');
-  try{if(window.OneSignal?.User?.PushSubscription){await window.OneSignal.User.PushSubscription.optOut();}}catch(e){}
-  setPushState(false,'Напоминания выключены');
-  pushToggle.disabled=false;
-  return;
- }
- if(!supported){
-  localStorage.setItem(PUSH_PREF_KEY,'false');
-  setPushState(false,'Этот браузер не поддерживает уведомления');
-  pushToggle.disabled=false;
-  return;
- }
- try{
-  let permission=Notification.permission;
-  if(permission!=='granted'&&permission!=='denied')permission=await Notification.requestPermission();
-  if(permission!=='granted'){
-   localStorage.setItem(PUSH_PREF_KEY,'false');
-   setPushState(false,permission==='denied'?'Разрешите уведомления в настройках iPhone':'Разрешение не получено');
-   pushToggle.disabled=false;
-   return;
+  if(pushBusy)return;
+  const wanted=pushToggle.checked;
+  setPushBusy(true);
+  try{
+    if(!pushClient)pushClient=await window.waywhalesOneSignalReady;
+    if(!pushClient)throw new Error('OneSignal is not ready');
+    const sub=pushClient.User?.PushSubscription;
+    if(!sub)throw new Error('Push subscription API is unavailable');
+    if(!wanted){
+      await sub.optOut();
+      await new Promise(resolve=>setTimeout(resolve,500));
+      refreshPushState();
+      if(actualPushState())paintPush(true,'Не удалось отключить подписку. Попробуйте ещё раз');
+      return;
+    }
+    if(isIOS&&!isInstalled()){
+      paintPush(false,'На iPhone сначала добавьте Waywhales на экран «Домой»');
+      return;
+    }
+    if(!('Notification'in window)){
+      paintPush(false,'Этот браузер не поддерживает push-уведомления');
+      return;
+    }
+    if(Notification.permission==='denied'){
+      paintPush(false,'Разрешите уведомления в настройках Safari или iPhone');
+      return;
+    }
+    if(Notification.permission!=='granted'){
+      await pushClient.Notifications.requestPermission();
+    }
+    if(Notification.permission!=='granted'){
+      paintPush(false,'Разрешение на уведомления не получено');
+      return;
+    }
+    await sub.optIn();
+    await new Promise(resolve=>setTimeout(resolve,1000));
+    refreshPushState();
+    if(!actualPushState())paintPush(false,'Подписка не подтверждена. Проверьте разрешение и повторите');
+  }catch(error){
+    console.error('Waywhales push subscription error:',error);
+    refreshPushState();
+    if(!actualPushState())paintPush(false,'Не удалось подписать устройство. Проверьте разрешение');
+  }finally{
+    setPushBusy(false);
   }
-  if(!window.OneSignal?.User?.PushSubscription){
-   localStorage.setItem(PUSH_PREF_KEY,'false');
-   setPushState(false,'Сервис уведомлений ещё загружается. Обновите страницу');
-   pushToggle.disabled=false;
-   return;
-  }
-  await window.OneSignal.User.PushSubscription.optIn();
-  localStorage.setItem(PUSH_PREF_KEY,'true');
-  setPushState(true,'Разрешение сохранено на этом устройстве');
- }catch(e){
-  localStorage.setItem(PUSH_PREF_KEY,'false');
-  setPushState(false,'Не удалось включить уведомления. Проверьте установку приложения');
- }
- pushToggle.disabled=false;
 });
 $('exportData').addEventListener('click',()=>{const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='waywhales-backup-'+today()+'.json';a.click();URL.revokeObjectURL(url);notify('Резервная копия подготовлена')});
 $('resetData').addEventListener('click',()=>{if(confirm('Удалить профиль, добавки и историю на этом устройстве? Это действие нельзя отменить.')){data=fresh();save();render();notify('Данные сброшены')}});
