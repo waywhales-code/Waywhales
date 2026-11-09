@@ -5,8 +5,8 @@
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#f6f5ef",
-  "theme_color": "#173d31",
+  "background_color": "#102b20",
+  "theme_color": "#102b20",
   "description": "Спокойный дневник приёма добавок",
   "icons": [
     {
