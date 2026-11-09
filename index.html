@@ -103,6 +103,28 @@ body:before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opac
  .profile-card .profile-actions{gap:8px}
 }
 
+
+/* Navigation refinement: equal columns, larger type and icons */
+.nav{
+ display:flex!important;align-items:stretch!important;justify-content:space-between!important;
+ gap:8px!important;padding:9px 12px calc(9px + env(safe-area-inset-bottom))!important;
+ width:100%;box-sizing:border-box;min-height:88px;
+}
+.nav button{
+ flex:1 1 0!important;min-width:0!important;width:25%!important;max-width:none!important;
+ min-height:70px!important;padding:10px 4px!important;margin:0!important;
+ display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;
+ gap:5px!important;border-radius:19px!important;font-size:15px!important;line-height:1.15!important;
+ font-weight:500!important;white-space:nowrap!important;text-align:center!important;
+}
+.nav button.active{font-weight:750!important}
+.nav b{display:block!important;font-size:25px!important;line-height:1!important;font-weight:400!important}
+@media(max-width:390px){
+ .nav{gap:4px!important;padding-left:7px!important;padding-right:7px!important}
+ .nav button{font-size:13px!important;border-radius:16px!important}
+ .nav b{font-size:23px!important}
+}
+
 </style></head>
 <body><main class="shell">
 <header class="top"><div class="brand"><span class="brand-mark">🌿</span> Waywhales</div><div class="date-pill" id="todayLabel"></div></header>
