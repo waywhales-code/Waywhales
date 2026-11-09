@@ -1,0 +1,19 @@
+{
+  "name": "Waywhales",
+  "short_name": "Waywhales",
+  "lang": "ru",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f6f5ef",
+  "theme_color": "#173d31",
+  "description": "Спокойный дневник приёма добавок",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
