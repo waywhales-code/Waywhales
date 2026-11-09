@@ -205,6 +205,12 @@ body:before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opac
 
 /* Per-supplement reminder explanation */
 .profile-card .hint{line-height:1.65}
+
+/* Optional push controls */
+.push-controls{margin-top:18px;padding:16px;border-radius:18px;background:#eef2e8}
+.push-controls .hint{margin:0 0 14px;color:#526b59;line-height:1.55}
+.push-controls .profile-actions{gap:10px}
+
 </style><script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
 <script>
 window.OneSignalDeferred = window.OneSignalDeferred || [];
@@ -227,7 +233,7 @@ OneSignalDeferred.push(async function(OneSignal) {
 <section id="profileView" class="view profile-layout">
 <div class="profile-intro"><span class="eyebrow">ВАШЕ ЛИЧНОЕ ПРОСТРАНСТВО</span><h2>Профиль</h2><p>Настройте Waywhales под свой ритм</p></div>
 <div class="panel profile-card"><div class="profile"><div class="avatar" id="avatar">🌱</div><div><strong id="profileName">Гость</strong><div class="hint">Ваш профиль на этом устройстве</div></div></div><div class="profile-actions"><label class="btn secondary small" for="photoInput">Изменить фото</label><input id="photoInput" type="file" accept="image/*" hidden><button class="btn ghost small" id="removePhoto">Удалить фото</button></div><div class="field"><label for="nameInput">Как к вам обращаться?</label><input id="nameInput" maxlength="40" placeholder="Ваше имя"></div><button class="btn" id="saveProfile">Сохранить профиль</button></div>
-<div class="panel profile-card"><div class="card-kicker">ЗАБОТА О СЕБЕ</div><h2>Напоминания о добавках</h2><p class="sub">Для каждой добавки можно указать своё время приёма при добавлении или редактировании.</p><p class="hint">Push-уведомления будут необязательными: каждый человек сам решит, разрешать их или нет. Разрешение можно будет отменить в любой момент.</p></div>
+<div class="panel profile-card"><div class="card-kicker">ЗАБОТА О СЕБЕ</div><h2>Напоминания о добавках</h2><p class="sub">Для каждой добавки можно указать своё время приёма при добавлении или редактировании.</p><div class="push-controls"><p class="hint" id="pushStatus">Push-уведомления выключены. Включите их, если хотите получать напоминания, когда Waywhales закрыт.</p><div class="profile-actions"><button class="btn" id="enablePush" type="button">Включить push</button><button class="btn ghost small" id="disablePush" type="button">Отключить push</button></div></div></div>
 <div class="panel profile-card"><div class="card-kicker">ВАШИ ДАННЫЕ</div><h2>Данные и поддержка</h2><p class="sub">Данные хранятся в браузере на этом устройстве. Облачной синхронизации пока нет.</p><div class="profile-actions"><button class="btn ghost small" id="exportData">Экспортировать данные</button><button class="btn danger small" id="resetData">Сбросить данные</button></div><p class="support-link"><a href="https://t.me/waywhales" target="_blank" rel="noopener">Связаться с Waywhales ↗</a></p></div>
 </section>
 </main>
@@ -277,6 +283,8 @@ document.querySelectorAll('.nav button').forEach(b=>b.addEventListener('click',(
 $('saveProfile').addEventListener('click',()=>{data.name=$('nameInput').value.trim();save();render();notify('Профиль сохранён')});
 $('photoInput').addEventListener('change',e=>{const f=e.target.files&&e.target.files[0];if(!f)return;if(f.type&&!f.type.startsWith('image/')){notify('Пожалуйста, выберите фотографию');e.target.value='';return}const reader=new FileReader();reader.onload=()=>{const img=new Image();img.onload=()=>{try{const maxSide=640,scale=Math.min(1,maxSide/Math.max(img.width,img.height)),c=document.createElement('canvas');c.width=Math.max(1,Math.round(img.width*scale));c.height=Math.max(1,Math.round(img.height*scale));const ctx=c.getContext('2d');ctx.fillStyle='#ffffff';ctx.fillRect(0,0,c.width,c.height);ctx.drawImage(img,0,0,c.width,c.height);let quality=.78,result=c.toDataURL('image/jpeg',quality);while(result.length>550000&&quality>.48){quality-=.08;result=c.toDataURL('image/jpeg',quality)}data.photo=result;save();renderProfile();notify('Фото добавлено и автоматически уменьшено')}catch(err){notify('Не удалось сохранить фото. Попробуйте другое изображение')}};img.onerror=()=>notify('Формат фото не поддерживается. Выберите JPG или PNG');img.src=reader.result};reader.onerror=()=>notify('Не удалось открыть файл фото');reader.readAsDataURL(f);e.target.value=''});
 $('removePhoto').addEventListener('click',()=>{data.photo='';save();renderProfile();notify('Фото удалено')});
+$('enablePush').addEventListener('click',async()=>{const status=$('pushStatus');if(!('Notification'in window)){status.textContent='Этот браузер не поддерживает push-уведомления.';return}if(Notification.permission==='denied'){status.textContent='Уведомления запрещены в настройках браузера. Разрешите их там и попробуйте снова.';return}if(!window.OneSignal){status.textContent='Подключение push-сервиса ещё не завершено. Пока кнопка не может включить отправку уведомлений.';return}try{await window.OneSignal.User.PushSubscription.optIn();status.textContent='Запрос на включение push-уведомлений отправлен. Вы можете отключить их этой кнопкой в любое время.'}catch(e){status.textContent='Не удалось включить уведомления. Проверьте разрешения браузера и попробуйте снова.'}});
+$('disablePush').addEventListener('click',async()=>{const status=$('pushStatus');try{if(window.OneSignal)await window.OneSignal.User.PushSubscription.optOut();status.textContent='Push-уведомления отключены. Их можно включить снова в любое время.'}catch(e){status.textContent='Не удалось отключить подписку через сервис. Отключите уведомления в настройках браузера.'}});
 $('exportData').addEventListener('click',()=>{const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='waywhales-backup-'+today()+'.json';a.click();URL.revokeObjectURL(url);notify('Резервная копия подготовлена')});
 $('resetData').addEventListener('click',()=>{if(confirm('Удалить профиль, добавки и историю на этом устройстве? Это действие нельзя отменить.')){data=fresh();save();render();notify('Данные сброшены')}});
 
