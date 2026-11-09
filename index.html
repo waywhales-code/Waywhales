@@ -191,6 +191,18 @@ body:before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opac
  .brand{font-size:21px!important}
 }
 
+
+/* High-contrast wordmark for dark forest header on iPhone 17 Pro Max */
+.brand{color:#f5f1df!important;font-size:23px!important;font-weight:800!important;letter-spacing:.45px!important;text-shadow:0 2px 12px rgba(0,0,0,.35)!important}
+.brand-mark{background:linear-gradient(145deg,#e8edda,#b7c99f)!important;color:#173b2d!important;border:1px solid rgba(255,255,255,.35)}
+.top{isolation:isolate}
+@media(max-width:720px){
+ .shell{padding-top:calc(28px + env(safe-area-inset-top, 0px))!important}
+ .top{min-height:54px!important;margin-bottom:22px!important;padding:6px 3px!important}
+ .brand{font-size:23px!important;gap:11px!important}
+ .brand-mark{width:44px!important;height:44px!important;flex-basis:44px!important}
+}
+
 </style></head>
 <body><main class="shell">
 <header class="top"><div class="brand"><span class="brand-mark">🌿</span> Waywhales</div><div class="date-pill" id="todayLabel"></div></header>
