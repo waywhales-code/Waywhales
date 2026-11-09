@@ -230,14 +230,6 @@ body:before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opac
 .push-switch:active:not(:disabled){transform:scale(.96)}
 .push-switch-row:active .push-switch-copy{opacity:.85}
 
-/* Keep visual switch and label in sync */
-.push-switch:checked{background:#2b9b62!important}
-.push-switch:not(:checked){background:#cbd3c8!important}
-.push-switch:checked:before{transform:translateX(26px)!important}
-.push-switch:not(:checked):before{transform:translateX(0)!important}
-.push-switch-row.is-on .push-switch-copy small{color:#2b8057}
-.push-switch-row:not(.is-on) .push-switch-copy small{color:#6b7b70}
-.push-switch:disabled{opacity:.65}
 </style><script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
 <script>
 window.OneSignalDeferred = window.OneSignalDeferred || [];
@@ -311,12 +303,10 @@ $('saveProfile').addEventListener('click',()=>{data.name=$('nameInput').value.tr
 $('photoInput').addEventListener('change',e=>{const f=e.target.files&&e.target.files[0];if(!f)return;if(f.type&&!f.type.startsWith('image/')){notify('Пожалуйста, выберите фотографию');e.target.value='';return}const reader=new FileReader();reader.onload=()=>{const img=new Image();img.onload=()=>{try{const maxSide=640,scale=Math.min(1,maxSide/Math.max(img.width,img.height)),c=document.createElement('canvas');c.width=Math.max(1,Math.round(img.width*scale));c.height=Math.max(1,Math.round(img.height*scale));const ctx=c.getContext('2d');ctx.fillStyle='#ffffff';ctx.fillRect(0,0,c.width,c.height);ctx.drawImage(img,0,0,c.width,c.height);let quality=.78,result=c.toDataURL('image/jpeg',quality);while(result.length>550000&&quality>.48){quality-=.08;result=c.toDataURL('image/jpeg',quality)}data.photo=result;save();renderProfile();notify('Фото добавлено и автоматически уменьшено')}catch(err){notify('Не удалось сохранить фото. Попробуйте другое изображение')}};img.onerror=()=>notify('Формат фото не поддерживается. Выберите JPG или PNG');img.src=reader.result};reader.onerror=()=>notify('Не удалось открыть файл фото');reader.readAsDataURL(f);e.target.value=''});
 $('removePhoto').addEventListener('click',()=>{data.photo='';save();renderProfile();notify('Фото удалено')});
 const pushToggle=$('pushToggle');const pushStatus=$('pushStatus');const pushRow=pushToggle.closest('.push-switch-row');
-const setPushState=(enabled,message)=>{pushToggle.checked=!!enabled;pushToggle.setAttribute('aria-checked',String(!!enabled));pushRow.classList.toggle('is-on',!!enabled);pushStatus.textContent=message;};
-setPushState(false,'Подключаем уведомления…');
-window.OneSignalDeferred=window.OneSignalDeferred||[];
-window.OneSignalDeferred.push(async function(OneSignal){const sub=OneSignal.User.PushSubscription;const sync=()=>{const enabled=sub.optedIn===true;setPushState(enabled,enabled?'Включены':'Выключены')};sync();sub.addEventListener('change',sync);
-pushToggle.addEventListener('change',async()=>{const wantsOn=pushToggle.checked;pushToggle.disabled=true;pushStatus.textContent=wantsOn?'Запрашиваем разрешение…':'Отключаем…';try{if(wantsOn){await OneSignal.User.PushSubscription.optIn();}else{await OneSignal.User.PushSubscription.optOut();}sync();if(wantsOn&&!sub.optedIn)pushStatus.textContent='Разрешение не получено. Проверьте настройки уведомлений iPhone.';}catch(error){sync();pushStatus.textContent='Не удалось изменить настройку. Проверьте разрешения браузера.';}finally{pushToggle.disabled=false;}});
-});
+const setPushState=(enabled,message)=>{pushToggle.checked=!!enabled;pushRow.classList.toggle('is-on',!!enabled);pushStatus.textContent=message;};
+const supported=('Notification'in window);
+setPushState(supported&&Notification.permission==='granted',supported?(Notification.permission==='granted'?'Разрешение браузера дано':'Выключены'):'Уведомления недоступны в этом браузере');
+pushToggle.addEventListener('change',async()=>{if(pushToggle.checked){if(!supported){setPushState(false,'Уведомления недоступны в этом браузере');return;}try{const permission=await Notification.requestPermission();if(permission==='granted'){setPushState(true,'Разрешение браузера дано');if(window.OneSignal?.User?.PushSubscription){window.OneSignal.User.PushSubscription.optIn().catch(()=>{});}}else{setPushState(false,permission==='denied'?'Разрешение запрещено в настройках iPhone':'Разрешение не получено');}}catch(e){setPushState(false,'Не удалось запросить разрешение');}}else{if(window.OneSignal?.User?.PushSubscription){window.OneSignal.User.PushSubscription.optOut().catch(()=>{});}setPushState(false,'Выключены в Waywhales');}});
 $('exportData').addEventListener('click',()=>{const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='waywhales-backup-'+today()+'.json';a.click();URL.revokeObjectURL(url);notify('Резервная копия подготовлена')});
 $('resetData').addEventListener('click',()=>{if(confirm('Удалить профиль, добавки и историю на этом устройстве? Это действие нельзя отменить.')){data=fresh();save();render();notify('Данные сброшены')}});
 
