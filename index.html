@@ -36,6 +36,53 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opac
 .toast{background:#10281f}
 @media(max-width:720px){.hero{background:linear-gradient(135deg,#1b4733f2,#365f45ed)}}
 
+
+/* Botanical premium redesign */
+:root{--forest:#173b2d;--deep:#091e16;--leaf:#a9c18e;--gold:#c7aa70;--paper:#f5f3e9;--ink:#213b2e;--muted:#68796d;--line:#d7dfd0;--shadow:0 16px 42px rgba(4,20,13,.28)}
+html{background:#0b2118}
+body{background:radial-gradient(ellipse at 12% 10%,rgba(91,126,72,.52),transparent 34%),radial-gradient(ellipse at 88% 34%,rgba(43,91,58,.55),transparent 36%),radial-gradient(ellipse at 48% 100%,rgba(31,73,48,.72),transparent 48%),linear-gradient(145deg,#102d20 0%,#081b13 52%,#163c2a 100%);color:#f4f2e7}
+body:before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.28;background-image:radial-gradient(ellipse 22px 62px at 35px 50px,rgba(193,211,158,.68) 0 34%,transparent 38%),radial-gradient(ellipse 22px 62px at 90px 115px,rgba(193,211,158,.48) 0 34%,transparent 38%),radial-gradient(ellipse 17px 50px at 145px 25px,rgba(193,211,158,.42) 0 33%,transparent 38%);background-size:190px 180px;mask-image:linear-gradient(90deg,#000,transparent 42%,transparent 58%,#000)}
+.shell{z-index:1}.brand{color:#f4f2e7}.brand-mark{background:linear-gradient(145deg,#e4e9cf,#9cb782);color:#173b2d}
+.date-pill{color:#d2ddc8}
+.hero{background:linear-gradient(120deg,rgba(18,58,39,.94),rgba(48,91,57,.88));border:1px solid rgba(224,230,195,.28);box-shadow:0 20px 55px rgba(0,0,0,.28)}
+.hero:after{border-color:rgba(231,235,204,.23);box-shadow:0 0 0 26px rgba(255,255,255,.06),0 0 0 54px rgba(255,255,255,.035)}
+.panel{background:rgba(248,247,238,.94);border:1px solid rgba(225,231,213,.8);box-shadow:0 16px 42px rgba(0,0,0,.22);backdrop-filter:blur(12px)}
+.panel h2{color:#193e2c}.sub,.hint,.field label{color:#68796d}
+.btn{background:linear-gradient(135deg,#28563d,#143a29);box-shadow:0 5px 14px rgba(16,54,35,.18)}
+.btn.secondary{background:#e3ebdc;color:#214832;box-shadow:none}.btn.ghost{background:rgba(255,255,255,.75);color:#214832}
+.supp{background:rgba(255,255,251,.92)}.supp.done{background:#edf4e8}.supp-icon{background:#e5eddd}.check.on{background:#234c35;border-color:#234c35}
+.stat{background:linear-gradient(145deg,#f0f4e9,#e4eddf)}.stat strong{color:#234b36}
+.nav{background:rgba(9,31,22,.97);border-top:1px solid rgba(215,228,196,.18);backdrop-filter:blur(18px)}
+.nav button{color:#c5d3be}.nav button.active{background:#e3ebdc;color:#193e2c}
+.day{background:#fffefa}.day.today{border-color:#79996d}.day.selected{background:#e5eee0}
+.avatar{background:#e5eee0;color:#214b37}.field input,.field select{background:#fffefa;border-color:#d6dfd1}
+.dialog{background:#f5f3e9}.toast{background:#10281f}
+.profile-layout{display:grid;gap:14px}
+.profile-intro{padding:8px 4px 4px;color:#f4f2e7}
+.profile-intro h2{font:400 34px Georgia,serif;margin:5px 0;color:#f4f2e7}
+.profile-intro p{margin:0;color:#d2ddc8}
+.profile-card{padding:20px;border-radius:21px}
+.profile-card h2{font-size:24px;margin:0 0 5px}
+.card-kicker{font-size:10px;letter-spacing:1.8px;color:#8a9d7c;font-weight:750;margin-bottom:7px}
+.profile-card .profile{margin-bottom:14px}
+.profile-card .field{margin:15px 0}
+.profile-card .profile-actions{gap:9px}
+.profile-card .hint{line-height:1.5}
+.reminder-choice{padding:13px 14px;border-radius:13px;background:#edf2e8}
+.reminder-choice label{display:flex;align-items:center;gap:10px;color:#254633;font-weight:600}
+.reminder-choice input{accent-color:#28563d;width:19px;height:19px}
+.reminder-note{padding:11px 12px;background:#f1f1e8;border-radius:12px}
+.support-link{margin:17px 0 0}.support-link a{color:#28563d;font-weight:650;text-decoration:none}
+@media(max-width:720px){
+ .shell{padding:15px 13px 110px}
+ .profile-layout{gap:12px}
+ .profile-intro{padding:7px 4px 8px}
+ .profile-card{padding:17px;border-radius:19px}
+ .profile-card .profile-actions .btn{min-height:40px}
+ .profile-card .field input[type=time]{min-height:52px}
+ .hero{border-radius:22px}
+}
+
 </style></head>
 <body><main class="shell">
 <header class="top"><div class="brand"><span class="brand-mark">🌿</span> Waywhales</div><div class="date-pill" id="todayLabel"></div></header>
@@ -43,7 +90,12 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opac
 <section id="homeView" class="view active"><div class="grid"><div class="panel"><div class="section-head"><div><h2>Сегодня</h2><p class="sub" id="todaySub">Ваш план приёма</p></div><button class="btn small" id="addBtn">＋ Добавить</button></div><div id="todayList" class="supp-list"></div></div><aside class="panel"><h2>Ваш ритм</h2><p class="sub">Небольшая статистика за сегодня</p><div class="stat-grid"><div class="stat"><strong id="statDone">0</strong><span>отмечено</span></div><div class="stat"><strong id="statTotal">0</strong><span>в плане</span></div><div class="stat"><strong id="statRate">0%</strong><span>выполнение</span></div><div class="stat"><strong id="statStreak">0</strong><span>дней с отметками</span></div></div><p class="hint" style="margin-top:15px">Отмечайте приём по своему плану. Приложение не заменяет рекомендации врача.</p></aside></div></section>
 <section id="calendarView" class="view"><div class="panel"><div class="calendar-head"><button class="btn ghost small" id="prevMonth">‹</button><h2 id="monthTitle"></h2><button class="btn ghost small" id="nextMonth">›</button></div><div class="calendar" id="calendarGrid"></div><p class="sub" id="selectedDayLabel" style="margin-top:15px"></p><div id="dayHistory" class="supp-list"></div></div></section>
 <section id="statsView" class="view"><div class="panel"><h2>История и анализ</h2><p class="sub">Ваши отметки за последние 7 дней</p><div id="weeklyStats" class="stat-grid"></div><p class="hint" style="margin-top:18px">Статистика основана только на отметках в этом приложении. Она не оценивает медицинскую эффективность добавок.</p></div></section>
-<section id="profileView" class="view"><div class="panel"><h2>Ваш профиль</h2><p class="sub">Настройте приложение под себя</p><div class="profile"><div class="avatar" id="avatar">🌱</div><div><strong id="profileName">Гость</strong><div class="hint">Профиль хранится на этом устройстве</div></div></div><div class="profile-actions"><label class="btn secondary small" for="photoInput">Изменить фото</label><input id="photoInput" type="file" accept="image/*" hidden><button class="btn ghost small" id="removePhoto">Удалить фото</button></div><div class="field"><label for="nameInput">Как к вам обращаться?</label><input id="nameInput" maxlength="40" placeholder="Ваше имя"></div><button class="btn" id="saveProfile">Сохранить профиль</button><hr style="border:0;border-top:1px solid var(--line);margin:22px 0"><h2 style="font-size:20px">Напоминания</h2><p class="sub">Разрешите уведомления, чтобы Waywhales мог показывать напоминание. Вы можете отключить его здесь в любое время или запретить уведомления в настройках iPhone.</p><div class="field"><label><input type="checkbox" id="reminderToggle"> Включить ежедневное напоминание</label></div><div class="field"><label for="reminderTime">Время</label><input type="time" id="reminderTime" value="09:00"></div><div class="profile-actions"><button class="btn secondary" id="saveReminder">Сохранить и разрешить</button><button class="btn ghost small" id="disableReminder" type="button">Отключить напоминания</button></div><p class="hint" id="reminderStatus">Можно отключить в любой момент. В этой версии напоминание работает, пока приложение открыто.</p><hr style="border:0;border-top:1px solid var(--line);margin:22px 0"><h2 style="font-size:20px">Данные</h2><p class="hint">Данные сохраняются в браузере на этом устройстве. Пока нет облачной синхронизации между устройствами.</p><div class="profile-actions" style="margin-top:12px"><button class="btn ghost small" id="exportData">Экспортировать данные</button><button class="btn danger small" id="resetData">Сбросить данные</button></div><p style="margin-top:18px"><a href="https://t.me/waywhales" target="_blank" rel="noopener" style="color:var(--forest)">Связаться с Waywhales в Telegram ↗</a></p></div></section>
+<section id="profileView" class="view profile-layout">
+<div class="profile-intro"><span class="eyebrow">ВАШЕ ЛИЧНОЕ ПРОСТРАНСТВО</span><h2>Профиль</h2><p>Настройте Waywhales под свой ритм</p></div>
+<div class="panel profile-card"><div class="profile"><div class="avatar" id="avatar">🌱</div><div><strong id="profileName">Гость</strong><div class="hint">Ваш профиль на этом устройстве</div></div></div><div class="profile-actions"><label class="btn secondary small" for="photoInput">Изменить фото</label><input id="photoInput" type="file" accept="image/*" hidden><button class="btn ghost small" id="removePhoto">Удалить фото</button></div><div class="field"><label for="nameInput">Как к вам обращаться?</label><input id="nameInput" maxlength="40" placeholder="Ваше имя"></div><button class="btn" id="saveProfile">Сохранить профиль</button></div>
+<div class="panel profile-card"><div class="card-kicker">ЗАБОТА О СЕБЕ</div><h2>Напоминания</h2><p class="sub">Выберите удобное время. Разрешение можно отменить в любой момент в настройках iPhone.</p><div class="field reminder-choice"><label><input type="checkbox" id="reminderToggle"> Включить ежедневное напоминание</label></div><div class="field"><label for="reminderTime">Время напоминания</label><input type="time" id="reminderTime" value="09:00"></div><div class="profile-actions"><button class="btn secondary" id="saveReminder">Сохранить и разрешить</button><button class="btn ghost small" id="disableReminder" type="button">Отключить</button></div><p class="hint" id="reminderStatus">Напоминания выключены. Вы можете включить их снова в любое время.</p><p class="hint reminder-note">В текущей версии уведомление срабатывает, пока приложение открыто. Уведомления в закрытом приложении пока не поддерживаются.</p></div>
+<div class="panel profile-card"><div class="card-kicker">ВАШИ ДАННЫЕ</div><h2>Данные и поддержка</h2><p class="sub">Данные хранятся в браузере на этом устройстве. Облачной синхронизации пока нет.</p><div class="profile-actions"><button class="btn ghost small" id="exportData">Экспортировать данные</button><button class="btn danger small" id="resetData">Сбросить данные</button></div><p class="support-link"><a href="https://t.me/waywhales" target="_blank" rel="noopener">Связаться с Waywhales ↗</a></p></div>
+</section>
 </main>
 <nav class="nav" aria-label="Основная навигация"><button class="active" data-view="home"><b>⌂</b>Главная</button><button data-view="calendar"><b>▦</b>Календарь</button><button data-view="stats"><b>◷</b>Анализ</button><button data-view="profile"><b>◎</b>Профиль</button></nav>
 <div class="modal" id="suppModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><form class="dialog" id="suppForm"><h2 id="modalTitle">Новая добавка</h2><input type="hidden" id="suppId"><div class="field"><label for="suppName">Название</label><input id="suppName" maxlength="70" required placeholder="Например, Витамин D"></div><div class="field"><label for="suppDose">Дозировка / заметка</label><input id="suppDose" maxlength="80" placeholder="Например, 1 капсула"></div><div class="field"><label for="suppTime">Время приёма</label><input id="suppTime" type="time" value="09:00" required></div><div class="field"><label for="suppIcon">Значок</label><select id="suppIcon"><option>🌿</option><option>☀️</option><option>💧</option><option>🍃</option><option>🌼</option><option>🫐</option><option>✨</option></select></div><div class="dialog-actions"><button type="button" class="btn ghost" id="cancelModal">Отмена</button><button class="btn" type="submit">Сохранить</button></div></form></div><div class="toast" id="toast" role="status"></div>
