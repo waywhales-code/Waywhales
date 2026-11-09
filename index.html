@@ -83,6 +83,26 @@ body:before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opac
  .hero{border-radius:22px}
 }
 
+/* Final precision fixes: view isolation, true botanical line art, iPhone fields */
+.view.profile-layout{display:none}
+.view.profile-layout.active{display:grid}
+.profile-card .profile strong{color:#213b2e!important;font-weight:700}
+.profile-card .profile .hint{color:#68796d!important}
+.profile-card{min-width:0;overflow:hidden}
+.profile-card .field{min-width:0;width:100%}
+.profile-card .field input,.profile-card .field select{display:block;width:100%;max-width:100%;min-width:0;box-sizing:border-box}
+#reminderTime{width:100%!important;max-width:100%!important;min-width:0!important;display:block;box-sizing:border-box;-webkit-appearance:none;appearance:none;text-align:center;padding-inline:12px;font-size:17px}
+.profile-card .profile-actions{align-items:center}
+.profile-card .profile-actions .btn{max-width:100%;white-space:normal}
+body:before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.22;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='280' viewBox='0 0 260 280'%3E%3Cg fill='none' stroke='%23c4d5aa' stroke-width='1.35' stroke-linecap='round' stroke-linejoin='round' opacity='.9'%3E%3Cpath d='M36 142C-1 105 5 53 67 28c22 56 12 96-31 114Z'/%3E%3Cpath d='M36 142Q49 78 67 28M43 111 18 83M49 91 67 70'/%3E%3Cpath d='M177 214c-5-61 29-108 91-111 3 64-30 105-91 111Z'/%3E%3Cpath d='M177 214q37-69 91-111m-61 69 2-37m25 11 18-20'/%3E%3Cpath d='M108 252c-35-26-37-68-1-103 38 34 39 75 1 103Z'/%3E%3Cpath d='M108 252q8-55-1-103m2 68-23-24m24 7 19-22'/%3E%3C/g%3E%3C/svg%3E");background-size:260px 280px;background-repeat:repeat;mask-image:linear-gradient(90deg,#000,transparent 40%,transparent 60%,#000)}
+@media(max-width:720px){
+ .profile-card{padding:17px;overflow:hidden}
+ .profile-card .field input[type=time]{width:100%;max-width:100%;min-width:0}
+ .profile-card .profile{align-items:center}
+ .profile-card .profile strong{color:#213b2e!important}
+ .profile-card .profile-actions{gap:8px}
+}
+
 </style></head>
 <body><main class="shell">
 <header class="top"><div class="brand"><span class="brand-mark">🌿</span> Waywhales</div><div class="date-pill" id="todayLabel"></div></header>
