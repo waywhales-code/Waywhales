@@ -238,7 +238,7 @@ window.waywhalesOneSignalReady = new Promise(resolve => {
     try {
       await OneSignal.init({
         appId: "5b20cccb-1f73-499a-bba3-34459d37d7bb",
-        serviceWorkerPath: "Waywhales/sw.js",
+        serviceWorkerPath: "./sw.js",
         serviceWorkerParam: { scope: "/Waywhales/" },
         notifyButton: { enable: false }
       });
