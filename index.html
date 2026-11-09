@@ -305,8 +305,25 @@ $('removePhoto').addEventListener('click',()=>{data.photo='';save();renderProfil
 const pushToggle=$('pushToggle');const pushStatus=$('pushStatus');const pushRow=pushToggle.closest('.push-switch-row');
 const setPushState=(enabled,message)=>{pushToggle.checked=!!enabled;pushRow.classList.toggle('is-on',!!enabled);pushStatus.textContent=message;};
 const supported=('Notification'in window);
-setPushState(supported&&Notification.permission==='granted',supported?(Notification.permission==='granted'?'Разрешение браузера дано':'Выключены'):'Уведомления недоступны в этом браузере');
-pushToggle.addEventListener('change',async()=>{if(pushToggle.checked){if(!supported){setPushState(false,'Уведомления недоступны в этом браузере');return;}try{const permission=await Notification.requestPermission();if(permission==='granted'){setPushState(true,'Разрешение браузера дано');if(window.OneSignal?.User?.PushSubscription){window.OneSignal.User.PushSubscription.optIn().catch(()=>{});}}else{setPushState(false,permission==='denied'?'Разрешение запрещено в настройках iPhone':'Разрешение не получено');}}catch(e){setPushState(false,'Не удалось запросить разрешение');}}else{if(window.OneSignal?.User?.PushSubscription){window.OneSignal.User.PushSubscription.optOut().catch(()=>{});}setPushState(false,'Выключены в Waywhales');}});
+setPushState(false,supported?(Notification.permission==='granted'?'Выключены':'Выключены'):'Уведомления недоступны в этом браузере');
+pushToggle.addEventListener('change',async()=>{if(pushToggle.checked){
+ if(!supported){setPushState(false,'Уведомления недоступны в этом браузере');return;}
+ const approved=confirm('Разрешить Waywhales отправлять push-уведомления о времени приёма добавок? Вы сможете отключить их в любой момент.');
+ if(!approved){setPushState(false,'Выключены');return;}
+ try{
+  let permission=Notification.permission;
+  if(permission!=='granted'&&permission!=='denied')permission=await Notification.requestPermission();
+  if(permission==='granted'){
+   if(window.OneSignal?.User?.PushSubscription){await window.OneSignal.User.PushSubscription.optIn();}
+   setPushState(true,'Push-уведомления включены');
+  }else{
+   setPushState(false,permission==='denied'?'Разрешение запрещено в настройках iPhone':'Разрешение не получено');
+  }
+ }catch(e){setPushState(false,'Не удалось подключить уведомления. Попробуйте ещё раз.');}
+ }else{
+  try{if(window.OneSignal?.User?.PushSubscription){await window.OneSignal.User.PushSubscription.optOut();}}catch(e){}
+  setPushState(false,'Push-уведомления выключены');
+ }});
 $('exportData').addEventListener('click',()=>{const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='waywhales-backup-'+today()+'.json';a.click();URL.revokeObjectURL(url);notify('Резервная копия подготовлена')});
 $('resetData').addEventListener('click',()=>{if(confirm('Удалить профиль, добавки и историю на этом устройстве? Это действие нельзя отменить.')){data=fresh();save();render();notify('Данные сброшены')}});
 
