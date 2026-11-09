@@ -303,27 +303,52 @@ $('saveProfile').addEventListener('click',()=>{data.name=$('nameInput').value.tr
 $('photoInput').addEventListener('change',e=>{const f=e.target.files&&e.target.files[0];if(!f)return;if(f.type&&!f.type.startsWith('image/')){notify('Пожалуйста, выберите фотографию');e.target.value='';return}const reader=new FileReader();reader.onload=()=>{const img=new Image();img.onload=()=>{try{const maxSide=640,scale=Math.min(1,maxSide/Math.max(img.width,img.height)),c=document.createElement('canvas');c.width=Math.max(1,Math.round(img.width*scale));c.height=Math.max(1,Math.round(img.height*scale));const ctx=c.getContext('2d');ctx.fillStyle='#ffffff';ctx.fillRect(0,0,c.width,c.height);ctx.drawImage(img,0,0,c.width,c.height);let quality=.78,result=c.toDataURL('image/jpeg',quality);while(result.length>550000&&quality>.48){quality-=.08;result=c.toDataURL('image/jpeg',quality)}data.photo=result;save();renderProfile();notify('Фото добавлено и автоматически уменьшено')}catch(err){notify('Не удалось сохранить фото. Попробуйте другое изображение')}};img.onerror=()=>notify('Формат фото не поддерживается. Выберите JPG или PNG');img.src=reader.result};reader.onerror=()=>notify('Не удалось открыть файл фото');reader.readAsDataURL(f);e.target.value=''});
 $('removePhoto').addEventListener('click',()=>{data.photo='';save();renderProfile();notify('Фото удалено')});
 const pushToggle=$('pushToggle');const pushStatus=$('pushStatus');const pushRow=pushToggle.closest('.push-switch-row');
+const PUSH_PREF_KEY='waywhales_push_enabled_v1';
+const getPushPref=()=>localStorage.getItem(PUSH_PREF_KEY)==='true';
 const setPushState=(enabled,message)=>{pushToggle.checked=!!enabled;pushRow.classList.toggle('is-on',!!enabled);pushStatus.textContent=message;};
 const supported=('Notification'in window);
-setPushState(false,supported?(Notification.permission==='granted'?'Выключены':'Выключены'):'Уведомления недоступны в этом браузере');
-pushToggle.addEventListener('change',async()=>{if(pushToggle.checked){
- if(!supported){setPushState(false,'Уведомления недоступны в этом браузере');return;}
- const approved=confirm('Разрешить Waywhales отправлять push-уведомления о времени приёма добавок? Вы сможете отключить их в любой момент.');
- if(!approved){setPushState(false,'Выключены');return;}
+const savedPush=getPushPref();
+setPushState(savedPush,savedPush?(supported&&Notification.permission==='granted'?'Разрешение выдано':'Нужно разрешить уведомления'):'Выключены');
+pushToggle.addEventListener('change',async()=>{
+ const wanted=pushToggle.checked;
+ pushToggle.disabled=true;
+ if(!wanted){
+  localStorage.setItem(PUSH_PREF_KEY,'false');
+  try{if(window.OneSignal?.User?.PushSubscription){await window.OneSignal.User.PushSubscription.optOut();}}catch(e){}
+  setPushState(false,'Напоминания выключены');
+  pushToggle.disabled=false;
+  return;
+ }
+ if(!supported){
+  localStorage.setItem(PUSH_PREF_KEY,'false');
+  setPushState(false,'Этот браузер не поддерживает уведомления');
+  pushToggle.disabled=false;
+  return;
+ }
  try{
   let permission=Notification.permission;
   if(permission!=='granted'&&permission!=='denied')permission=await Notification.requestPermission();
-  if(permission==='granted'){
-   if(window.OneSignal?.User?.PushSubscription){await window.OneSignal.User.PushSubscription.optIn();}
-   setPushState(true,'Push-уведомления включены');
-  }else{
-   setPushState(false,permission==='denied'?'Разрешение запрещено в настройках iPhone':'Разрешение не получено');
+  if(permission!=='granted'){
+   localStorage.setItem(PUSH_PREF_KEY,'false');
+   setPushState(false,permission==='denied'?'Разрешите уведомления в настройках iPhone':'Разрешение не получено');
+   pushToggle.disabled=false;
+   return;
   }
- }catch(e){setPushState(false,'Не удалось подключить уведомления. Попробуйте ещё раз.');}
- }else{
-  try{if(window.OneSignal?.User?.PushSubscription){await window.OneSignal.User.PushSubscription.optOut();}}catch(e){}
-  setPushState(false,'Push-уведомления выключены');
- }});
+  if(!window.OneSignal?.User?.PushSubscription){
+   localStorage.setItem(PUSH_PREF_KEY,'false');
+   setPushState(false,'Сервис уведомлений ещё загружается. Обновите страницу');
+   pushToggle.disabled=false;
+   return;
+  }
+  await window.OneSignal.User.PushSubscription.optIn();
+  localStorage.setItem(PUSH_PREF_KEY,'true');
+  setPushState(true,'Разрешение сохранено на этом устройстве');
+ }catch(e){
+  localStorage.setItem(PUSH_PREF_KEY,'false');
+  setPushState(false,'Не удалось включить уведомления. Проверьте установку приложения');
+ }
+ pushToggle.disabled=false;
+});
 $('exportData').addEventListener('click',()=>{const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='waywhales-backup-'+today()+'.json';a.click();URL.revokeObjectURL(url);notify('Резервная копия подготовлена')});
 $('resetData').addEventListener('click',()=>{if(confirm('Удалить профиль, добавки и историю на этом устройстве? Это действие нельзя отменить.')){data=fresh();save();render();notify('Данные сброшены')}});
 
