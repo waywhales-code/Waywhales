@@ -160,6 +160,24 @@ body:before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opac
 .supp .check{color:#1d422e!important}
 .supp .check.on{color:#fff!important}
 
+
+/* Slightly slimmer, lower-set bottom navigation */
+.nav{
+ padding:7px 12px calc(5px + env(safe-area-inset-bottom))!important;
+ min-height:0!important;
+ align-items:center!important;
+}
+.nav button{
+ min-height:66px!important;
+ padding:8px 4px!important;
+ border-radius:20px!important;
+}
+.nav-icon{transform:translateY(1px)}
+@media(max-width:390px){
+ .nav{padding-left:7px!important;padding-right:7px!important}
+ .nav button{min-height:64px!important;padding-top:7px!important;padding-bottom:7px!important}
+}
+
 </style></head>
 <body><main class="shell">
 <header class="top"><div class="brand"><span class="brand-mark">🌿</span> Waywhales</div><div class="date-pill" id="todayLabel"></div></header>
