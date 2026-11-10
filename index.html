@@ -355,6 +355,30 @@ body:before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opac
   -webkit-text-fill-color:#8b3329!important;
 }
 
+
+/* Fix oversized Save button in the profile name editor on mobile */
+#profileView .profile-edit-actions{align-items:stretch!important;min-height:0!important}
+#profileView .profile-edit-actions #saveProfile,
+#profileView .profile-edit-actions .profile-cancel-btn{
+  box-sizing:border-box!important;
+  flex:0 1 auto!important;
+  width:auto!important;
+  height:52px!important;
+  min-height:52px!important;
+  max-height:52px!important;
+  padding:0 22px!important;
+  line-height:1.2!important;
+}
+@media(max-width:520px){
+  #profileView .profile-edit-actions{display:grid!important;grid-template-columns:1fr!important;gap:10px!important}
+  #profileView .profile-edit-actions #saveProfile,
+  #profileView .profile-edit-actions .profile-cancel-btn{
+    display:flex!important;align-items:center!important;justify-content:center!important;
+    width:100%!important;height:52px!important;min-height:52px!important;max-height:52px!important;
+    flex:none!important;
+  }
+}
+
 </style>
 </head>
 <body><div class="cosmos-scene" id="cosmosScene" aria-hidden="true"></div><main class="shell">
