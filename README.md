@@ -1,8 +1,8 @@
-# COSMIA ✦
+# COSMOS ✦
 
 **Created by Waywhales**
 
-COSMIA — дневник заботы о теле, душе и внутренней гармонии, созданный Waywhales. Статическое PWA-приложение на русском языке.
+COSMOS — дневник заботы о теле, душе и внутренней гармонии, созданный Waywhales. Статическое PWA-приложение на русском языке.
 
 ## Публикация
 В GitHub откройте **Settings → Pages**. В разделе **Build and deployment** выберите **Deploy from a branch**, ветку **main**, папку **/(root)** и нажмите **Save**. После публикации адрес будет иметь вид `https://waywhales-code.github.io/Waywhales/`.
