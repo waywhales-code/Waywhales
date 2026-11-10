@@ -434,7 +434,7 @@ body:before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opac
 /* Keep profile save button reliably tappable on iPhone */
 #profileView #saveProfile{position:relative!important;z-index:3!important;pointer-events:auto!important;touch-action:manipulation!important;cursor:pointer!important}
 
-/* Compact calendar: date-first flow and Estonian public holidays */
+/* Compact calendar: date-first flow and Russian public holidays */
 .calendar-legend{display:flex;gap:16px;flex-wrap:wrap;align-items:center;padding:8px 2px 2px;color:var(--muted);font-size:11px}
 .calendar-legend span{display:inline-flex;align-items:center;gap:7px}
 .calendar-legend i{display:inline-block;width:8px;height:8px;border-radius:50%}
@@ -457,7 +457,7 @@ body:before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opac
 <header class="top"><div class="brand"><span class="brand-mark">✦</span><span class="brand-name">COSMOS<small>by Waywhales</small></span></div><div class="date-pill" id="todayLabel"></div></header>
 <section class="hero"><div class="hero-row"><div><div class="eyebrow">ваш спокойный ритм</div><h1 id="greeting">Добро пожаловать</h1><p>Маленькие шаги заботы о себе — день за днём.</p></div><div class="hero-progress-wrap"><div class="progress-ring" id="progress">0%</div><div class="hero-progress-caption" id="progressCaption">Сегодня: 0 из 0 приёмов</div></div></div><div class="daily-quote"><div class="quote-label">МЫСЛЬ ДНЯ <span>✦</span></div><blockquote id="dailyQuote">Большие перемены начинаются с маленьких шагов.</blockquote><div class="quote-signature">— COSMOS ✦</div></div></section>
 <section id="homeView" class="view active"><div class="grid"><div class="panel"><div class="section-head"><div><h2>Сегодня</h2><p class="sub" id="todaySub">Ваш план приёма</p></div><button class="btn small" id="addBtn">＋ Добавить</button></div><div id="todayList" class="supp-list"></div></div><aside class="panel"><h2>Ваш ритм</h2><p class="sub">Небольшая статистика за сегодня</p><div class="stat-grid"><div class="stat"><strong id="statDone">0</strong><span>отмечено</span></div><div class="stat"><strong id="statTotal">0</strong><span>в плане</span></div><div class="stat"><strong id="statRate">0%</strong><span>выполнение</span></div><button class="stat stat-button" id="openMarkedHistory" type="button" aria-label="Нажмите, чтобы открыть историю отметок"><strong id="statStreak">0</strong><span id="markedDaysCaption">дней с отметками</span><small class="stat-open-hint">Нажмите, чтобы посмотреть историю ↗</small></button></div><p class="hint" style="margin-top:15px">Отмечайте приём по своему плану. Приложение не заменяет рекомендации врача.</p></aside></div></section>
-<section id="calendarView" class="view"><div class="panel"><div class="calendar-head"><button class="btn ghost small" id="prevMonth">‹</button><h2 id="monthTitle"></h2><button class="btn ghost small" id="nextMonth">›</button></div><div class="calendar" id="calendarGrid"></div><div class="calendar-legend"><span><i class="holiday"></i>Праздничный день</span><span><i class="marked"></i>Есть отметки</span></div><div class="selected-day-toolbar"><div class="selected-day-copy"><p class="sub" id="selectedDayLabel"></p><p class="selected-day-holiday" id="selectedDayHoliday" hidden></p></div><button class="btn small" id="addForSelectedDay" type="button">＋ Добавить приём</button></div><div class="selected-day-result" id="selectedDayResult"><div><span>Выполнение за день</span><strong id="selectedDayPercent">0%</strong></div><p id="selectedDayCounts">0 из 0 приёмов отмечено</p><div class="progress-track"><span id="selectedDayBar"></span></div></div><div id="dayHistory" class="supp-list"></div></div></section>
+<section id="calendarView" class="view"><div class="panel"><div class="calendar-head"><button class="btn ghost small" id="prevMonth">‹</button><h2 id="monthTitle"></h2><button class="btn ghost small" id="nextMonth">›</button></div><div class="calendar" id="calendarGrid"></div><div class="calendar-legend"><span><i class="holiday"></i>Праздник / выходной</span><span><i class="marked"></i>Есть отметки</span></div><div class="selected-day-toolbar"><div class="selected-day-copy"><p class="sub" id="selectedDayLabel"></p><p class="selected-day-holiday" id="selectedDayHoliday" hidden></p></div><button class="btn small" id="addForSelectedDay" type="button">＋ Добавить приём</button></div><div class="selected-day-result" id="selectedDayResult"><div><span>Выполнение за день</span><strong id="selectedDayPercent">0%</strong></div><p id="selectedDayCounts">0 из 0 приёмов отмечено</p><div class="progress-track"><span id="selectedDayBar"></span></div></div><div id="dayHistory" class="supp-list"></div></div></section>
 
 <section id="profileView" class="view profile-layout">
 <div class="profile-intro"><span class="eyebrow">ВАШЕ ЛИЧНОЕ ПРОСТРАНСТВО</span><h2>Профиль</h2><p>Настройте COSMOS под свой ритм</p></div>
@@ -504,19 +504,27 @@ function render(){renderDailyQuote();const n=data.name.trim();$('greeting').text
 function renderToday(){const list=$('todayList'),items=data.supplements.filter(x=>isScheduled(x,today())).sort((a,b)=>(a.time||'').localeCompare(b.time||'')),doneItems=items.filter(x=>completed(today(),x.id)),pending=items.filter(x=>!completed(today(),x.id));const done=doneItems.length,total=items.length,pct=total?Math.round(done/total*100):0;const currentMonth=monthRange(today().slice(0,7)),monthProgress=progressBetween(currentMonth.start,currentMonth.end);$('progress').textContent=monthProgress.pct+'%';$('progressCaption').textContent=monthProgress.planned?`За месяц: ${monthProgress.done} из ${monthProgress.planned} приёмов`:'За месяц пока нет приёмов';$('statDone').textContent=done;$('statTotal').textContent=total;$('statRate').textContent=pct+'%';$('statStreak').textContent=markedDaysCount();const marked=markedDaysCount();$('markedDaysCaption').textContent=marked===1?'день с отметками':marked>=2&&marked<=4?'дня с отметками':'дней с отметками';$('todaySub').textContent=total?done+' из '+total+' отмечено':'Добавьте первую позицию в свой план';list.innerHTML=pending.length?pending.map(x=>rowHTML(x,today())).join(''):'<div class="empty">'+(total?'Все запланированные приёмы отмечены 🌱 Отличная работа!':'Пока здесь пусто.<br>Добавьте первую добавку, чтобы начать вести дневник.')+'</div>';if(doneItems.length)list.innerHTML+='<button class="completed-toggle" type="button" id="toggleCompleted">✓ Выполнено сегодня: '+doneItems.length+' · показать</button><div id="completedToday" hidden>'+doneItems.map(x=>rowHTML(x,today())).join('')+'</div>';const flexible=data.supplements.filter(x=>x.repeat==='flexible').sort((a,b)=>(a.time||'').localeCompare(b.time||''));if(flexible.length)list.innerHTML+='<div class="flexible-plan-heading">Свободный график <span>отмечай, когда удобно</span></div>'+flexible.map(x=>rowHTML(x,today())).join('')}
 function rowHTML(x,day){const done=completed(day,x.id);return '<article class="supp '+(done?'done':'')+'"><div class="supp-icon">'+safe(x.icon||'🌿')+'</div><div class="supp-main"><div class="supp-name">'+safe(x.name)+'</div><div class="supp-meta">'+safe(x.dose||'Без заметки')+' · '+safe(x.time||'')+'</div></div><button class="check '+(done?'on':'')+'" data-action="toggle" data-id="'+safe(x.id)+'" data-day="'+safe(day)+'" aria-label="'+(done?'Снять отметку':'Отметить приём')+'">'+(done?'✓':'○')+'</button><div class="actions"><button class="icon-btn" data-action="duplicate" data-id="'+safe(x.id)+'" aria-label="Добавить похожую">＋</button><button class="icon-btn" data-action="edit" data-id="'+safe(x.id)+'" aria-label="Изменить">✎</button><button class="icon-btn" data-action="delete" data-id="'+safe(x.id)+'" aria-label="Удалить">×</button></div></article>'}
 function markedDaysCount(){return Object.entries(data.logs).filter(([,log])=>log&&Object.values(log).some(Boolean)).length}
-function easterSunday(year){
- const a=year%19,b=Math.floor(year/100),c=year%100,d=Math.floor(b/4),e=b%4,f=Math.floor((b+8)/25),g=Math.floor((b-f+1)/3),h=(19*a+b-d-g+15)%30,i=Math.floor(c/4),k=c%4,l=(32+2*e+2*i-h-k)%7,m=Math.floor((a+11*h+22*l)/451),month=Math.floor((h+l-7*m+114)/31)-1,day=((h+l-7*m+114)%31)+1;
- return new Date(year,month,day,12);
-}
-function estonianHolidays(year){
- const fixed=[['01-01','Новый год'],['02-24','День независимости Эстонии'],['05-01','Весенний праздник'],['06-23','День победы'],['06-24','Яанов день'],['08-20','День восстановления независимости'],['12-24','Сочельник'],['12-25','Рождество'],['12-26','Второй день Рождества']];
- const map={};fixed.forEach(([md,name])=>map[year+'-'+md]=name);
- const easter=easterSunday(year),add=(offset,name)=>{const d=new Date(easter);d.setDate(d.getDate()+offset);map[dateKey(d)]=name};
- add(-2,'Страстная пятница');add(0,'Пасха');add(49,'Троица');
+function russianHolidays(year){
+ const map={};
+ const add=(date,name)=>{map[year+'-'+date]=name};
+ const range=(from,to,name)=>{for(let d=from;d<=to;d++)add(String(d).padStart(2,'0')+'-'+(from>20&&to<=31?'01':'01'),name)};
+ const fixed=[
+  ['01-01','Новогодние каникулы'],['01-02','Новогодние каникулы'],['01-03','Новогодние каникулы'],['01-04','Новогодние каникулы'],
+  ['01-05','Новогодние каникулы'],['01-06','Новогодние каникулы'],['01-07','Рождество Христово'],['01-08','Новогодние каникулы'],
+  ['02-23','День защитника Отечества'],['03-08','Международный женский день'],['05-01','Праздник Весны и Труда'],
+  ['05-09','День Победы'],['06-12','День России'],['11-04','День народного единства']
+ ];
+ fixed.forEach(([date,name])=>add(date,name));
+ if(year===2026){
+  [['01-09','Перенос выходного дня'],['02-21','Выходной день'],['02-22','Выходной день'],['03-07','Выходной день'],['03-09','Перенос выходного дня'],['05-02','Выходной день'],['05-03','Выходной день'],['05-10','Выходной день'],['05-11','Перенос выходного дня'],['06-13','Выходной день'],['06-14','Выходной день'],['12-31','Перенос выходного дня']].forEach(([date,name])=>add(date,name));
+ }
+ if(year===2027){
+  [['02-21','Выходной день'],['02-22','Перенос выходного дня'],['03-06','Выходной день'],['03-07','Выходной день'],['05-02','Выходной день'],['05-03','Перенос выходного дня'],['05-08','Выходной день'],['05-10','Перенос выходного дня'],['06-13','Выходной день'],['06-14','Перенос выходного дня'],['11-05','Перенос выходного дня'],['11-06','Выходной день'],['11-07','Выходной день'],['12-31','Перенос выходного дня']].forEach(([date,name])=>add(date,name));
+ }
  return map;
 }
 function renderCalendar(){
- const y=month.getFullYear(),m=month.getMonth(),holidays=estonianHolidays(y);
+ const y=month.getFullYear(),m=month.getMonth(),holidays=russianHolidays(y);
  $('monthTitle').textContent=month.toLocaleDateString('ru-RU',{month:'long',year:'numeric'});
  const first=new Date(y,m,1),offset=(first.getDay()+6)%7,days=new Date(y,m+1,0).getDate();
  let h=['Пн','Вт','Ср','Чт','Пт','Сб','Вс'].map(x=>'<div class="dayname">'+x+'</div>').join('');
@@ -527,7 +535,7 @@ function renderCalendar(){
   h+='<button type="button" class="'+cls+'" data-daypick="'+key+'"'+(holiday?' title="'+safe(holiday)+'"':'')+' aria-label="'+safe(holiday?d+', '+holiday:d)+'">'+d+(has?'<i class="dot"></i>':'')+'</button>';
  }
  $('calendarGrid').innerHTML=h;
- const dt=new Date(selected+'T12:00:00'),holiday=estonianHolidays(dt.getFullYear())[selected]||'';
+ const dt=new Date(selected+'T12:00:00'),holiday=russianHolidays(dt.getFullYear())[selected]||'';
  $('selectedDayLabel').textContent=dt.toLocaleDateString('ru-RU',{weekday:'long',day:'numeric',month:'long'});
  $('selectedDayHoliday').textContent=holiday;$('selectedDayHoliday').hidden=!holiday;
  const archived=data.archivedSupplements||[];
