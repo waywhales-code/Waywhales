@@ -721,7 +721,7 @@ $('aiChatForm').addEventListener('submit',async e=>{
  aiHistory.push({role:'user',content:question});aiAddMessage('user',question);
  const pending=aiAddMessage('assistant','Готовлю ответ…','ai-pending');
  try{
-  const response=await fetch(aiEndpoint,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:aiHistory.slice(-12)})});
+  const response=await fetch(aiEndpoint,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:aiHistory.slice(-12),language:document.body.dataset.language||'ru'})});
   const data=await response.json().catch(()=>({}));
   if(!response.ok)throw new Error(data.error||'Не удалось получить ответ');
   const answer=String(data.answer||'').trim();if(!answer)throw new Error('Ответ пока пуст. Попробуйте переформулировать вопрос.');
@@ -1265,6 +1265,10 @@ function translateValue(value){
  const base=baseText(clean(value));
  if(current==='ru')return base;
  if(dicts[current][base])return dicts[current][base];
+ let m=base.match(/^Рады видеть, (.+)$/);
+ if(m)return current==='en'?'Welcome back, '+m[1]+' 🌱':current==='uk'?'Раді вас бачити, '+m[1]+' 🌱':'Қайта келгеніңізге қуаныштымыз, '+m[1]+' 🌱';
+ m=base.match(/^✓ Выполнено: (\d+) · (показать|скрыть)$/);
+ if(m)return current==='en'?'✓ Completed: '+m[1]+' · '+(m[2]==='показать'?'show':'hide'):current==='uk'?'✓ Виконано: '+m[1]+' · '+(m[2]==='показать'?'показати':'сховати'):'✓ Орындалды: '+m[1]+' · '+(m[2]==='показать'?'көрсету':'жасыру');
  let m=base.match(/^За месяц: (\d+) из (\d+) приёмов$/);
  if(m)return current==='en'?'This month: '+m[1]+' of '+m[2]+' entries':current==='uk'?'За місяць: '+m[1]+' із '+m[2]+' прийомів':'Осы айда: '+m[1]+' / '+m[2]+' қабылдау';
  m=base.match(/^(\d+) из (\d+) приёмов отмечено$/);
