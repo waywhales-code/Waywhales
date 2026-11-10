@@ -1269,7 +1269,7 @@ function translateValue(value){
  if(m)return current==='en'?'Welcome back, '+m[1]+' 🌱':current==='uk'?'Раді вас бачити, '+m[1]+' 🌱':'Қайта келгеніңізге қуаныштымыз, '+m[1]+' 🌱';
  m=base.match(/^✓ Выполнено: (\d+) · (показать|скрыть)$/);
  if(m)return current==='en'?'✓ Completed: '+m[1]+' · '+(m[2]==='показать'?'show':'hide'):current==='uk'?'✓ Виконано: '+m[1]+' · '+(m[2]==='показать'?'показати':'сховати'):'✓ Орындалды: '+m[1]+' · '+(m[2]==='показать'?'көрсету':'жасыру');
- let m=base.match(/^За месяц: (\d+) из (\d+) приёмов$/);
+ m=base.match(/^За месяц: (\d+) из (\d+) приёмов$/);
  if(m)return current==='en'?'This month: '+m[1]+' of '+m[2]+' entries':current==='uk'?'За місяць: '+m[1]+' із '+m[2]+' прийомів':'Осы айда: '+m[1]+' / '+m[2]+' қабылдау';
  m=base.match(/^(\d+) из (\d+) приёмов отмечено$/);
  if(m)return current==='en'?m[1]+' of '+m[2]+' entries completed':current==='uk'?m[1]+' із '+m[2]+' прийомів відмічено':m[1]+' / '+m[2]+' қабылдау белгіленді';
