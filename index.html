@@ -541,6 +541,13 @@ function saveProfileName(){
 document.addEventListener('click',e=>{const button=e.target.closest('#saveProfile');if(!button)return;e.preventDefault();e.stopPropagation();saveProfileName()});
 $('nameInput').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();saveProfileName()}});
 $('addCourse').addEventListener('click',()=>{const course={id:uid(),name:'',startDate:today(),durationDays:30,status:'active'};data.courses.push(course);if(!save()){data.courses=data.courses.filter(x=>x.id!==course.id);return}renderCourses();notify('Новый курс добавлен 🌱')});
+$('coursesList').addEventListener('input',e=>{
+ const field=e.target.closest('[data-course-field="name"]'),card=field?.closest('[data-course-card]');
+ if(!field||!card)return;
+ const course=data.courses.find(x=>x.id===card.dataset.courseCard);if(!course)return;
+ const previous=course.name;course.name=field.value.trim();
+ if(!save()){course.name=previous;field.value=previous}
+});
 $('coursesList').addEventListener('change',e=>{
  const field=e.target.closest('[data-course-field]'),card=field?.closest('[data-course-card]');
  if(!field||!card)return;
