@@ -1092,6 +1092,7 @@ body.calendar-view #calendarView>.panel{margin-top:0}
 <script id="cosmos-language-switcher">
 (()=>{
 'use strict';
+try{
 const STORAGE_KEY='cosmos.language';
 // Isolated, fail-safe language layer; app startup must never depend on translation.
 const locales={ru:'ru-RU',kk:'kk-KZ',uk:'uk-UA',en:'en-US'};
@@ -1306,16 +1307,25 @@ function translateAttributes(root){
   });
  });
 }
+let observer=null,applying=false;
 function apply(root=document.body){
- if(!root)return;
- const walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);
- let node;while((node=walker.nextNode()))translateNode(node);
- translateAttributes(root);
- document.documentElement.lang=current;
- document.body.dataset.language=current;
- const toggle=document.getElementById('cosmosLanguageToggle');
- if(toggle)toggle.innerHTML='<span aria-hidden="true">🌐</span><span>'+({ru:'RU',kk:'KZ',uk:'UK',en:'EN'}[current])+'</span>';
+ if(!root||applying)return;
+ applying=true;
+ if(observer)observer.disconnect();
+ try{
+  const walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);
+  let node;while((node=walker.nextNode()))translateNode(node);
+  translateAttributes(root);
+  document.documentElement.lang=current;
+  document.body.dataset.language=current;
+  const toggle=document.getElementById('cosmosLanguageToggle');
+  if(toggle)toggle.innerHTML='<span aria-hidden="true">🌐</span><span>'+({ru:'RU',kk:'KZ',uk:'UK',en:'EN'}[current])+'</span>';
+ } finally {
+  applying=false;
+  if(observer)observer.observe(document.body,{subtree:true,childList:true,characterData:true});
+ }
 }
+
 function setLanguage(lang){
  if(!['ru','kk','uk','en'].includes(lang))return;
  current=lang;try{localStorage.setItem(STORAGE_KEY,lang)}catch(e){}
@@ -1345,10 +1355,22 @@ toggle.addEventListener('click',()=>{menu.hidden=!menu.hidden;toggle.setAttribut
 document.addEventListener('click',e=>{if(!menu.hidden&&!menu.contains(e.target)&&e.target!==toggle&&!toggle.contains(e.target)){menu.hidden=true;toggle.setAttribute('aria-expanded','false')}});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){menu.hidden=true;toggle.setAttribute('aria-expanded','false')}});
 document.body.append(toggle,menu);
-const observer=new MutationObserver(records=>{for(const r of records){if(r.type==='characterData')translateNode(r.target);else r.addedNodes.forEach(n=>{if(n.nodeType===Node.TEXT_NODE)translateNode(n);else if(n.nodeType===Node.ELEMENT_NODE)apply(n)})}});
-observer.observe(document.body,{subtree:true,childList:true,characterData:true});
+observer=new MutationObserver(records=>{
+ if(applying)return;
+ for(const r of records){
+  if(r.type==='characterData')translateNode(r.target);
+  else r.addedNodes.forEach(n=>{
+   if(n.nodeType===Node.TEXT_NODE)translateNode(n);
+   else if(n.nodeType===Node.ELEMENT_NODE)apply(n);
+  });
+ }
+});
 apply();
+observer.observe(document.body,{subtree:true,childList:true,characterData:true});
 document.addEventListener('cosmos-language-change',()=>{setTimeout(()=>apply(),0)});
+document.dispatchEvent(new Event('cosmos-language-change'));
+}catch(error){console.error('COSMOS language selector failed safely:',error)}
+
 })();
 </script>
 </body></html>
