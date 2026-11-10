@@ -1260,9 +1260,9 @@ let current='ru';
 try{const v=localStorage.getItem(STORAGE_KEY);if(['ru','kk','uk','en'].includes(v))current=v}catch(e){}
 window.cosmosLocale=locales[current];
 const clean=s=>String(s).replace(/\u00a0/g,' ');
+const originalTextNodes=new WeakMap(),originalAttributes=new WeakMap();
 function baseText(s){return reverse[current].get(s)||s}
-function translateValue(value){
- const base=baseText(clean(value));
+function translateBase(base){
  if(current==='ru')return base;
  if(dicts[current][base])return dicts[current][base];
  let m=base.match(/^Рады видеть, (.+)$/);
@@ -1279,11 +1279,14 @@ function translateValue(value){
  if(m)return current==='en'?'Result for '+m[1]:current==='uk'?'Результат за '+m[1]:'Нәтиже: '+m[1];
  return base;
 }
+function translateValue(value){return translateBase(baseText(clean(value)))}
 function translateNode(node){
  const p=node.parentElement;if(!p||p.closest('script,style,textarea,.ai-message-content,.supp-name,.supp-meta'))return;
  const raw=node.nodeValue||'',trim=raw.trim();if(!trim)return;
- const lead=raw.match(/^\s*/)?.[0]||'',trail=raw.match(/\s*$/)?.[0]||'';
- const translated=translateValue(trim);
+ const lead=raw.match(/^\\s*/)?.[0]||'',trail=raw.match(/\\s*$/)?.[0]||'';
+ const original=originalTextNodes.has(node)?originalTextNodes.get(node):baseText(trim);
+ originalTextNodes.set(node,original);
+ const translated=translateBase(original);
  if(translated!==trim)node.nodeValue=lead+translated+trail;
 }
 function translateAttributes(root){
@@ -1291,7 +1294,12 @@ function translateAttributes(root){
  els.forEach(el=>{
   ['placeholder','aria-label','title','data-ai-prompt'].forEach(attr=>{
    if(!el.hasAttribute?.(attr))return;
-   const value=el.getAttribute(attr),next=translateValue(value);
+   const value=el.getAttribute(attr);
+   let originals=originalAttributes.get(el);
+   if(!originals){originals=new Map();originalAttributes.set(el,originals)}
+   const original=originals.has(attr)?originals.get(attr):baseText(clean(value));
+   originals.set(attr,original);
+   const next=translateBase(original);
    if(next!==value)el.setAttribute(attr,next);
   });
  });
