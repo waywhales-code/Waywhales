@@ -1,6 +1,8 @@
-# Waywhales 🌱
+# Sprout 🌱
 
-Мобильный дневник добавок — статическое PWA-приложение на русском языке.
+**Created by Waywhales**
+
+Sprout — мобильный дневник добавок и заботы о себе, созданный Waywhales. Статическое PWA-приложение на русском языке.
 
 ## Публикация
 В GitHub откройте **Settings → Pages**. В разделе **Build and deployment** выберите **Deploy from a branch**, ветку **main**, папку **/(root)** и нажмите **Save**. После публикации адрес будет иметь вид `https://waywhales-code.github.io/Waywhales/`.
