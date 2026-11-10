@@ -431,6 +431,8 @@ body:before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opac
   border:1px solid #cbd9c7!important;box-shadow:none!important;
 }
 
+/* Keep profile save button reliably tappable on iPhone */
+#profileView #saveProfile{position:relative!important;z-index:3!important;pointer-events:auto!important;touch-action:manipulation!important;cursor:pointer!important}
 </style>
 </head>
 <body><div class="cosmos-scene" id="cosmosScene" aria-hidden="true"></div><main class="shell">
@@ -457,6 +459,7 @@ body:before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opac
 'use strict';
 const KEY='waywhales.v1';
 const PROFILE_NAME_KEY=KEY+'.profileName';
+const PROFILE_PHOTO_KEY=KEY+'.profilePhoto';
 const $=id=>document.getElementById(id);
 const today=()=>{const d=new Date();return [d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-')};
 const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
@@ -465,7 +468,8 @@ const fresh=()=>({name:'',photo:'',supplements:[],logs:{},courses:[]});
 let data=fresh(),month=new Date(),selected=today(),toastTimer,calendarAddMode=false;
 try{const saved=JSON.parse(localStorage.getItem(KEY)||'null');if(saved&&typeof saved==='object'){data={...fresh(),...saved};if(!Array.isArray(data.supplements))data.supplements=[];if(!data.logs||typeof data.logs!=='object')data.logs={};if(!Array.isArray(data.courses)){data.courses=[];for(const id of [2,3]){const old=data['course'+id];if(old&&(old.name||old.startDate)){data.courses.push({id:uid(),name:old.name||'',startDate:old.startDate||'',durationDays:old.durationDays||30,status:'active'})}delete data['course'+id]}}}}catch(e){console.warn('Не удалось прочитать локальные данные',e)}
 try{const separateName=localStorage.getItem(PROFILE_NAME_KEY);if(separateName!==null)data.name=separateName}catch(e){console.warn('Не удалось прочитать имя профиля',e)}
-function save(){try{localStorage.setItem(KEY,JSON.stringify(data));return true}catch(e){notify('Не удалось сохранить: возможно, закончилось место в памяти браузера.');return false}}
+try{const separatePhoto=localStorage.getItem(PROFILE_PHOTO_KEY);if(separatePhoto)data.photo=separatePhoto}catch(e){console.warn('Не удалось прочитать фото профиля',e)}
+function save(){try{if(data.photo)localStorage.setItem(PROFILE_PHOTO_KEY,data.photo);const compact={...data};delete compact.photo;localStorage.setItem(KEY,JSON.stringify(compact));if(!data.photo)localStorage.removeItem(PROFILE_PHOTO_KEY);const check=JSON.parse(localStorage.getItem(KEY)||'null');const photoCheck=data.photo?localStorage.getItem(PROFILE_PHOTO_KEY):null;if(!check||check.name!==data.name||(data.photo&&photoCheck!==data.photo))throw new Error('Storage verification failed');return true}catch(e){notify('Не удалось сохранить все данные. Проверьте свободное место в Safari.');return false}}
 function notify(msg){const t=$('toast');t.textContent=msg;t.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('show'),2600)}
 function notifyUndo(msg,undo){const t=$('toast');t.replaceChildren();const label=document.createElement('span');label.textContent=msg;const button=document.createElement('button');button.type='button';button.textContent='Отменить';button.style.cssText='margin-left:12px;border:0;border-radius:9px;padding:7px 10px;background:#e6eee1;color:#173d31;font-weight:700';button.addEventListener('click',()=>{clearTimeout(toastTimer);t.classList.remove('show');undo()},{once:true});t.append(label,button);t.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('show'),5000)}
 function dayLog(day){if(!data.logs[day]||typeof data.logs[day]!=='object')data.logs[day]={};return data.logs[day]}
@@ -510,22 +514,25 @@ $('cancelProfileEdit').addEventListener('click',()=>{$('profileEditPanel').hidde
 function saveProfileName(){
  const input=$('nameInput'),next=input.value.trim(),previous=data.name||'';
  if(!next){notify('Введите имя профиля');input.focus();return}
+ let nameStored=false;
+ try{localStorage.setItem(PROFILE_NAME_KEY,next);nameStored=localStorage.getItem(PROFILE_NAME_KEY)===next}catch(e){}
+ if(!nameStored){notify('Имя не сохранено. Разрешите Safari хранить данные сайта.');return}
  data.name=next;
- let separateSaved=false;
- try{localStorage.setItem(PROFILE_NAME_KEY,next);separateSaved=localStorage.getItem(PROFILE_NAME_KEY)===next}catch(e){}
- let mainSaved=false;
- try{localStorage.setItem(KEY,JSON.stringify(data));const check=JSON.parse(localStorage.getItem(KEY)||'null');mainSaved=!!check&&check.name===next}catch(e){}
- if(!separateSaved&&!mainSaved){data.name=previous;notify('Не удалось сохранить имя. Проверьте настройки хранения Safari.');return}
- render();$('profileEditPanel').hidden=true;notify('Имя профиля сохранено');
+ const allSaved=save();
+ $('profileName').textContent=next;
+ $('greeting').textContent='Рады видеть, '+next+' 🌱';
+ $('profileEditPanel').hidden=true;
+ $('photoInput').value='';
+ notify(allSaved?'Имя профиля сохранено':'Имя сохранено отдельно; проверьте память Safari для остальных данных');
 }
-$('saveProfile').addEventListener('click',e=>{e.preventDefault();e.stopPropagation();saveProfileName()});
+document.addEventListener('click',e=>{const button=e.target.closest('#saveProfile');if(!button)return;e.preventDefault();e.stopPropagation();saveProfileName()});
 $('nameInput').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();saveProfileName()}});
 $('addCourse').addEventListener('click',()=>{data.courses.push({id:uid(),name:'',startDate:today(),durationDays:30,status:'active'});renderCourses();save();notify('Новый курс добавлен 🌱')});
 $('saveCourses').addEventListener('click',()=>{for(const card of document.querySelectorAll('[data-course-card]')){const id=card.dataset.courseCard,c=data.courses.find(x=>x.id===id);if(!c)continue;const days=Number(card.querySelector('[data-course-field="durationDays"]').value);if(!Number.isInteger(days)||days<1||days>730){notify('Продолжительность должна быть от 1 до 730 дней');return}c.name=card.querySelector('[data-course-field="name"]').value.trim();c.startDate=card.querySelector('[data-course-field="startDate"]').value;c.durationDays=days;c.status=card.querySelector('[data-course-field="status"]').value}save();renderCourses();notify('Курсы сохранены 🌿')});
 $('coursesList').addEventListener('click',e=>{const b=e.target.closest('[data-course-delete]');if(!b)return;const id=b.dataset.courseDelete;if(confirm('Удалить этот курс?')){data.courses=data.courses.filter(c=>c.id!==id);save();renderCourses();notify('Курс удалён')}});
 $('openMarkedHistory').addEventListener('click',()=>{const dates=Object.entries(data.logs).filter(([,log])=>log&&Object.values(log).some(Boolean)).map(([day])=>day).sort();selected=dates.length?dates[dates.length-1]:today();document.querySelectorAll('.nav button').forEach(x=>x.classList.toggle('active',x.dataset.view==='calendar'));document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));$('calendarView').classList.add('active');const d=new Date(selected+'T12:00:00');month=new Date(d.getFullYear(),d.getMonth(),1);renderCalendar();$('calendarView').scrollIntoView({behavior:'smooth',block:'start'})});
-$('photoInput').addEventListener('change',e=>{const f=e.target.files&&e.target.files[0];if(!f)return;if(f.type&&!f.type.startsWith('image/')){notify('Пожалуйста, выберите фотографию');e.target.value='';return}const reader=new FileReader();reader.onload=()=>{const img=new Image();img.onload=()=>{try{const maxSide=640,scale=Math.min(1,maxSide/Math.max(img.width,img.height)),c=document.createElement('canvas');c.width=Math.max(1,Math.round(img.width*scale));c.height=Math.max(1,Math.round(img.height*scale));const ctx=c.getContext('2d');ctx.fillStyle='#ffffff';ctx.fillRect(0,0,c.width,c.height);ctx.drawImage(img,0,0,c.width,c.height);let quality=.78,result=c.toDataURL('image/jpeg',quality);while(result.length>550000&&quality>.48){quality-=.08;result=c.toDataURL('image/jpeg',quality)}data.photo=result;save();renderProfile();notify('Фото добавлено и автоматически уменьшено')}catch(err){notify('Не удалось сохранить фото. Попробуйте другое изображение')}};img.onerror=()=>notify('Формат фото не поддерживается. Выберите JPG или PNG');img.src=reader.result};reader.onerror=()=>notify('Не удалось открыть файл фото');reader.readAsDataURL(f);e.target.value=''});
-$('removePhoto').addEventListener('click',()=>{if(!data.photo){notify('Фото профиля ещё не добавлено');return}if(confirm('Удалить фото профиля?')){data.photo='';save();renderProfile();notify('Фото удалено')}document.querySelector('.photo-menu')?.removeAttribute('open')});
+$('photoInput').addEventListener('change',e=>{const f=e.target.files&&e.target.files[0];if(!f)return;if(f.type&&!f.type.startsWith('image/')){notify('Пожалуйста, выберите фотографию');e.target.value='';return}const reader=new FileReader();reader.onload=()=>{const img=new Image();img.onload=()=>{try{const maxSide=420,scale=Math.min(1,maxSide/Math.max(img.width,img.height)),c=document.createElement('canvas');c.width=Math.max(1,Math.round(img.width*scale));c.height=Math.max(1,Math.round(img.height*scale));const ctx=c.getContext('2d');ctx.fillStyle='#ffffff';ctx.fillRect(0,0,c.width,c.height);ctx.drawImage(img,0,0,c.width,c.height);let quality=.62,result=c.toDataURL('image/jpeg',quality);while(result.length>180000&&quality>.36){quality-=.05;result=c.toDataURL('image/jpeg',quality)}const previous=data.photo;data.photo=result;if(!save()){data.photo=previous;renderProfile();return}renderProfile();notify('Фото профиля сохранено')}catch(err){notify('Не удалось сохранить фото. Попробуйте другое изображение')}};img.onerror=()=>notify('Формат фото не поддерживается. Выберите JPG или PNG');img.src=reader.result};reader.onerror=()=>notify('Не удалось открыть файл фото');reader.readAsDataURL(f);e.target.value=''});
+$('removePhoto').addEventListener('click',()=>{if(!data.photo){notify('Фото профиля ещё не добавлено');return}if(confirm('Удалить фото профиля?')){const previous=data.photo;data.photo='';if(!save()){data.photo=previous;return}renderProfile();notify('Фото удалено')}document.querySelector('.photo-menu')?.removeAttribute('open')});
 $('exportData').addEventListener('click',()=>{const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='waywhales-backup-'+today()+'.json';a.click();URL.revokeObjectURL(url);notify('Резервная копия подготовлена')});
 $('resetData').addEventListener('click',()=>{if(confirm('Удалить профиль, добавки и историю на этом устройстве? Это действие нельзя отменить.')){data=fresh();save();render();notify('Данные сброшены')}});
 
