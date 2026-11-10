@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#102b20"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png"><meta name="description" content="COSMOS — дневник заботы о теле, душе и внутренней гармонии. by Waywhales.">
+<meta name="theme-color" content="#102b20"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png"><meta name="description" content="COSMOS — дневник заботы о теле, душе и внутренней гармонии. by Waywhales."><meta name="cosmos-ai-endpoint" content="">
 <link rel="manifest" href="./manifest.webmanifest"><link rel="icon" href="./apple-touch-icon.png" type="image/png"><link rel="icon" href="./apple-touch-icon.png" type="image/png">
 <title>COSMOS ✦</title>
 <style>
@@ -481,7 +481,7 @@ body:before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opac
 <body><div class="cosmos-scene" id="cosmosScene" aria-hidden="true"></div><main class="shell">
 <header class="top"><div class="brand"><span class="brand-mark">✦</span><span class="brand-name">COSMOS<small>by Waywhales</small></span></div><div class="date-pill" id="todayLabel"></div></header>
 <section class="hero"><div class="hero-row"><div><div class="eyebrow">ваш спокойный ритм</div><h1 id="greeting">Добро пожаловать</h1><p>Маленькие шаги заботы о себе — день за днём.</p></div><div class="hero-progress-wrap"><div class="progress-ring" id="progress">0%</div><div class="hero-progress-caption" id="progressCaption">Сегодня: 0 из 0 приёмов</div></div></div><div class="daily-quote"><div class="quote-label">МЫСЛЬ ДНЯ <span>✦</span></div><blockquote id="dailyQuote">Большие перемены начинаются с маленьких шагов.</blockquote><div class="quote-signature">— WAYWHALES</div></div></section>
-<section id="homeView" class="view active"><div class="grid"><div class="panel"><div class="section-head"><div><h2>Сегодня</h2><p class="sub" id="todaySub">Ваш план приёма</p></div><button class="btn small" id="addBtn">＋ Добавить</button></div><div id="todayList" class="supp-list"></div></div><aside class="panel"><h2>Ваш ритм</h2><p class="sub">Небольшая статистика за сегодня</p><div class="stat-grid"><div class="stat"><strong id="statDone">0</strong><span>отмечено</span></div><div class="stat"><strong id="statTotal">0</strong><span>в плане</span></div><div class="stat"><strong id="statRate">0%</strong><span>выполнение</span></div><button class="stat stat-button" id="openMarkedHistory" type="button" aria-label="Нажмите, чтобы открыть историю отметок"><strong id="statStreak">0</strong><span id="markedDaysCaption">дней с отметками</span><small class="stat-open-hint">Нажмите, чтобы посмотреть историю ↗</small></button></div><p class="hint" style="margin-top:15px">Отмечайте приём по своему плану. Приложение не заменяет рекомендации врача.</p></aside></div></section>
+<section id="homeView" class="view active"><div class="grid"><div class="panel"><div class="section-head"><div><h2>Сегодня</h2><p class="sub" id="todaySub">Ваш план приёма</p></div><button class="btn small" id="addBtn">＋ Добавить</button></div><div id="todayList" class="supp-list"></div></div><aside class="panel"><h2>Ваш ритм</h2><p class="sub">Небольшая статистика за сегодня</p><div class="stat-grid"><div class="stat"><strong id="statDone">0</strong><span>отмечено</span></div><div class="stat"><strong id="statTotal">0</strong><span>в плане</span></div><div class="stat"><strong id="statRate">0%</strong><span>выполнение</span></div><button class="stat stat-button" id="openMarkedHistory" type="button" aria-label="Нажмите, чтобы открыть историю отметок"><strong id="statStreak">0</strong><span id="markedDaysCaption">дней с отметками</span><small class="stat-open-hint">Нажмите, чтобы посмотреть историю ↗</small></button></div><p class="hint" style="margin-top:15px">Отмечайте приём по своему плану. Приложение не заменяет рекомендации врача.</p></aside></div><div class="panel ai-launcher"><div class="ai-launcher-mark">✦</div><div class="ai-launcher-copy"><div class="ai-launcher-kicker">COSMOS AI</div><h3>Помощник по здоровью</h3><p>Разбирайтесь в витаминах, добавках, анализах и вопросах самочувствия простыми словами.</p></div><button class="btn ai-open-button" id="openAiChat" type="button">Открыть помощника</button><span class="ai-launcher-note" id="aiLauncherStatus">Подключение ИИ настраивается</span></div></section>
 <section id="calendarView" class="view"><div class="panel"><div class="calendar-head"><button class="btn ghost small" id="prevMonth">‹</button><h2 id="monthTitle"></h2><button class="btn ghost small" id="nextMonth">›</button></div><div class="calendar" id="calendarGrid"></div><div class="calendar-legend"><span><i class="holiday"></i>Праздник / выходной</span><span><i class="marked"></i>Есть отметки</span></div><div class="selected-day-toolbar"><div class="selected-day-copy"><p class="sub" id="selectedDayLabel"></p><p class="selected-day-holiday" id="selectedDayHoliday" hidden></p></div><button class="btn small" id="addForSelectedDay" type="button">＋ Добавить приём</button></div><div class="selected-day-result" id="selectedDayResult"><div><span>Выполнение за день</span><strong id="selectedDayPercent">0%</strong></div><p id="selectedDayCounts">0 из 0 приёмов отмечено</p><div class="progress-track"><span id="selectedDayBar"></span></div></div><div id="dayHistory" class="supp-list"></div></div></section>
 
 <section id="profileView" class="view profile-layout">
@@ -496,7 +496,29 @@ body:before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opac
 <button data-view="calendar"><span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="5" width="17" height="16" rx="2"/><path d="M7.5 3v4M16.5 3v4M3.5 9h17M8 12.5h.01M12 12.5h.01M16 12.5h.01M8 16.5h.01M12 16.5h.01M16 16.5h.01"/></svg></span><span>Календарь</span></button>
 <button data-view="profile"><span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.5"/><path d="M4.5 20c.7-3.6 3.4-5.5 7.5-5.5s6.8 1.9 7.5 5.5"/></svg></span><span>Профиль</span></button>
 </nav>
-<div class="modal" id="suppModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><form class="dialog" id="suppForm"><h2 id="modalTitle">Новая добавка</h2><input type="hidden" id="suppId"><div class="field"><label for="suppName">Название</label><input id="suppName" maxlength="70" required placeholder="Например, Витамин D"></div><div class="field"><label for="suppDose">Дозировка / заметка</label><input id="suppDose" maxlength="80" placeholder="Например, 1 капсула"></div><div class="field"><label for="suppTime">Время приёма</label><input id="suppTime" type="time" value="09:00" required></div><div class="field"><label for="suppStartDate">Дата начала</label><input id="suppStartDate" type="date" required><small class="schedule-note">С этой даты добавка появится в плане.</small></div><div class="field"><label for="suppRepeat">График приёма</label><select id="suppRepeat"><option value="daily">Каждый день</option><option value="selectedDays">По выбранным дням недели</option><option value="weekly">Раз в неделю (в день начала)</option><option value="flexible">Свободный график — отмечать вручную</option><option value="once">Только один раз</option></select></div><div class="field" id="weekDaysField" hidden><label>Дни недели</label><div class="weekday-picker"><label><input type="checkbox" name="weekDay" value="0"><span>Пн</span></label><label><input type="checkbox" name="weekDay" value="1"><span>Вт</span></label><label><input type="checkbox" name="weekDay" value="2"><span>Ср</span></label><label><input type="checkbox" name="weekDay" value="3"><span>Чт</span></label><label><input type="checkbox" name="weekDay" value="4"><span>Пт</span></label><label><input type="checkbox" name="weekDay" value="5"><span>Сб</span></label><label><input type="checkbox" name="weekDay" value="6"><span>Вс</span></label></div></div><div class="field"><label for="suppEndDate">Дата окончания (необязательно)</label><input id="suppEndDate" type="date"><small class="schedule-note">Оставь пустым, если график без срока.</small></div><div class="field"><label for="suppIcon">Значок</label><select id="suppIcon"><option>🌿</option><option>☀️</option><option>💧</option><option>🍃</option><option>🌼</option><option>🫐</option><option>✨</option></select></div><div class="dialog-actions"><button type="button" class="btn ghost" id="cancelModal">Отмена</button><button class="btn" type="submit">Сохранить</button></div></form></div><div class="toast" id="toast" role="status"></div>
+<div class="modal" id="suppModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><form class="dialog" id="suppForm"><h2 id="modalTitle">Новая добавка</h2><input type="hidden" id="suppId"><div class="field"><label for="suppName">Название</label><input id="suppName" maxlength="70" required placeholder="Например, Витамин D"></div><div class="field"><label for="suppDose">Дозировка / заметка</label><input id="suppDose" maxlength="80" placeholder="Например, 1 капсула"></div><div class="field"><label for="suppTime">Время приёма</label><input id="suppTime" type="time" value="09:00" required></div><div class="field"><label for="suppStartDate">Дата начала</label><input id="suppStartDate" type="date" required><small class="schedule-note">С этой даты добавка появится в плане.</small></div><div class="field"><label for="suppRepeat">График приёма</label><select id="suppRepeat"><option value="daily">Каждый день</option><option value="selectedDays">По выбранным дням недели</option><option value="weekly">Раз в неделю (в день начала)</option><option value="flexible">Свободный график — отмечать вручную</option><option value="once">Только один раз</option></select></div><div class="field" id="weekDaysField" hidden><label>Дни недели</label><div class="weekday-picker"><label><input type="checkbox" name="weekDay" value="0"><span>Пн</span></label><label><input type="checkbox" name="weekDay" value="1"><span>Вт</span></label><label><input type="checkbox" name="weekDay" value="2"><span>Ср</span></label><label><input type="checkbox" name="weekDay" value="3"><span>Чт</span></label><label><input type="checkbox" name="weekDay" value="4"><span>Пт</span></label><label><input type="checkbox" name="weekDay" value="5"><span>Сб</span></label><label><input type="checkbox" name="weekDay" value="6"><span>Вс</span></label></div></div><div class="field"><label for="suppEndDate">Дата окончания (необязательно)</label><input id="suppEndDate" type="date"><small class="schedule-note">Оставь пустым, если график без срока.</small></div><div class="field"><label for="suppIcon">Значок</label><select id="suppIcon"><option>🌿</option><option>☀️</option><option>💧</option><option>🍃</option><option>🌼</option><option>🫐</option><option>✨</option></select></div><div class="dialog-actions"><button type="button" class="btn ghost" id="cancelModal">Отмена</button><button class="btn" type="submit">Сохранить</button></div></form></div>
+<div class="ai-modal" id="aiChatModal" hidden>
+ <section class="ai-window" role="dialog" aria-modal="true" aria-labelledby="aiChatTitle">
+  <header class="ai-head">
+   <div class="ai-head-brand"><span class="ai-head-symbol">✦</span><div><strong id="aiChatTitle">COSMOS AI</strong><small>Помощник по здоровью</small></div></div>
+   <div class="ai-head-actions"><button type="button" id="clearAiChat" aria-label="Очистить переписку">↺</button><button type="button" id="closeAiChat" aria-label="Закрыть чат">×</button></div>
+  </header>
+  <div class="ai-status" id="aiChatStatus" role="status"></div>
+  <div class="ai-messages" id="aiChatMessages" aria-live="polite"></div>
+  <div class="ai-topics" id="aiChatTopics">
+   <button type="button" data-ai-prompt="Для чего нужен витамин D и как обычно оценивают его уровень?">Витамины</button>
+   <button type="button" data-ai-prompt="На что обратить внимание при сочетании нескольких добавок?">Сочетание добавок</button>
+   <button type="button" data-ai-prompt="Объясни простыми словами, как читать общий анализ крови.">Анализы</button>
+   <button type="button" data-ai-prompt="Какие привычки помогают улучшить качество сна?">Сон</button>
+  </div>
+  <form class="ai-form" id="aiChatForm">
+   <textarea id="aiChatInput" rows="2" maxlength="2500" placeholder="Напишите свой вопрос…" aria-label="Ваш вопрос помощнику" disabled></textarea>
+   <button type="submit" id="aiSendButton" disabled>Отправить</button>
+  </form>
+  <p class="ai-privacy">Не указывайте ФИО, адрес, телефон и другие личные данные. Ответы ИИ носят информационный характер и не заменяют консультацию врача.</p>
+ </section>
+</div>
+<div class="toast" id="toast" role="status"></div>
 <script>
 (()=>{
 'use strict';
@@ -640,6 +662,54 @@ $('removePhoto').addEventListener('click',async()=>{if(!data.photo){notify('Фо
 $('exportData').addEventListener('click',()=>{const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='waywhales-backup-'+today()+'.json';a.click();URL.revokeObjectURL(url);notify('Резервная копия подготовлена')});
 $('resetData').addEventListener('click',()=>{if(confirm('Удалить профиль, добавки и историю на этом устройстве? Это действие нельзя отменить.')){data=fresh();save();render();notify('Данные сброшены')}});
 
+
+// COSMOS AI — chat stays in memory for this open tab only.
+const aiEndpoint=(document.querySelector('meta[name="cosmos-ai-endpoint"]')?.content||'').trim();
+const aiModal=$('aiChatModal'),aiMessagesEl=$('aiChatMessages'),aiInput=$('aiChatInput'),aiSend=$('aiSendButton'),aiStatus=$('aiChatStatus'),aiLauncherStatus=$('aiLauncherStatus');
+let aiHistory=[];
+function aiAddMessage(role,text,extraClass=''){
+ const node=document.createElement('div');node.className='ai-message '+(role==='user'?'ai-user':'ai-assistant')+(extraClass?' '+extraClass:'');
+ const label=document.createElement('span');label.className='ai-message-label';label.textContent=role==='user'?'Вы':'COSMOS AI';
+ const body=document.createElement('p');body.textContent=text;
+ node.append(label,body);aiMessagesEl.appendChild(node);aiMessagesEl.scrollTop=aiMessagesEl.scrollHeight;return node;
+}
+function aiSetReady(){
+ const ready=!!aiEndpoint;
+ aiInput.disabled=!ready;aiSend.disabled=!ready;
+ aiStatus.textContent=ready
+  ?'Можно задать вопрос. Не отправляйте личные документы и данные, по которым вас можно определить.'
+  :'Чат подготовлен, но защищённый сервер ещё не подключён. Пока не вводите сюда медицинские сведения.';
+ aiLauncherStatus.textContent=ready?'ИИ-помощник подключён':'Подключение ИИ настраивается';
+}
+function aiOpen(){
+ aiModal.hidden=false;document.body.classList.add('ai-chat-open');aiSetReady();
+ if(!aiHistory.length)aiAddMessage('assistant','Здравствуйте! Я COSMOS AI. Помогу разобраться в общей информации о витаминах, добавках, анализах, питании и сне. Не ставлю диагнозы и не назначаю лечение.');
+}
+function aiClose(){aiModal.hidden=true;document.body.classList.remove('ai-chat-open')}
+$('openAiChat').addEventListener('click',aiOpen);
+$('closeAiChat').addEventListener('click',aiClose);
+aiModal.addEventListener('click',e=>{if(e.target===aiModal)aiClose()});
+$('clearAiChat').addEventListener('click',()=>{aiHistory=[];aiMessagesEl.replaceChildren();aiAddMessage('assistant','Переписка очищена. Чем могу помочь?')});
+$('aiChatTopics').addEventListener('click',e=>{const b=e.target.closest('[data-ai-prompt]');if(!b)return;if(!aiEndpoint){aiStatus.textContent='Сначала нужно подключить защищённый сервер. Пока вопросы никуда не отправляются.';return}aiInput.value=b.dataset.aiPrompt;aiInput.focus()});
+$('aiChatForm').addEventListener('submit',async e=>{
+ e.preventDefault();if(!aiEndpoint){aiSetReady();return}
+ const question=aiInput.value.trim();if(!question||aiSend.disabled)return;
+ aiInput.value='';aiSend.disabled=true;aiInput.disabled=true;
+ aiHistory.push({role:'user',content:question});aiAddMessage('user',question);
+ const pending=aiAddMessage('assistant','Готовлю ответ…','ai-pending');
+ try{
+  const response=await fetch(aiEndpoint,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:aiHistory.slice(-12)})});
+  const data=await response.json().catch(()=>({}));
+  if(!response.ok)throw new Error(data.error||'Не удалось получить ответ');
+  const answer=String(data.answer||'').trim();if(!answer)throw new Error('Ответ пока пуст. Попробуйте переформулировать вопрос.');
+  pending.remove();aiHistory.push({role:'assistant',content:answer});aiAddMessage('assistant',answer);
+ }catch(err){
+  pending.remove();aiAddMessage('assistant',err.message==='Failed to fetch'?'Не удалось связаться с сервером. Проверьте подключение и попробуйте позже.':(err.message||'Не удалось получить ответ. Попробуйте позже.'),'ai-error');
+ }finally{aiInput.disabled=false;aiSend.disabled=false;aiInput.focus()}
+});
+aiInput.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();$('aiChatForm').requestSubmit()}});
+aiSetReady();
+
 const dailyScenes=['nebula','forest','galaxy','ocean','sunrise'];let previousTheme='';try{previousTheme=localStorage.getItem('cosmosLastTheme')||''}catch(e){}let choices=dailyScenes.filter(x=>x!==previousTheme);const chosenTheme=choices[Math.floor(Math.random()*choices.length)];try{localStorage.setItem('cosmosLastTheme',chosenTheme)}catch(e){}const scene=document.getElementById('cosmosScene');if(scene)scene.dataset.theme=chosenTheme;document.body.dataset.cosmosTheme=chosenTheme;
 render();
 })();
@@ -741,4 +811,41 @@ render();
 #profileView .profile-edit-actions #saveProfile,#profileView .profile-edit-actions .profile-cancel-btn{min-height:50px!important}
 @media(max-width:520px){#profileView .profile-main-card .profile{gap:12px!important}#profileView .profile-main-card .profile-menu{flex-basis:46px!important}#profileView .profile-main-card .profile-menu summary{width:46px!important;height:46px!important}#profileView .profile-main-card .photo-menu-pop{min-width:205px!important}}
 </style>
+
+<style id="cosmos-ai-style">
+.ai-launcher{display:grid;grid-template-columns:54px minmax(0,1fr);gap:8px 14px;align-items:center;margin-top:14px;padding:18px 20px;background:linear-gradient(135deg,rgba(232,239,231,.98),rgba(220,234,232,.97));border:1px solid rgba(190,211,195,.9);border-radius:22px}
+.ai-launcher-mark{width:50px;height:50px;display:grid;place-items:center;border-radius:16px;background:#173d31;color:#e7e6d6;font-size:27px}
+.ai-launcher-copy{min-width:0}
+.ai-launcher-kicker{font-size:10px;letter-spacing:2px;font-weight:800;color:#758d73}
+.ai-launcher-copy h3{margin:2px 0 4px;color:#1d4334;font-size:19px}
+.ai-launcher-copy p{margin:0;color:#687b70;font-size:13px;line-height:1.4}
+.ai-open-button{grid-column:1/-1;width:100%;min-height:46px}
+.ai-launcher-note{grid-column:1/-1;color:#7c897f;font-size:11px;text-align:center}
+.ai-modal{position:fixed;inset:0;z-index:100;background:rgba(5,23,21,.68);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);display:grid;place-items:center;padding:12px}
+.ai-modal[hidden]{display:none!important}
+.ai-window{width:min(100%,640px);height:min(88dvh,780px);display:flex;flex-direction:column;overflow:hidden;border:1px solid rgba(224,233,218,.9);border-radius:25px;background:#f5f4ed;box-shadow:0 22px 70px rgba(0,0,0,.28)}
+.ai-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:15px 17px;background:linear-gradient(130deg,#173d31,#244e50);color:#f4f3e6}
+.ai-head-brand{display:flex;align-items:center;gap:11px}.ai-head-symbol{width:42px;height:42px;display:grid;place-items:center;border:1px solid #9db39b;border-radius:14px;color:#e7d5a7;font-size:25px}
+.ai-head-brand strong{display:block;font-size:17px;letter-spacing:.6px}.ai-head-brand small{display:block;margin-top:3px;color:#cbd8c7;font-size:11px}
+.ai-head-actions{display:flex;gap:7px}.ai-head-actions button{width:38px;height:38px;border:1px solid #6f8a7b;border-radius:12px;background:rgba(255,255,255,.08);color:#fff;font-size:22px}
+.ai-status{padding:10px 14px;background:#e7eee3;color:#4d6858;font-size:11px;line-height:1.4;border-bottom:1px solid #d8e1d5}
+.ai-messages{flex:1;min-height:0;overflow:auto;display:flex;flex-direction:column;gap:11px;padding:15px}
+.ai-message{max-width:88%;padding:11px 13px;border:1px solid #e0e6dc;border-radius:16px;background:#fff;color:#233b30;box-shadow:0 3px 9px rgba(23,61,49,.04)}
+.ai-assistant{align-self:flex-start;border-bottom-left-radius:5px}.ai-user{align-self:flex-end;background:#e4eee2;border-color:#ceddca;border-bottom-right-radius:5px}
+.ai-message-label{display:block;margin-bottom:5px;color:#789078;font-size:10px;letter-spacing:.8px;font-weight:800}
+.ai-message p{margin:0;white-space:pre-wrap;overflow-wrap:anywhere;font-size:14px;line-height:1.5}
+.ai-message.ai-error{border-color:#edc8c0;background:#fff1ee;color:#803d35}
+.ai-pending p{color:#758278}
+.ai-topics{display:flex;gap:7px;flex-wrap:wrap;padding:0 14px 11px}
+.ai-topics button{padding:8px 10px;border:1px solid #d3dfcf;border-radius:999px;background:#fff;color:#315542;font-size:11px;font-weight:650}
+.ai-form{display:flex;align-items:flex-end;gap:8px;padding:11px 13px;background:#edf1e9;border-top:1px solid #dce4d8}
+.ai-form textarea{flex:1;min-width:0;max-height:110px;resize:vertical;padding:11px 12px;border:1px solid #d0dbce;border-radius:14px;background:#fff;color:#20382e;font:14px/1.4 inherit}
+.ai-form textarea:disabled{background:#e9ece6;color:#7b857d}
+.ai-form button{min-height:44px;padding:0 14px;border:0;border-radius:13px;background:#1c4b38;color:#fff;font-size:13px;font-weight:750}
+.ai-form button:disabled{opacity:.45}
+.ai-privacy{margin:0;padding:0 14px 12px;background:#edf1e9;color:#778279;font-size:10px;line-height:1.4}
+body.ai-chat-open{overflow:hidden}
+@media(max-width:520px){.ai-modal{padding:0;place-items:end center}.ai-window{width:100%;height:94dvh;max-height:94dvh;border-radius:24px 24px 0 0}.ai-launcher{padding:15px}.ai-launcher-copy h3{font-size:17px}}
+</style>
+
 </body></html>
