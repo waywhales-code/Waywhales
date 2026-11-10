@@ -635,7 +635,7 @@ function toggleSupplement(button){const id=button.dataset.id,day=button.dataset.
 $('statsMonth').addEventListener('change',renderStats);function shiftStatsMonth(amount){const picker=$('statsMonth'),[y,m]=picker.value.split('-').map(Number),d=new Date(y,m-1+amount,1);picker.value=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');renderStats()}$('statsPrevMonth').addEventListener('click',()=>shiftStatsMonth(-1));$('statsNextMonth').addEventListener('click',()=>shiftStatsMonth(1));$('statsCurrentMonth').addEventListener('click',()=>{$('statsMonth').value=today().slice(0,7);renderStats()});
 $('addForSelectedDay').addEventListener('click',()=>openModal(null,true));
 $('prevMonth').addEventListener('click',()=>{month.setMonth(month.getMonth()-1);renderCalendar()});$('nextMonth').addEventListener('click',()=>{month.setMonth(month.getMonth()+1);renderCalendar()});
-document.querySelectorAll('.nav button').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.nav button').forEach(x=>x.classList.toggle('active',x===b));document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));$(b.dataset.view+'View').classList.add('active');if(b.dataset.view==='calendar')renderCalendar()}));
+document.querySelectorAll('.nav button').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.nav button').forEach(x=>x.classList.toggle('active',x===b));document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));$(b.dataset.view+'View').classList.add('active');document.body.classList.toggle('calendar-view',b.dataset.view==='calendar');if(b.dataset.view==='calendar')renderCalendar()}));
 $('openProfileEdit').addEventListener('click',()=>{document.querySelector('.photo-menu')?.removeAttribute('open');$('nameInput').value=data.name||'';$('profileEditPanel').hidden=false;$('nameInput').focus()});
 $('cancelProfileEdit').addEventListener('click',()=>{$('profileEditPanel').hidden=true;$('nameInput').value=data.name||'';$('photoInput').value=''});
 function saveProfileName(){
@@ -1058,6 +1058,18 @@ body.ai-chat-open{overflow:hidden}
  #suppModal .weekday-picker{gap:3px}
  #suppModal .weekday-picker label span{font-size:10px}
  #suppModal .dialog-actions{margin-left:-13px!important;margin-right:-13px!important;padding-left:13px!important;padding-right:13px!important}
+}
+</style>
+
+<style id="cosmos-calendar-focus">
+/* Calendar is a focused workspace: hide the home-only welcome/quote hero */
+body.calendar-view .hero{display:none!important}
+body.calendar-view .shell{padding-top:14px}
+body.calendar-view #calendarView{margin-top:10px}
+body.calendar-view #calendarView>.panel{margin-top:0}
+@media(max-width:720px){
+ body.calendar-view .shell{padding-top:10px;padding-bottom:110px}
+ body.calendar-view #calendarView{margin-top:8px}
 }
 </style>
 </body></html>
