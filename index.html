@@ -481,7 +481,7 @@ body:before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opac
 <body><div class="cosmos-scene" id="cosmosScene" aria-hidden="true"></div><main class="shell">
 <header class="top"><div class="brand"><span class="brand-mark">✦</span><span class="brand-name">COSMOS<small>by Waywhales</small></span></div><div class="date-pill" id="todayLabel"></div></header>
 <section class="hero"><div class="hero-row"><div><div class="eyebrow">ваш спокойный ритм</div><h1 id="greeting">Добро пожаловать</h1><p>Маленькие шаги заботы о себе — день за днём.</p></div><div class="hero-progress-wrap"><div class="progress-ring" id="progress">0%</div><div class="hero-progress-caption" id="progressCaption">Сегодня: 0 из 0 приёмов</div></div></div><div class="daily-quote"><div class="quote-label">МЫСЛЬ ДНЯ <span>✦</span></div><blockquote id="dailyQuote">Большие перемены начинаются с маленьких шагов.</blockquote><div class="quote-signature">— WAYWHALES</div></div></section>
-<section id="homeView" class="view active"><div class="grid"><div class="panel"><div class="section-head plan-section-head"><div><h2 id="planDayTitle">Сегодня</h2><p class="sub" id="todaySub">Ваш план приёма</p></div><button class="btn small" id="addBtn">＋ Добавить</button></div><div class="plan-day-switch" id="planDaySwitch" aria-label="Выбор дня"><button type="button" data-plan-offset="0" class="active">Сегодня</button><button type="button" data-plan-offset="1">Завтра</button><button type="button" data-plan-offset="2">Послезавтра</button><button type="button" data-plan-offset="3">Следующий день</button></div><div id="todayList" class="supp-list"></div></div><aside class="panel"><h2>Ваш ритм</h2><p class="sub">Небольшая статистика за выбранный день</p><div class="stat-grid"><div class="stat"><strong id="statDone">0</strong><span>отмечено</span></div><div class="stat"><strong id="statTotal">0</strong><span>в плане</span></div><div class="stat"><strong id="statRate">0%</strong><span>выполнение</span></div><button class="stat stat-button" id="openMarkedHistory" type="button" aria-label="Нажмите, чтобы открыть историю отметок"><strong id="statStreak">0</strong><span id="markedDaysCaption">дней с отметками</span><small class="stat-open-hint">Нажмите, чтобы посмотреть историю ↗</small></button></div><p class="hint" style="margin-top:15px">Отмечайте приём по своему плану. Приложение не заменяет рекомендации врача.</p></aside></div><div class="panel ai-launcher"><div class="ai-launcher-mark">✦</div><div class="ai-launcher-copy"><div class="ai-launcher-kicker">COSMOS AI</div><h3>Помощник по здоровью</h3><p>Разбирайтесь в витаминах, добавках, анализах и вопросах самочувствия простыми словами.</p></div><button class="btn ai-open-button" id="openAiChat" type="button">Открыть помощника</button><span class="ai-launcher-note" id="aiLauncherStatus">Подключение ИИ настраивается</span></div></section>
+<section id="homeView" class="view active"><div class="grid"><div class="panel"><div class="section-head plan-section-head"><div><h2 id="planDayTitle">Сегодня</h2><p class="sub" id="todaySub">Ваш план приёма</p></div><button class="btn small" id="addBtn">＋ Добавить</button></div><div class="plan-day-switch" id="planDaySwitch" aria-label="Выбор дня"><button type="button" data-plan-offset="0" class="active">Сегодня</button><button type="button" data-plan-offset="1">Завтра</button><button type="button" data-plan-offset="2">Послезавтра</button><button type="button" data-plan-offset="3">Через 3 дня</button></div><div id="todayList" class="supp-list"></div></div><aside class="panel"><h2>Ваш ритм</h2><p class="sub">Небольшая статистика за выбранный день</p><div class="stat-grid"><div class="stat"><strong id="statDone">0</strong><span>отмечено</span></div><div class="stat"><strong id="statTotal">0</strong><span>в плане</span></div><div class="stat"><strong id="statRate">0%</strong><span>выполнение</span></div><button class="stat stat-button" id="openMarkedHistory" type="button" aria-label="Нажмите, чтобы открыть историю отметок"><strong id="statStreak">0</strong><span id="markedDaysCaption">дней с отметками</span><small class="stat-open-hint">Нажмите, чтобы посмотреть историю ↗</small></button></div><p class="hint" style="margin-top:15px">Отмечайте приём по своему плану. Приложение не заменяет рекомендации врача.</p></aside></div><div class="panel ai-launcher"><div class="ai-launcher-mark">✦</div><div class="ai-launcher-copy"><div class="ai-launcher-kicker">COSMOS AI</div><h3>Помощник по здоровью</h3><p>Разбирайтесь в витаминах, добавках, анализах и вопросах самочувствия простыми словами.</p></div><button class="btn ai-open-button" id="openAiChat" type="button">Открыть помощника</button><span class="ai-launcher-note" id="aiLauncherStatus">Подключение ИИ настраивается</span></div></section>
 <section id="calendarView" class="view"><div class="panel"><div class="calendar-head"><button class="btn ghost small" id="prevMonth">‹</button><h2 id="monthTitle"></h2><button class="btn ghost small" id="nextMonth">›</button></div><div class="calendar" id="calendarGrid"></div><div class="calendar-legend"><span><i class="holiday"></i>Праздник / выходной</span><span><i class="marked"></i>Есть отметки</span></div><div class="selected-day-toolbar"><div class="selected-day-copy"><p class="sub" id="selectedDayLabel"></p><p class="selected-day-holiday" id="selectedDayHoliday" hidden></p></div><button class="btn small" id="addForSelectedDay" type="button">＋ Добавить приём</button></div><div class="selected-day-result" id="selectedDayResult"><div><span>Выполнение за день</span><strong id="selectedDayPercent">0%</strong></div><p id="selectedDayCounts">0 из 0 приёмов отмечено</p><div class="progress-track"><span id="selectedDayBar"></span></div></div><div id="dayHistory" class="supp-list"></div></div></section>
 
 <section id="profileView" class="view profile-layout">
@@ -928,5 +928,62 @@ body.ai-chat-open{overflow:hidden}
  #todayList .supp>.actions .icon-btn{width:36px;height:34px;display:grid;place-items:center;font-size:17px;border:1px solid #dce5d8;border-radius:10px;background:#f8faf5}
 }
 @media(max-width:380px){.plan-day-switch button{font-size:10px;letter-spacing:-.2px}}
+</style>
+
+<style id="cosmos-plan-switch-polish">
+.plan-day-switch{
+ display:grid!important;
+ grid-template-columns:repeat(4,minmax(0,1fr))!important;
+ align-items:stretch!important;
+ gap:3px!important;
+ width:100%!important;
+ min-width:0!important;
+ padding:4px!important;
+ margin:0 0 15px!important;
+ border:1px solid #dfe7dc!important;
+ border-radius:16px!important;
+ background:linear-gradient(180deg,#f0f4ed,#e9efe6)!important;
+ box-shadow:inset 0 1px 2px rgba(26,60,42,.04)!important;
+}
+.plan-day-switch button{
+ display:flex!important;
+ align-items:center!important;
+ justify-content:center!important;
+ min-width:0!important;
+ min-height:42px!important;
+ margin:0!important;
+ padding:6px 2px!important;
+ border:1px solid transparent!important;
+ border-radius:12px!important;
+ background:transparent!important;
+ color:#65776a!important;
+ font-size:clamp(10px,2.7vw,12px)!important;
+ font-weight:650!important;
+ line-height:1.15!important;
+ letter-spacing:-.2px!important;
+ text-align:center!important;
+ white-space:nowrap!important;
+ overflow:hidden!important;
+ text-overflow:clip!important;
+ box-shadow:none!important;
+ -webkit-tap-highlight-color:transparent;
+ transition:background .16s ease,color .16s ease,box-shadow .16s ease;
+}
+.plan-day-switch button.active{
+ background:#fffefa!important;
+ color:#214b37!important;
+ border-color:#dce6d8!important;
+ box-shadow:0 2px 7px rgba(29,65,44,.10),inset 0 1px 0 rgba(255,255,255,.9)!important;
+ font-weight:750!important;
+}
+.plan-day-switch button:active{transform:scale(.98)}
+.plan-day-switch button:focus-visible{outline:2px solid #8eaa7c!important;outline-offset:1px}
+@media(max-width:360px){
+ .plan-day-switch{gap:2px!important;padding:3px!important}
+ .plan-day-switch button{font-size:9.5px!important;letter-spacing:-.3px!important;padding-inline:1px!important}
+}
+@media(prefers-reduced-motion:reduce){
+ .plan-day-switch button{transition:none!important}
+}
 </style>
 </body></html>
