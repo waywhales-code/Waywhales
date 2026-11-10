@@ -428,6 +428,7 @@ body:before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opac
 (()=>{
 'use strict';
 const KEY='waywhales.v1';
+const PROFILE_NAME_KEY=KEY+'.profileName';
 const $=id=>document.getElementById(id);
 const today=()=>{const d=new Date();return [d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-')};
 const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
@@ -435,6 +436,7 @@ const safe=(s)=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>'
 const fresh=()=>({name:'',photo:'',supplements:[],logs:{},courses:[]});
 let data=fresh(),month=new Date(),selected=today(),toastTimer,calendarAddMode=false;
 try{const saved=JSON.parse(localStorage.getItem(KEY)||'null');if(saved&&typeof saved==='object'){data={...fresh(),...saved};if(!Array.isArray(data.supplements))data.supplements=[];if(!data.logs||typeof data.logs!=='object')data.logs={};if(!Array.isArray(data.courses)){data.courses=[];for(const id of [2,3]){const old=data['course'+id];if(old&&(old.name||old.startDate)){data.courses.push({id:uid(),name:old.name||'',startDate:old.startDate||'',durationDays:old.durationDays||30,status:'active'})}delete data['course'+id]}}}}catch(e){console.warn('Не удалось прочитать локальные данные',e)}
+try{const separateName=localStorage.getItem(PROFILE_NAME_KEY);if(separateName!==null)data.name=separateName}catch(e){console.warn('Не удалось прочитать имя профиля',e)}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(data));return true}catch(e){notify('Не удалось сохранить: возможно, закончилось место в памяти браузера.');return false}}
 function notify(msg){const t=$('toast');t.textContent=msg;t.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('show'),2600)}
 function dayLog(day){if(!data.logs[day]||typeof data.logs[day]!=='object')data.logs[day]={};return data.logs[day]}
@@ -476,7 +478,19 @@ $('prevMonth').addEventListener('click',()=>{month.setMonth(month.getMonth()-1);
 document.querySelectorAll('.nav button').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.nav button').forEach(x=>x.classList.toggle('active',x===b));document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));$(b.dataset.view+'View').classList.add('active');if(b.dataset.view==='calendar')renderCalendar()}));
 $('openProfileEdit').addEventListener('click',()=>{document.querySelector('.photo-menu')?.removeAttribute('open');$('nameInput').value=data.name||'';$('profileEditPanel').hidden=false;$('nameInput').focus()});
 $('cancelProfileEdit').addEventListener('click',()=>{$('profileEditPanel').hidden=true;$('nameInput').value=data.name||'';$('photoInput').value=''});
-$('saveProfile').addEventListener('click',()=>{data.name=$('nameInput').value.trim();save();render();$('profileEditPanel').hidden=true;notify('Профиль сохранён')});
+function saveProfileName(){
+ const input=$('nameInput'),next=input.value.trim(),previous=data.name||'';
+ if(!next){notify('Введите имя профиля');input.focus();return}
+ data.name=next;
+ let separateSaved=false;
+ try{localStorage.setItem(PROFILE_NAME_KEY,next);separateSaved=localStorage.getItem(PROFILE_NAME_KEY)===next}catch(e){}
+ let mainSaved=false;
+ try{localStorage.setItem(KEY,JSON.stringify(data));const check=JSON.parse(localStorage.getItem(KEY)||'null');mainSaved=!!check&&check.name===next}catch(e){}
+ if(!separateSaved&&!mainSaved){data.name=previous;notify('Не удалось сохранить имя. Проверьте настройки хранения Safari.');return}
+ render();$('profileEditPanel').hidden=true;notify('Имя профиля сохранено');
+}
+$('saveProfile').addEventListener('click',e=>{e.preventDefault();e.stopPropagation();saveProfileName()});
+$('nameInput').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();saveProfileName()}});
 $('addCourse').addEventListener('click',()=>{data.courses.push({id:uid(),name:'',startDate:today(),durationDays:30,status:'active'});renderCourses();save();notify('Новый курс добавлен 🌱')});
 $('saveCourses').addEventListener('click',()=>{for(const card of document.querySelectorAll('[data-course-card]')){const id=card.dataset.courseCard,c=data.courses.find(x=>x.id===id);if(!c)continue;const days=Number(card.querySelector('[data-course-field="durationDays"]').value);if(!Number.isInteger(days)||days<1||days>730){notify('Продолжительность должна быть от 1 до 730 дней');return}c.name=card.querySelector('[data-course-field="name"]').value.trim();c.startDate=card.querySelector('[data-course-field="startDate"]').value;c.durationDays=days;c.status=card.querySelector('[data-course-field="status"]').value}save();renderCourses();notify('Курсы сохранены 🌿')});
 $('coursesList').addEventListener('click',e=>{const b=e.target.closest('[data-course-delete]');if(!b)return;const id=b.dataset.courseDelete;if(confirm('Удалить этот курс?')){data.courses=data.courses.filter(c=>c.id!==id);save();renderCourses();notify('Курс удалён')}});
