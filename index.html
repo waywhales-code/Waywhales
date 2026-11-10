@@ -305,6 +305,56 @@ body:before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opac
  .profile-card #addCourse,.profile-card #saveCourses{font-size:16px!important}
 }
 
+
+/* COSMOS: enforce accessible button contrast in profile and course controls */
+.profile-card .btn,
+.course-card .btn{
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+  opacity:1!important;
+  text-shadow:none!important;
+}
+.profile-card .btn.secondary,
+.course-card .btn.secondary{
+  background:#e5eee1!important;
+  color:#173b2d!important;
+  -webkit-text-fill-color:#173b2d!important;
+  border:1px solid #cbd9c7!important;
+}
+.profile-card .btn.ghost{
+  background:#e5eee1!important;
+  color:#173b2d!important;
+  -webkit-text-fill-color:#173b2d!important;
+  border:1px solid #cbd9c7!important;
+}
+.profile-card .btn.danger,
+.course-card .btn.danger{
+  background:#f8e7e3!important;
+  color:#8b3329!important;
+  -webkit-text-fill-color:#8b3329!important;
+  border:1px solid #edc9c1!important;
+}
+.profile-card #addCourse{
+  background:linear-gradient(135deg,#e5eee1,#d6e5d1)!important;
+  color:#173b2d!important;-webkit-text-fill-color:#173b2d!important;
+}
+.profile-card #saveCourses{
+  background:linear-gradient(135deg,#28563d,#143a29)!important;
+  color:#fff!important;-webkit-text-fill-color:#fff!important;
+}
+.profile-card #exportData{
+  background:#e5eee1!important;color:#173b2d!important;
+  -webkit-text-fill-color:#173b2d!important;
+}
+.profile-card #resetData{
+  background:#f8e7e3!important;color:#8b3329!important;
+  -webkit-text-fill-color:#8b3329!important;
+}
+.course-card [data-course-delete]{
+  background:#f8e7e3!important;color:#8b3329!important;
+  -webkit-text-fill-color:#8b3329!important;
+}
+
 </style>
 </head>
 <body><div class="cosmos-scene" id="cosmosScene" aria-hidden="true"></div><main class="shell">
