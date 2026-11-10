@@ -734,6 +734,7 @@ aiInput.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preven
 aiSetReady();
 
 const dailyScenes=['nebula','forest','galaxy','ocean','sunrise'];let previousTheme='';try{previousTheme=localStorage.getItem('cosmosLastTheme')||''}catch(e){}let choices=dailyScenes.filter(x=>x!==previousTheme);const chosenTheme=choices[Math.floor(Math.random()*choices.length)];try{localStorage.setItem('cosmosLastTheme',chosenTheme)}catch(e){}const scene=document.getElementById('cosmosScene');if(scene)scene.dataset.theme=chosenTheme;document.body.dataset.cosmosTheme=chosenTheme;
+document.addEventListener('cosmos-language-change',()=>{render()});
 render();
 })();
 </script>
@@ -1088,4 +1089,266 @@ body.calendar-view #calendarView>.panel{margin-top:0}
 </style>
 
 
+<script id="cosmos-language-switcher">
+(()=>{
+'use strict';
+const STORAGE_KEY='cosmos.language';
+// Isolated, fail-safe language layer; app startup must never depend on translation.
+const locales={ru:'ru-RU',kk:'kk-KZ',uk:'uk-UA',en:'en-US'};
+const phrases={
+'ваш спокойный ритм':['your gentle rhythm','ваш спокійний ритм','сіздің жайлы ырғағыңыз'],
+'Добро пожаловать':['Welcome','Ласкаво просимо','Қош келдіңіз'],
+'Маленькие шаги заботы о себе — день за днём.':['Small steps of self-care, day by day.','Маленькі кроки турботи про себе — день за днем.','Өзіңізге қамқорлық жасаудың шағын қадамдары — күн сайын.'],
+'Сегодня: 0 из 0 приёмов':['Today: 0 of 0 entries','Сьогодні: 0 із 0 прийомів','Бүгін: 0 қабылдаудың 0-і'],
+'МЫСЛЬ ДНЯ':['THOUGHT OF THE DAY','ДУМКА ДНЯ','КҮН ОЙЫ'],
+'Стабильность рождается из простых повторений.':['Consistency grows from simple repetitions.','Стабільність народжується з простих повторень.','Тұрақтылық қарапайым қайталаудан қалыптасады.'],
+'Сегодня':['Today','Сьогодні','Бүгін'],
+'Завтра':['Tomorrow','Завтра','Ертең'],
+'Послезавтра':['Day after tomorrow','Післязавтра','Бүрсігүні'],
+'Через 3 дня':['In 3 days','Через 3 дні','3 күннен кейін'],
+'Ваш план приёма':['Your supplement plan','Ваш план прийому','Қабылдау жоспарыңыз'],
+'＋ Добавить':['＋ Add','＋ Додати','＋ Қосу'],
+'Ваш ритм':['Your rhythm','Ваш ритм','Сіздің ырғағыңыз'],
+'Небольшая статистика за выбранный день':['A little snapshot of your selected day','Коротка статистика за вибраний день','Таңдалған күннің қысқаша статистикасы'],
+'отмечено':['completed','відмічено','орындалды'],
+'в плане':['planned','у плані','жоспарда'],
+'выполнение':['completion','виконання','орындалуы'],
+'дней с отметками':['days with check-ins','днів із відмітками','белгі қойылған күн'],
+'Нажмите, чтобы посмотреть историю ↗':['Tap to view history ↗','Натисніть, щоб переглянути історію ↗','Тарихты көру үшін басыңыз ↗'],
+'Отмечайте приём по своему плану. Приложение не заменяет рекомендации врача.':['Track your supplements according to your plan. The app does not replace medical advice.','Відмічайте прийом відповідно до свого плану. Застосунок не замінює рекомендацій лікаря.','Қоспаларды жоспарыңызға сай белгілеңіз. Қолданба дәрігер кеңесін алмастырмайды.'],
+'Помощник по здоровью':['Health assistant','Помічник зі здоров’я','Денсаулық көмекшісі'],
+'Разбирайтесь в витаминах, добавках, анализах и вопросах самочувствия простыми словами.':['Understand vitamins, supplements, lab tests and wellbeing in plain language.','Розбирайтеся у вітамінах, добавках, аналізах і самопочутті простими словами.','Дәрумендер, қоспалар, талдаулар және көңіл-күй туралы қарапайым тілмен біліңіз.'],
+'Открыть помощника':['Open assistant','Відкрити помічника','Көмекшіні ашу'],
+'Подключение ИИ настраивается':['AI connection is being configured','Підключення ШІ налаштовується','ЖИ қосылымы бапталуда'],
+'Праздник / выходной':['Holiday / day off','Свято / вихідний','Мереке / демалыс'],
+'Есть отметки':['Has check-ins','Є відмітки','Белгілер бар'],
+'＋ Добавить приём':['＋ Add entry','＋ Додати прийом','＋ Қабылдауды қосу'],
+'Выполнение за день':['Daily completion','Виконання за день','Күндік орындалуы'],
+'0 из 0 приёмов отмечено':['0 of 0 entries completed','0 із 0 прийомів відмічено','0 қабылдаудың 0-і белгіленді'],
+'ВАШЕ ЛИЧНОЕ ПРОСТРАНСТВО':['YOUR PERSONAL SPACE','ВАШ ОСОБИСТИЙ ПРОСТІР','ЖЕКЕ КЕҢІСТІГІҢІЗ'],
+'Профиль':['Profile','Профіль','Профиль'],
+'Настройте COSMOS под свой ритм':['Make COSMOS fit your rhythm','Налаштуйте COSMOS під свій ритм','COSMOS қолданбасын өз ырғағыңызға бейімдеңіз'],
+'Гость':['Guest','Гість','Қонақ'],
+'Ваш профиль на этом устройстве':['Your profile on this device','Ваш профіль на цьому пристрої','Осы құрылғыдағы профиліңіз'],
+'Изменить фото':['Change photo','Змінити фото','Фотосуретті өзгерту'],
+'Удалить фото':['Remove photo','Видалити фото','Фотосуретті жою'],
+'Изменить имя':['Change name','Змінити ім’я','Атын өзгерту'],
+'Новое имя':['New name','Нове ім’я','Жаңа есім'],
+'Сохранить':['Save','Зберегти','Сақтау'],
+'Отмена':['Cancel','Скасувати','Болдырмау'],
+'ТЕКУЩИЙ МЕСЯЦ':['CURRENT MONTH','ПОТОЧНИЙ МІСЯЦЬ','АҒЫМДАҒЫ АЙ'],
+'Мой прогресс за месяц':['My progress this month','Мій прогрес за місяць','Осы айдағы жетістігім'],
+'0 из 0 приёмов':['0 of 0 entries','0 із 0 прийомів','0 қабылдаудың 0-і'],
+'Процент = отмеченные приёмы / все приёмы по графику. Свободный график не завышает результат.':['Percentage = completed entries / all scheduled entries. Flexible entries do not inflate the result.','Відсоток = відмічені прийоми / усі прийоми за графіком. Вільний графік не завищує результат.','Пайыз = белгіленген қабылдаулар / жоспарланған барлық қабылдаулар. Еркін кесте нәтижені жасанды арттырмайды.'],
+'МОЯ СТАТИСТИКА':['MY STATISTICS','МОЯ СТАТИСТИКА','СТАТИСТИКАМ'],
+'Результаты по месяцам':['Monthly results','Результати за місяцями','Айлар бойынша нәтиже'],
+'История и анализ':['History and insights','Історія та аналіз','Тарих және талдау'],
+'Ваш прогресс отдельно за каждый месяц':['Your progress for each month','Ваш прогрес за кожен місяць окремо','Әр айдағы жетістігіңіз'],
+'Выберите месяц':['Choose a month','Оберіть місяць','Айды таңдаңыз'],
+'Вернуться к текущему месяцу':['Back to current month','Повернутися до поточного місяця','Ағымдағы айға оралу'],
+'За выбранный месяц':['For selected month','За вибраний місяць','Таңдалған ай үшін'],
+'По месяцам':['By month','За місяцями','Айлар бойынша'],
+'Последние 7 дней':['Last 7 days','Останні 7 днів','Соңғы 7 күн'],
+'Процент показывает долю отмеченных приёмов от всех запланированных. Он не оценивает медицинскую эффективность добавок.':['The percentage shows completed entries out of all scheduled entries. It does not measure medical effectiveness.','Відсоток показує частку відмічених прийомів від усіх запланованих. Він не оцінює медичну ефективність добавок.','Пайыз жоспарланған қабылдаулардың ішіндегі белгіленген үлесті көрсетеді. Ол қоспалардың медициналық тиімділігін бағаламайды.'],
+'ВАШИ ДАННЫЕ':['YOUR DATA','ВАШІ ДАНІ','ДЕРЕКТЕРІҢІЗ'],
+'Данные и конфиденциальность':['Data and privacy','Дані та конфіденційність','Деректер және құпиялылық'],
+'Ваши записи хранятся только в браузере на этом устройстве. COSMOS не получает к ним доступ и не отправляет их на наши серверы. Экспорт и удаление данных — под вашим контролем.':['Your records are stored only in the browser on this device. COSMOS cannot access them and does not send them to our servers. You control data export and deletion.','Ваші записи зберігаються лише у браузері на цьому пристрої. COSMOS не має до них доступу й не надсилає їх на наші сервери. Експорт і видалення даних — під вашим контролем.','Жазбаларыңыз тек осы құрылғының браузерінде сақталады. COSMOS оларға қол жеткізбейді және серверлерімізге жібермейді. Деректерді экспорттау мен жою өз бақылауыңызда.'],
+'Экспортировать данные':['Export data','Експортувати дані','Деректерді экспорттау'],
+'Сбросить данные':['Reset data','Скинути дані','Деректерді тазарту'],
+'Связаться с Waywhales ↗':['Contact Waywhales ↗','Зв’язатися з Waywhales ↗','Waywhales-пен байланысу ↗'],
+'Главная':['Home','Головна','Басты бет'],
+'Календарь':['Calendar','Календар','Күнтізбе'],
+'Новая добавка':['New supplement','Нова добавка','Жаңа қоспа'],
+'Название':['Name','Назва','Атауы'],
+'Дозировка / заметка':['Dosage / note','Дозування / нотатка','Мөлшері / ескертпе'],
+'Время приёма':['Intake time','Час прийому','Қабылдау уақыты'],
+'Дата начала':['Start date','Дата початку','Басталу күні'],
+'С этой даты добавка появится в плане.':['The supplement will appear in your plan from this date.','З цієї дати добавка з’явиться у плані.','Осы күннен бастап қоспа жоспарыңызда көрсетіледі.'],
+'График приёма':['Schedule','Графік прийому','Қабылдау кестесі'],
+'Каждый день':['Every day','Щодня','Күн сайын'],
+'По выбранным дням недели':['On selected weekdays','У вибрані дні тижня','Таңдалған апта күндері'],
+'Раз в неделю (в день начала)':['Once a week (starting on the start day)','Раз на тиждень (у день початку)','Аптасына бір рет (басталған күні)'],
+'Свободный график — отмечать вручную':['Flexible schedule — mark manually','Вільний графік — відмічати вручну','Еркін кесте — қолмен белгілеу'],
+'Только один раз':['Just once','Лише один раз','Бір рет қана'],
+'Дни недели':['Weekdays','Дні тижня','Апта күндері'],
+'Пн':['Mon','Пн','Дс'],'Вт':['Tue','Вт','Сс'],'Ср':['Wed','Ср','Ср'],'Чт':['Thu','Чт','Бс'],'Пт':['Fri','Пт','Жм'],'Сб':['Sat','Сб','Сб'],'Вс':['Sun','Нд','Жс'],
+'Дата окончания (необязательно)':['End date (optional)','Дата завершення (необов’язково)','Аяқталу күні (міндетті емес)'],
+'Оставь пустым, если график без срока.':['Leave empty if there is no end date.','Залиште порожнім, якщо графік без кінцевої дати.','Аяқталу күні болмаса, бос қалдырыңыз.'],
+'Значок':['Icon','Значок','Белгіше'],
+'Витамины':['Vitamins','Вітаміни','Дәрумендер'],
+'Сочетание добавок':['Combining supplements','Поєднання добавок','Қоспаларды үйлестіру'],
+'Анализы':['Lab tests','Аналізи','Талдаулар'],
+'Сон':['Sleep','Сон','Ұйқы'],
+'Отправить':['Send','Надіслати','Жіберу'],
+'Не указывайте ФИО, адрес, телефон и другие личные данные. Ответы ИИ носят информационный характер и не заменяют консультацию врача.':['Do not enter your name, address, phone number or other personal data. AI responses are informational and do not replace medical advice.','Не вказуйте ПІБ, адресу, телефон та інші особисті дані. Відповіді ШІ мають інформаційний характер і не замінюють консультацію лікаря.','Аты-жөніңізді, мекенжайыңызды, телефон нөміріңізді және басқа жеке деректерді енгізбеңіз. ЖИ жауаптары ақпараттық сипатта және дәрігер кеңесін алмастырмайды.'],
+'Выполнено: ':['Completed: ','Виконано: ','Орындалды: '],
+' · показать':[' · show',' · показати',' · көрсету'], 
+' · скрыть':[' · hide',' · сховати',' · жасыру'], 
+'Свободный график':['Flexible schedule','Вільний графік','Еркін кесте'], 
+'отмечай, когда удобно':['mark whenever it suits you','відмічай, коли зручно','өзіңізге ыңғайлы кезде белгілеңіз'], 
+'Без заметки':['No note','Без нотатки','Ескертпе жоқ'], 
+'Снять отметку':['Undo check-in','Зняти відмітку','Белгіні алып тастау'], 
+'Отметить приём':['Mark as taken','Відмітити прийом','Қабылдауды белгілеу'], 
+'Добавить похожую':['Add similar','Додати схоже','Ұқсасын қосу'], 
+'Изменить':['Edit','Змінити','Өзгерту'], 
+'Удалить':['Delete','Видалити','Жою'], 
+'Новогодние каникулы':['New Year holidays','Новорічні канікули','Жаңа жыл демалысы'],
+'Рождество Христово':['Christmas','Різдво Христове','Рождество'],
+'День защитника Отечества':['Defender of the Fatherland Day','День захисника Вітчизни','Отан қорғаушылар күні'],
+'Международный женский день':['International Women’s Day','Міжнародний жіночий день','Халықаралық әйелдер күні'],
+'Праздник Весны и Труда':['Spring and Labour Day','Свято Весни і Праці','Көктем және еңбек мерекесі'],
+'День Победы':['Victory Day','День перемоги','Жеңіс күні'],
+'День России':['Russia Day','День Росії','Ресей күні'],
+'День народного единства':['National Unity Day','День народної єдності','Халық бірлігі күні'],
+'Перенос выходного дня':['Substitute day off','Перенесення вихідного дня','Демалыс күнін ауыстыру'],
+'Выходной день':['Day off','Вихідний день','Демалыс күні'],
+'Приёмы: ':['Entries: ','Прийоми: ','Қабылдау: '],
+' · отмечено: ':[' · completed: ',' · відмічено: ',' · белгіленген: '],
+' · свободный график: ':[' · flexible: ',' · вільний графік: ',' · еркін кесте: '],
+'Снять все отметки':['Clear all check-ins','Зняти всі відмітки','Барлық белгілерді алып тастау'],
+'Отличная работа! Все приёмы на этот день отмечены.':['Great job! All entries for this day are complete.','Чудова робота! Усі прийоми за цей день відмічено.','Жарайсыз! Бұл күнгі барлық қабылдаулар белгіленді.'],
+'Отличная работа! Все приёмы на сегодня отмечены.':['Great job! All entries for today are complete.','Чудова робота! Усі прийоми на сьогодні відмічено.','Жарайсыз! Бүгінгі барлық қабылдаулар белгіленді.'],
+'Пока здесь пусто.':['Nothing here yet.','Поки тут порожньо.','Әзірге мұнда бос.'],
+'Добавьте первую позицию в свой план':['Add the first item to your plan','Додайте першу позицію до свого плану','Жоспарыңызға алғашқы қоспаны қосыңыз'],
+'Добавьте первую добавку, чтобы начать вести дневник.':['Add your first supplement to start tracking.','Додайте першу добавку, щоб почати вести щоденник.','Бақылауды бастау үшін алғашқы қоспаңызды қосыңыз.'],
+'На этот день пока нет приёмов. Нажми «＋ Добавить приём», чтобы записать первый.':['No entries for this day yet. Tap “＋ Add entry” to add one.','На цей день поки немає прийомів. Натисніть «＋ Додати прийом», щоб записати перший.','Бұл күнге қабылдау әлі жоспарланбаған. Біріншісін қосу үшін «＋ Қабылдауды қосу» түймесін басыңыз.'],
+'История пока пуста.':['History is empty for now.','Історія поки порожня.','Әзірге тарих бос.'],
+'Рады видеть, ':['Welcome back, ','Раді вас бачити, ','Қайта келгеніңізге қуаныштымыз, '],
+'За месяц пока нет приёмов':['No entries scheduled this month yet','За цей місяць прийомів поки немає','Осы айда қабылдау әлі жоспарланбаған'],
+'Отличная работа! Все приёмы на сегодня отмечены.':['Great job! All entries for today are complete.','Чудова робота! Усі прийоми на сьогодні відмічено.','Жарайсыз! Бүгінгі барлық қабылдаулар белгіленді.'],
+'Введите название':['Enter a name','Введіть назву','Атауын енгізіңіз'],
+'Выбери хотя бы один день недели':['Choose at least one weekday','Оберіть хоча б один день тижня','Кемінде бір апта күнін таңдаңыз'],
+'Дата окончания не может быть раньше даты начала':['End date cannot be earlier than start date','Дата завершення не може бути раніше дати початку','Аяқталу күні басталу күнінен бұрын болмауы керек'],
+'Добавка добавлена за выбранный день 🌱':['Supplement added for the selected day 🌱','Добавку додано на вибраний день 🌱','Қоспа таңдалған күнге қосылды 🌱'],
+'Сохранено 🌿':['Saved 🌿','Збережено 🌿','Сақталды 🌿'],
+'Отметки за день удалены':['Check-ins for the day were removed','Відмітки за день видалено','Күн белгілері жойылды'],
+'Позиция удалена':['Item removed','Позицію видалено','Элемент жойылды'],
+'Отметка снята':['Check-in removed','Відмітку знято','Белгі алынды'],
+'Приём отмечен 🌱':['Entry marked 🌱','Прийом відмічено 🌱','Қабылдау белгіленді 🌱'],
+'Введите имя профиля':['Enter a profile name','Введіть ім’я профілю','Профиль атын енгізіңіз'],
+'Имя профиля сохранено':['Profile name saved','Ім’я профілю збережено','Профиль аты сақталды'],
+'Пожалуйста, выберите фотографию':['Please choose a photo','Будь ласка, виберіть фото','Фотосуретті таңдаңыз'],
+'Фото профиля сохранено':['Profile photo saved','Фото профілю збережено','Профиль фотосуреті сақталды'],
+'Фото профиля ещё не добавлено':['No profile photo added yet','Фото профілю ще не додано','Профиль фотосуреті әлі қосылмаған'],
+'Фото удалено':['Photo removed','Фото видалено','Фотосурет жойылды'],
+'Резервная копия подготовлена':['Backup is ready','Резервну копію підготовлено','Сақтық көшірме дайын'],
+'Данные сброшены':['Data has been reset','Дані скинуто','Деректер тазартылды'],
+'Вы':['You','Ви','Сіз'],
+'Готовлю ответ…':['Preparing an answer…','Готую відповідь…','Жауап дайындалуда…'],
+'Переписка очищена. Чем могу помочь?':['Chat cleared. How can I help?','Листування очищено. Чим можу допомогти?','Чат тазартылды. Қалай көмектесемін?'],
+'Ответ пока пуст. Попробуйте переформулировать вопрос.':['The response is empty. Please rephrase your question.','Відповідь поки порожня. Спробуйте переформулювати запитання.','Жауап бос. Сұрағыңызды басқаша қойып көріңіз.'],
+'Не удалось получить ответ':['Could not get a response','Не вдалося отримати відповідь','Жауап алу мүмкін болмады'],
+'Можно задать вопрос. Не отправляйте личные документы и данные, по которым вас можно определить.':['Ask a question. Do not send personal documents or identifying information.','Можна поставити запитання. Не надсилайте особисті документи та дані, за якими вас можна ідентифікувати.','Сұрақ қоюға болады. Жеке құжаттар мен сізді анықтауға мүмкіндік беретін деректерді жібермеңіз.'],
+
+'Ваше имя':['Your name','Ваше ім’я','Есіміңіз'],
+'Например, Витамин D':['For example, Vitamin D','Наприклад, вітамін D','Мысалы, D дәрумені'],
+'Например, 1 капсула':['For example, 1 capsule','Наприклад, 1 капсула','Мысалы, 1 капсула'],
+'Напишите свой вопрос…':['Type your question…','Напишіть своє запитання…','Сұрағыңызды жазыңыз…'],
+'Выбрать язык':['Choose language','Обрати мову','Тілді таңдау'],
+'Для чего нужен витамин D и как обычно оценивают его уровень?':['What is vitamin D for, and how is its level usually assessed?','Для чого потрібен вітамін D і як зазвичай оцінюють його рівень?','D дәрумені не үшін қажет және оның деңгейі қалай бағаланады?'],
+'На что обратить внимание при сочетании нескольких добавок?':['What should I consider when combining several supplements?','На що звернути увагу під час поєднання кількох добавок?','Бірнеше қоспаны бірге қабылдағанда неге назар аудару керек?'],
+'Объясни простыми словами, как читать общий анализ крови.':['Explain in simple terms how to read a complete blood count.','Поясни простими словами, як читати загальний аналіз крові.','Жалпы қан талдауын қалай оқу керегін қарапайым тілмен түсіндір.'],
+'Какие привычки помогают улучшить качество сна?':['What habits can help improve sleep quality?','Які звички допомагають покращити якість сну?','Ұйқы сапасын жақсартуға қандай әдеттер көмектеседі?'],
+'ИИ-помощник подключён':['AI assistant connected','Помічник ШІ підключений','ЖИ көмекшісі қосылды']
+};
+const dicts={en:{},uk:{},kk:{}};
+Object.entries(phrases).forEach(([ru,v])=>{
+ if(Array.isArray(v)){dicts.en[ru]=v[0];dicts.uk[ru]=v[1];dicts.kk[ru]=v[2]}
+ else {dicts.en[ru]=v;dicts.uk[ru]=v;dicts.kk[ru]=v}
+});
+const reverse={ru:new Map(),en:new Map(),uk:new Map(),kk:new Map()};
+Object.keys(dicts).forEach(lang=>Object.entries(dicts[lang]).forEach(([ru,tr])=>{if(!reverse[lang].has(tr))reverse[lang].set(tr,ru)}));
+let current='ru';
+try{const v=localStorage.getItem(STORAGE_KEY);if(['ru','kk','uk','en'].includes(v))current=v}catch(e){}
+window.cosmosLocale=locales[current];
+const clean=s=>String(s).replace(/\u00a0/g,' ');
+const originalTextNodes=new WeakMap(),originalAttributes=new WeakMap();
+function baseText(s){return reverse[current].get(s)||s}
+function translateBase(base){
+ if(current==='ru')return base;
+ if(dicts[current][base])return dicts[current][base];
+ let m=base.match(/^Рады видеть, (.+)$/);
+ if(m)return current==='en'?'Welcome back, '+m[1]+' 🌱':current==='uk'?'Раді вас бачити, '+m[1]+' 🌱':'Қайта келгеніңізге қуаныштымыз, '+m[1]+' 🌱';
+ m=base.match(/^✓ Выполнено: (\d+) · (показать|скрыть)$/);
+ if(m)return current==='en'?'✓ Completed: '+m[1]+' · '+(m[2]==='показать'?'show':'hide'):current==='uk'?'✓ Виконано: '+m[1]+' · '+(m[2]==='показать'?'показати':'сховати'):'✓ Орындалды: '+m[1]+' · '+(m[2]==='показать'?'көрсету':'жасыру');
+ m=base.match(/^За месяц: (\d+) из (\d+) приёмов$/);
+ if(m)return current==='en'?'This month: '+m[1]+' of '+m[2]+' entries':current==='uk'?'За місяць: '+m[1]+' із '+m[2]+' прийомів':'Осы айда: '+m[1]+' / '+m[2]+' қабылдау';
+ m=base.match(/^(\d+) из (\d+) приёмов отмечено$/);
+ if(m)return current==='en'?m[1]+' of '+m[2]+' entries completed':current==='uk'?m[1]+' із '+m[2]+' прийомів відмічено':m[1]+' / '+m[2]+' қабылдау белгіленді';
+ m=base.match(/^(\d+) из (\d+) приёмов$/);
+ if(m)return current==='en'?m[1]+' of '+m[2]+' entries':current==='uk'?m[1]+' із '+m[2]+' прийомів':m[1]+' / '+m[2]+' қабылдау';
+ m=base.match(/^Результат за (.+)$/);
+ if(m)return current==='en'?'Result for '+m[1]:current==='uk'?'Результат за '+m[1]:'Нәтиже: '+m[1];
+ return base;
+}
+function translateValue(value){return translateBase(baseText(clean(value)))}
+function translateNode(node){
+ const p=node.parentElement;if(!p||p.closest('script,style,textarea,.ai-message-content,.supp-name,.supp-meta'))return;
+ const raw=node.nodeValue||'',trim=raw.trim();if(!trim)return;
+ const lead=raw.match(/^\\s*/)?.[0]||'',trail=raw.match(/\\s*$/)?.[0]||'';
+ const original=originalTextNodes.has(node)?originalTextNodes.get(node):baseText(trim);
+ originalTextNodes.set(node,original);
+ const translated=translateBase(original);
+ if(translated!==trim)node.nodeValue=lead+translated+trail;
+}
+function translateAttributes(root){
+ const els=(root.nodeType===1?[root]:[]).concat([...root.querySelectorAll?.('*')||[]]);
+ els.forEach(el=>{
+  ['placeholder','aria-label','title','data-ai-prompt'].forEach(attr=>{
+   if(!el.hasAttribute?.(attr))return;
+   const value=el.getAttribute(attr);
+   let originals=originalAttributes.get(el);
+   if(!originals){originals=new Map();originalAttributes.set(el,originals)}
+   const original=originals.has(attr)?originals.get(attr):baseText(clean(value));
+   originals.set(attr,original);
+   const next=translateBase(original);
+   if(next!==value)el.setAttribute(attr,next);
+  });
+ });
+}
+function apply(root=document.body){
+ if(!root)return;
+ const walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);
+ let node;while((node=walker.nextNode()))translateNode(node);
+ translateAttributes(root);
+ document.documentElement.lang=current;
+ document.body.dataset.language=current;
+ const toggle=document.getElementById('cosmosLanguageToggle');
+ if(toggle)toggle.innerHTML='<span aria-hidden="true">🌐</span><span>'+({ru:'RU',kk:'KZ',uk:'UK',en:'EN'}[current])+'</span>';
+}
+function setLanguage(lang){
+ if(!['ru','kk','uk','en'].includes(lang))return;
+ current=lang;try{localStorage.setItem(STORAGE_KEY,lang)}catch(e){}
+ window.cosmosLocale=locales[lang];
+ apply();
+ const menu=document.getElementById('cosmosLanguageMenu');if(menu)menu.hidden=true;
+ const toggle=document.getElementById('cosmosLanguageToggle');if(toggle)toggle.setAttribute('aria-expanded','false');
+ document.dispatchEvent(new Event('cosmos-language-change'));
+ setTimeout(()=>apply(),40);
+}
+const style=document.createElement('style');
+style.textContent=`
+#cosmosLanguageToggle{position:fixed;right:13px;bottom:calc(96px + env(safe-area-inset-bottom));z-index:90;display:flex;align-items:center;gap:7px;min-height:40px;padding:0 13px;border:1px solid rgba(209,224,203,.9);border-radius:999px;background:rgba(248,250,243,.96);color:#204a35;box-shadow:0 5px 18px rgba(2,22,14,.2);font:700 12px/1 system-ui,-apple-system,sans-serif;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+#cosmosLanguageMenu{position:fixed;right:13px;bottom:calc(144px + env(safe-area-inset-bottom));z-index:91;width:190px;padding:7px;border:1px solid #dce5d8;border-radius:17px;background:#fffefa;box-shadow:0 14px 36px rgba(2,22,14,.22)}
+#cosmosLanguageMenu[hidden]{display:none!important}
+#cosmosLanguageMenu button{display:flex;align-items:center;justify-content:space-between;width:100%;min-height:42px;padding:9px 11px;border:0;border-radius:11px;background:transparent;color:#294b38;font:600 14px system-ui,-apple-system,sans-serif;text-align:left}
+#cosmosLanguageMenu button[aria-current="true"]{background:#e9f0e5;color:#173d2b}
+#cosmosLanguageMenu button:active{background:#e3ecdf}
+@media(max-width:380px){#cosmosLanguageToggle{right:9px;bottom:calc(91px + env(safe-area-inset-bottom))}#cosmosLanguageMenu{right:9px;bottom:calc(139px + env(safe-area-inset-bottom))}}
+`;
+document.head.appendChild(style);
+const toggle=document.createElement('button');toggle.id='cosmosLanguageToggle';toggle.type='button';toggle.setAttribute('aria-label','Выбрать язык');toggle.setAttribute('aria-expanded','false');
+const menu=document.createElement('div');menu.id='cosmosLanguageMenu';menu.hidden=true;menu.setAttribute('role','menu');
+const names={ru:'Русский',kk:'Қазақша',uk:'Українська',en:'English'};
+Object.entries(names).forEach(([lang,name])=>{const b=document.createElement('button');b.type='button';b.textContent=name;b.dataset.lang=lang;b.setAttribute('role','menuitem');b.addEventListener('click',()=>setLanguage(lang));menu.appendChild(b)});
+toggle.addEventListener('click',()=>{menu.hidden=!menu.hidden;toggle.setAttribute('aria-expanded',String(!menu.hidden));menu.querySelectorAll('button').forEach(b=>b.setAttribute('aria-current',String(b.dataset.lang===current)))});
+document.addEventListener('click',e=>{if(!menu.hidden&&!menu.contains(e.target)&&e.target!==toggle&&!toggle.contains(e.target)){menu.hidden=true;toggle.setAttribute('aria-expanded','false')}});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){menu.hidden=true;toggle.setAttribute('aria-expanded','false')}});
+document.body.append(toggle,menu);
+const observer=new MutationObserver(records=>{for(const r of records){if(r.type==='characterData')translateNode(r.target);else r.addedNodes.forEach(n=>{if(n.nodeType===Node.TEXT_NODE)translateNode(n);else if(n.nodeType===Node.ELEMENT_NODE)apply(n)})}});
+observer.observe(document.body,{subtree:true,childList:true,characterData:true});
+apply();
+document.addEventListener('cosmos-language-change',()=>{setTimeout(()=>apply(),0)});
+})();
+</script>
 </body></html>
