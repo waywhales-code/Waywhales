@@ -670,7 +670,15 @@ let aiHistory=[];
 function aiAddMessage(role,text,extraClass=''){
  const node=document.createElement('div');node.className='ai-message '+(role==='user'?'ai-user':'ai-assistant')+(extraClass?' '+extraClass:'');
  const label=document.createElement('span');label.className='ai-message-label';label.textContent=role==='user'?'Вы':'COSMOS AI';
- const body=document.createElement('p');body.textContent=text;
+ const body=document.createElement('div');body.className='ai-message-content';
+ const escaped=String(text).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+ body.innerHTML=escaped
+  .replace(/^#{1,3}\\s+(.+)$/gm,'<strong>$1</strong>')
+  .replace(/\\*\\*(.+?)\\*\\*/g,'<strong>$1</strong>')
+  .replace(/^\\s*[-•]\\s+(.+)$/gm,'<div class="ai-bullet">• $1</div>')
+  .replace(/\\n{2,}/g,'</p><p>')
+  .replace(/\\n/g,'<br>');
+ body.innerHTML='<p>'+body.innerHTML+'</p>';
  node.append(label,body);aiMessagesEl.appendChild(node);aiMessagesEl.scrollTop=aiMessagesEl.scrollHeight;return node;
 }
 function aiSetReady(){
@@ -848,4 +856,14 @@ body.ai-chat-open{overflow:hidden}
 @media(max-width:520px){.ai-modal{padding:0;place-items:end center}.ai-window{width:100%;height:94dvh;max-height:94dvh;border-radius:24px 24px 0 0}.ai-launcher{padding:15px}.ai-launcher-copy h3{font-size:17px}}
 </style>
 
+
+<style id="cosmos-ai-message-polish">
+.ai-message-content{font-size:14px;line-height:1.65;overflow-wrap:anywhere}
+.ai-message-content p{margin:0 0 9px}
+.ai-message-content p:last-child{margin-bottom:0}
+.ai-message-content strong{font-weight:750;color:inherit}
+.ai-message-content .ai-bullet{padding-left:3px;margin:4px 0}
+.ai-message{max-width:min(88%,680px)}
+.ai-pending{opacity:.72}
+</style>
 </body></html>
