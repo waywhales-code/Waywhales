@@ -986,4 +986,78 @@ body.ai-chat-open{overflow:hidden}
  .plan-day-switch button{transition:none!important}
 }
 </style>
+
+<style id="cosmos-supplement-modal-responsive">
+/* Responsive supplement editor: fit the viewport, never crop form controls */
+#suppModal{box-sizing:border-box}
+#suppModal *{box-sizing:border-box}
+#suppModal .dialog{
+ width:min(100%,480px);
+ max-width:100%;
+ max-height:min(90dvh,820px);
+ overflow-x:hidden;
+ overflow-y:auto;
+ overscroll-behavior:contain;
+ -webkit-overflow-scrolling:touch;
+ padding:22px;
+ margin:auto;
+}
+#suppModal .dialog h2{font-size:25px;line-height:1.2;margin:0 0 16px}
+#suppModal .field{width:100%;min-width:0;gap:7px;margin:13px 0}
+#suppModal .field label{font-size:14px;line-height:1.35}
+#suppModal .field input:not([type=checkbox]),
+#suppModal .field select{
+ display:block;width:100%;max-width:100%;min-width:0;min-height:48px;
+ padding:11px 13px;border-radius:13px;font-size:16px;line-height:1.25;
+}
+#suppModal .field input[type=date],
+#suppModal .field input[type=time]{
+ -webkit-appearance:none;appearance:none;min-height:50px;
+}
+#suppModal .schedule-note{display:block;font-size:12px;line-height:1.4;overflow-wrap:anywhere}
+#suppModal .weekday-picker{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px;width:100%}
+#suppModal .weekday-picker label{min-width:0}
+#suppModal .weekday-picker label span{display:grid;place-items:center;min-height:42px;padding:5px 2px;border:1px solid var(--line);border-radius:11px;background:#fff;font-size:12px}
+#suppModal .weekday-picker input:checked+span{background:var(--forest);border-color:var(--forest);color:#fff}
+#suppModal .dialog-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px}
+#suppModal .dialog-actions button{width:100%;min-width:0;min-height:48px;padding:10px 12px;font-size:15px}
+@media(max-width:600px){
+ #suppModal{
+  align-items:flex-start!important;justify-content:center!important;
+  padding:calc(env(safe-area-inset-top) + 8px) 12px calc(env(safe-area-inset-bottom) + 8px)!important;
+  overflow:hidden;
+ }
+ #suppModal .dialog{
+  width:100%!important;max-width:480px!important;
+  max-height:100%!important;height:auto!important;
+  margin:0 auto!important;padding:18px 16px 16px!important;
+  border-radius:20px!important;
+  overflow-x:hidden!important;overflow-y:auto!important;
+  -webkit-overflow-scrolling:touch;
+ }
+ #suppModal .dialog h2{font-size:23px;margin-bottom:13px}
+ #suppModal .field{margin:10px 0;gap:6px}
+ #suppModal .field label{font-size:13px}
+ #suppModal .field input:not([type=checkbox]),
+ #suppModal .field select{min-height:46px;padding:10px 12px;font-size:16px}
+ #suppModal .weekday-picker{gap:4px}
+ #suppModal .weekday-picker label span{min-height:39px;font-size:11px;border-radius:9px}
+ #suppModal .dialog-actions{
+  position:sticky;bottom:-16px;
+  margin:14px -16px -16px!important;
+  padding:12px 16px calc(12px + env(safe-area-inset-bottom))!important;
+  background:linear-gradient(180deg,rgba(245,245,237,.94),var(--paper) 28%);
+  border-top:1px solid rgba(220,228,218,.75);
+  z-index:2;
+ }
+ #suppModal .dialog-actions button{min-height:46px;font-size:14px;padding:9px 8px}
+}
+@media(max-width:360px){
+ #suppModal{padding-left:8px!important;padding-right:8px!important}
+ #suppModal .dialog{padding-left:13px!important;padding-right:13px!important}
+ #suppModal .weekday-picker{gap:3px}
+ #suppModal .weekday-picker label span{font-size:10px}
+ #suppModal .dialog-actions{margin-left:-13px!important;margin-right:-13px!important;padding-left:13px!important;padding-right:13px!important}
+}
+</style>
 </body></html>
