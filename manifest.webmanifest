@@ -1,13 +1,13 @@
 {
-  "name": "COSMIA — by Waywhales",
-  "short_name": "COSMIA",
+  "name": "COSMOS — by Waywhales",
+  "short_name": "COSMOS",
   "lang": "ru",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "background_color": "#102b20",
   "theme_color": "#102b20",
-  "description": "COSMIA — дневник заботы о теле, душе и внутренней гармонии. by Waywhales.",
+  "description": "COSMOS — дневник заботы о теле, душе и внутренней гармонии. by Waywhales.",
   "icons": [
     {
       "src": "./icon.svg",
