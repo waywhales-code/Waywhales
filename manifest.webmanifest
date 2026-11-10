@@ -1,13 +1,13 @@
 {
-  "name": "Sprout — by Waywhales",
-  "short_name": "Sprout",
+  "name": "COSMIA — by Waywhales",
+  "short_name": "COSMIA",
   "lang": "ru",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "background_color": "#102b20",
   "theme_color": "#102b20",
-  "description": "Sprout — спокойный дневник добавок и заботы о себе. by Waywhales.",
+  "description": "COSMIA — дневник заботы о теле, душе и внутренней гармонии. by Waywhales.",
   "icons": [
     {
       "src": "./icon.svg",
