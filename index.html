@@ -1179,9 +1179,9 @@ const phrases={
 'Сон':['Sleep','Сон','Ұйқы'],
 'Отправить':['Send','Надіслати','Жіберу'],
 'Не указывайте ФИО, адрес, телефон и другие личные данные. Ответы ИИ носят информационный характер и не заменяют консультацию врача.':['Do not enter your name, address, phone number or other personal data. AI responses are informational and do not replace medical advice.','Не вказуйте ПІБ, адресу, телефон та інші особисті дані. Відповіді ШІ мають інформаційний характер і не замінюють консультацію лікаря.','Аты-жөніңізді, мекенжайыңызды, телефон нөміріңізді және басқа жеке деректерді енгізбеңіз. ЖИ жауаптары ақпараттық сипатта және дәрігер кеңесін алмастырмайды.'],
-'Выполнено: ':'Completed: ','Виконано: ','Орындалды: ',
-' · показать':' · show',' · показати',' · көрсету',
-' · скрыть':' · hide',' · сховати',' · жасыру',
+'Выполнено: ':['Completed: ','Виконано: ','Орындалды: '],
+' · показать':[' · show',' · показати',' · көрсету'], 
+' · скрыть':[' · hide',' · сховати',' · жасыру'], 
 'Свободный график':'Flexible schedule','Вільний графік','Еркін кесте',
 'отмечай, когда удобно':'mark whenever it suits you','відмічай, коли зручно','өзіңізге ыңғайлы кезде белгілеңіз',
 'Без заметки':'No note','Без нотатки','Ескертпе жоқ',
@@ -1200,9 +1200,9 @@ const phrases={
 'День народного единства':['National Unity Day','День народної єдності','Халық бірлігі күні'],
 'Перенос выходного дня':['Substitute day off','Перенесення вихідного дня','Демалыс күнін ауыстыру'],
 'Выходной день':['Day off','Вихідний день','Демалыс күні'],
-'Приёмы: ':'Entries: ','Прийоми: ','Қабылдау: ',
-' · отмечено: ':' · completed: ',' · відмічено: ',' · белгіленген: ',
-' · свободный график: ':' · flexible: ',' · вільний графік: ',' · еркін кесте: ',
+'Приёмы: ':['Entries: ','Прийоми: ','Қабылдау: '],
+' · отмечено: ':[' · completed: ',' · відмічено: ',' · белгіленген: '],
+' · свободный график: ':[' · flexible: ',' · вільний графік: ',' · еркін кесте: '],
 'Снять все отметки':['Clear all check-ins','Зняти всі відмітки','Барлық белгілерді алып тастау'],
 'Отличная работа! Все приёмы на этот день отмечены.':['Great job! All entries for this day are complete.','Чудова робота! Усі прийоми за цей день відмічено.','Жарайсыз! Бұл күнгі барлық қабылдаулар белгіленді.'],
 'Отличная работа! Все приёмы на сегодня отмечены.':['Great job! All entries for today are complete.','Чудова робота! Усі прийоми на сьогодні відмічено.','Жарайсыз! Бүгінгі барлық қабылдаулар белгіленді.'],
@@ -1244,7 +1244,7 @@ Object.entries(phrases).forEach(([ru,v])=>{
  if(Array.isArray(v)){dicts.en[ru]=v[0];dicts.uk[ru]=v[1];dicts.kk[ru]=v[2]}
  else {dicts.en[ru]=v;dicts.uk[ru]=v;dicts.kk[ru]=v}
 });
-const reverse={en:new Map(),uk:new Map(),kk:new Map()};
+const reverse={ru:new Map(),en:new Map(),uk:new Map(),kk:new Map()};
 Object.keys(dicts).forEach(lang=>Object.entries(dicts[lang]).forEach(([ru,tr])=>{if(!reverse[lang].has(tr))reverse[lang].set(tr,ru)}));
 let current='ru';
 try{const v=localStorage.getItem(STORAGE_KEY);if(['ru','kk','uk','en'].includes(v))current=v}catch(e){}
@@ -1266,7 +1266,7 @@ function translateValue(value){
  return base;
 }
 function translateNode(node){
- const p=node.parentElement;if(!p||p.closest('script,style,textarea,.ai-message-content,.supp-name,.supp-meta,.profile-identity'))return;
+ const p=node.parentElement;if(!p||p.closest('script,style,textarea,.ai-message-content,.supp-name,.supp-meta'))return;
  const raw=node.nodeValue||'',trim=raw.trim();if(!trim)return;
  const lead=raw.match(/^\s*/)?.[0]||'',trail=raw.match(/\s*$/)?.[0]||'';
  const translated=translateValue(trim);
