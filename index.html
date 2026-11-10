@@ -439,4 +439,68 @@ $('resetData').addEventListener('click',()=>{if(confirm('Удалить проф
 const dailyScenes=['nebula','forest','galaxy','ocean','sunrise'];let previousTheme='';try{previousTheme=localStorage.getItem('cosmosLastTheme')||''}catch(e){}let choices=dailyScenes.filter(x=>x!==previousTheme);const chosenTheme=choices[Math.floor(Math.random()*choices.length)];try{localStorage.setItem('cosmosLastTheme',chosenTheme)}catch(e){}const scene=document.getElementById('cosmosScene');if(scene)scene.dataset.theme=chosenTheme;document.body.dataset.cosmosTheme=chosenTheme;
 render();
 })();
-</script></body></html>
+</script>
+<style id="cosmos-profile-polish">
+/* Refined COSMOS profile card */
+#profileView > .profile-card:first-of-type{
+  padding:clamp(20px,4vw,30px)!important;
+  border:1px solid rgba(205,220,202,.95)!important;
+  border-radius:28px!important;
+  background:linear-gradient(145deg,#edf3eb 0%,#dce9e9 100%)!important;
+  box-shadow:0 16px 38px rgba(3,28,25,.14),inset 0 1px 0 rgba(255,255,255,.85)!important;
+}
+#profileView .profile-card .profile{
+  display:flex!important;align-items:center!important;gap:18px!important;
+  margin:0 0 22px!important;
+}
+#profileView .profile-card .avatar{
+  width:clamp(82px,20vw,112px)!important;height:clamp(82px,20vw,112px)!important;
+  flex:0 0 auto!important;border:3px solid #f8fbf4!important;
+  box-shadow:0 5px 18px rgba(21,61,45,.15)!important;
+}
+#profileView #profileName{display:block!important;color:#173f32!important;font-size:clamp(21px,5vw,28px)!important;font-weight:750!important;line-height:1.2!important}
+#profileView .profile-card .profile .hint{font-size:15px!important;color:#687d73!important;margin-top:5px!important}
+#profileView .profile-photo-actions{
+  display:flex!important;align-items:center!important;gap:12px!important;
+  margin:18px 0 22px!important;
+}
+#profileView .profile-card .profile-photo-actions > label.photo-edit-btn{
+  display:flex!important;flex:1 1 auto!important;justify-content:center!important;align-items:center!important;
+  min-height:58px!important;padding:14px 18px!important;border-radius:18px!important;
+  background:linear-gradient(135deg,#eaf2e5,#dce9dd)!important;
+  color:#174633!important;-webkit-text-fill-color:#174633!important;
+  border:1px solid #c6d8c6!important;font-size:17px!important;font-weight:750!important;
+  letter-spacing:.1px!important;box-shadow:0 5px 15px rgba(21,61,45,.08)!important;
+}
+#profileView .profile-photo-actions .photo-menu{flex:0 0 58px!important}
+#profileView .profile-photo-actions .photo-menu summary{
+  width:58px!important;height:58px!important;border-radius:18px!important;
+  background:#f1f5eb!important;color:#174633!important;border:1px solid #c6d8c6!important;
+  box-shadow:0 5px 15px rgba(21,61,45,.08)!important;
+}
+#profileView .profile-card .field{gap:9px!important;margin:18px 0!important}
+#profileView .profile-card .field label{
+  color:#526d60!important;font-size:15px!important;font-weight:650!important;
+}
+#profileView #nameInput{
+  min-height:58px!important;padding:14px 17px!important;border-radius:17px!important;
+  border:1px solid #d1dfd0!important;background:#fffefa!important;color:#203c30!important;
+  font-size:18px!important;box-shadow:inset 0 1px 2px rgba(22,54,39,.04)!important;
+}
+#profileView #saveProfile{
+  min-height:58px!important;padding:14px 25px!important;border-radius:18px!important;
+  background:linear-gradient(135deg,#286174,#173e53)!important;
+  color:#fff!important;-webkit-text-fill-color:#fff!important;
+  font-size:17px!important;font-weight:750!important;letter-spacing:.1px!important;
+  box-shadow:0 9px 22px rgba(15,54,68,.2)!important;
+}
+#profileView #saveProfile:active,#profileView .photo-edit-btn:active{transform:translateY(1px) scale(.99)!important}
+@media(max-width:520px){
+ #profileView > .profile-card:first-of-type{padding:18px!important;border-radius:23px!important}
+ #profileView .profile-photo-actions{gap:9px!important}
+ #profileView .profile-card .profile-photo-actions > label.photo-edit-btn{font-size:15px!important;min-height:54px!important}
+ #profileView #saveProfile{width:100%!important}
+}
+</style>
+
+</body></html>
