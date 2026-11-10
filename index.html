@@ -673,12 +673,11 @@ function aiAddMessage(role,text,extraClass=''){
  const body=document.createElement('div');body.className='ai-message-content';
  const escaped=String(text).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
  body.innerHTML=escaped
-  .replace(/^#{1,3}\\s+(.+)$/gm,'<strong>$1</strong>')
-  .replace(/\\*\\*(.+?)\\*\\*/g,'<strong>$1</strong>')
-  .replace(/^\\s*[-•]\\s+(.+)$/gm,'<div class="ai-bullet">• $1</div>')
-  .replace(/\\n{2,}/g,'</p><p>')
-  .replace(/\\n/g,'<br>');
- body.innerHTML='<p>'+body.innerHTML+'</p>';
+  .replace(/^#{1,3}\s+(.+)$/gm,'<strong>$1</strong>')
+  .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
+  .replace(/^\s*[-•]\s+(.+)$/gm,'<div class="ai-bullet">• $1</div>')
+  .replace(/\n{2,}/g,'</p><p>')
+  .replace(/\n/g,'<br>'); body.innerHTML='<p>'+body.innerHTML+'</p>';
  node.append(label,body);aiMessagesEl.appendChild(node);aiMessagesEl.scrollTop=aiMessagesEl.scrollHeight;return node;
 }
 function aiSetReady(){
@@ -865,5 +864,41 @@ body.ai-chat-open{overflow:hidden}
 .ai-message-content .ai-bullet{padding-left:3px;margin:4px 0}
 .ai-message{max-width:min(88%,680px)}
 .ai-pending{opacity:.72}
+</style>
+
+<style id="cosmos-ai-mobile-refinement">
+.ai-window{width:min(100%,600px);height:min(86dvh,760px);border-radius:23px}
+.ai-head{padding:13px 16px}
+.ai-head-brand strong{font-size:16px}.ai-head-brand small{font-size:12px}
+.ai-head-symbol{width:40px;height:40px}
+.ai-status{padding:9px 14px;font-size:12px}
+.ai-messages{gap:10px;padding:14px}
+.ai-message{max-width:92%;padding:11px 13px;border-radius:15px}
+.ai-message-content{font-size:14px;line-height:1.55}
+.ai-message-content p{margin:0 0 8px}
+.ai-message-content .ai-bullet{margin:3px 0}
+.ai-topics{gap:7px;flex-wrap:nowrap;overflow-x:auto;overscroll-behavior-x:contain;padding:0 13px 10px;scrollbar-width:none}
+.ai-topics::-webkit-scrollbar{display:none}
+.ai-topics button{flex:0 0 auto;padding:7px 10px;font-size:11px}
+.ai-form{gap:8px;padding:10px 12px}
+.ai-form textarea{min-height:44px;max-height:100px;padding:10px 12px;font-size:14px}
+.ai-form button{min-height:42px;padding:0 13px;font-size:13px}
+.ai-privacy{padding:0 12px 10px;font-size:10px}
+@media(max-width:600px){
+ .ai-modal{padding:0;place-items:stretch}
+ .ai-window{width:100%;height:100dvh;max-height:100dvh;min-height:0;border-radius:0;border-left:0;border-right:0}
+ .ai-head{padding:calc(10px + env(safe-area-inset-top)) 14px 11px}
+ .ai-head-actions button{width:36px;height:36px}
+ .ai-messages{padding:12px;gap:9px}
+ .ai-message{max-width:94%;padding:10px 12px}
+ .ai-message-label{font-size:10px;margin-bottom:4px}
+ .ai-message-content{font-size:14px;line-height:1.52}
+ .ai-topics{padding:0 12px 9px}
+ .ai-form{padding:9px 11px}
+ .ai-form textarea{font-size:16px;min-height:44px}
+ .ai-form button{min-height:44px;padding:0 12px}
+ .ai-privacy{padding:0 11px calc(8px + env(safe-area-inset-bottom))}
+}
+@media(min-width:601px) and (max-width:900px){.ai-window{width:min(94vw,620px);height:88dvh}}
 </style>
 </body></html>
