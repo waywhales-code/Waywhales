@@ -827,7 +827,7 @@ async function enablePush(){
   return true;
  }catch(error){
   toggle.checked=false;
-  $('pushTestButton').disabled=true;
+  $('pushTestButton').disabled=false;
   pushStatus(error&&error.message?error.message:'Не удалось включить уведомления.');
   if(subscription&&subscription.endpoint){
    try{await removeServerPushSubscription(subscription.endpoint)}catch(ignored){}
@@ -845,14 +845,14 @@ async function disablePush(){
   await removeServerPushSubscription(subscription&&subscription.endpoint);
   if(subscription)await subscription.unsubscribe();
   toggle.checked=false;
-  $('pushTestButton').disabled=true;
+  $('pushTestButton').disabled=false;
   pushStatus('Уведомления отключены на этом устройстве.');
  }catch(error){toggle.checked=true;$('pushTestButton').disabled=false;pushStatus(error&&error.message?error.message:'Не удалось отключить уведомления.')}
  finally{pushBusy=false;toggle.disabled=false}
 }
 async function updatePushTime(){
  if(!$('pushEnabled').checked||pushBusy)return;
- pushBusy=true;$('pushReminderTime').disabled=true;$('pushEnabled').disabled=true;$('pushTestButton').disabled=true;
+ pushBusy=true;$('pushReminderTime').disabled=true;$('pushEnabled').disabled=true;$('pushTestButton').disabled=false;
  try{
   const registration=await getPushRegistration();
   const subscription=await registration.pushManager.getSubscription();
@@ -860,7 +860,7 @@ async function updatePushTime(){
   await savePushSubscription(subscription);
   pushStatus('Время напоминания обновлено: '+$('pushReminderTime').value+'.');
  }catch(error){pushStatus(error&&error.message?error.message:'Не удалось обновить время уведомления.')}
- finally{pushBusy=false;$('pushReminderTime').disabled=false;$('pushEnabled').disabled=false;$('pushTestButton').disabled=!$('pushEnabled').checked}
+ finally{pushBusy=false;$('pushReminderTime').disabled=false;$('pushEnabled').disabled=false;$('pushTestButton').disabled=false}
 }
 async function enableAndTestPush(){
  if(pushBusy)return;
@@ -892,7 +892,7 @@ async function testPushNotification(){
   pushStatus(error&&error.message?error.message:'Не удалось отправить тестовое уведомление.');
  }finally{
   pushBusy=false;$('pushEnabled').disabled=false;$('pushReminderTime').disabled=false;
-  button.disabled=!$('pushEnabled').checked;
+  button.disabled=false;
  }
 }
 async function initializePush(){
@@ -909,7 +909,7 @@ async function initializePush(){
    catch(error){pushStatus('Не удалось синхронизировать отключение уведомлений: '+(error.message||'ошибка сервера.'))}
   }
   toggle.checked=!!subscription&&notificationGranted;
-  $('pushTestButton').disabled=!toggle.checked;
+  $('pushTestButton').disabled=false;
   if(!('Notification' in window)||!('PushManager' in window)){pushStatus('Push-уведомления недоступны в этом браузере. Нажмите кнопку ниже, чтобы увидеть доступные инструкции.');return}
   pushStatus(toggle.checked?'Уведомления включены на этом устройстве.':'Уведомления выключены. Включите переключатель, чтобы настроить напоминание.');
  }catch(error){pushStatus(error&&error.message?error.message:'Не удалось подготовить фоновое приложение.')}
