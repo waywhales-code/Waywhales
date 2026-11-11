@@ -487,6 +487,17 @@ body:before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opac
 <section id="profileView" class="view profile-layout">
 <div class="profile-intro"><span class="eyebrow">ВАШЕ ЛИЧНОЕ ПРОСТРАНСТВО</span><h2>Профиль</h2><p>Настройте COSMOS под свой ритм</p></div>
 <div class="panel profile-card profile-main-card"><div class="profile"><div class="avatar" id="avatar">🌱</div><div class="profile-identity"><strong id="profileName">Гость</strong><div class="hint">Ваш профиль на этом устройстве</div></div><details class="photo-menu profile-menu"><summary aria-label="Действия с профилем" title="Действия с профилем">…</summary><div class="photo-menu-pop"><label class="profile-menu-action" for="photoInput">Изменить фото</label><button type="button" id="removePhoto">Удалить фото</button><button type="button" id="openProfileEdit">Изменить имя</button></div></details></div><input id="photoInput" type="file" accept="image/*" hidden><div id="profileEditPanel" class="profile-edit-panel" hidden><div class="field"><label for="nameInput">Новое имя</label><input id="nameInput" maxlength="40" placeholder="Ваше имя"></div><div class="profile-edit-actions" style="display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important;align-items:stretch!important"><button class="btn" id="saveProfile" type="button" style="display:flex!important;align-items:center!important;justify-content:center!important;box-sizing:border-box!important;width:100%!important;height:52px!important;min-height:52px!important;max-height:52px!important;padding:0 10px!important;margin:0!important;flex:none!important;font-size:16px!important;line-height:1.2!important;white-space:nowrap!important">Сохранить</button><button class="profile-cancel-btn" id="cancelProfileEdit" type="button" style="display:flex!important;align-items:center!important;justify-content:center!important;box-sizing:border-box!important;width:100%!important;height:52px!important;min-height:52px!important;max-height:52px!important;padding:0 10px!important;margin:0!important;flex:none!important;font-size:16px!important;line-height:1.2!important;white-space:nowrap!important">Отмена</button></div></div></div>
+<div class="panel profile-card push-settings-card">
+ <div class="card-kicker">ЗАБОТА О СЕБЕ</div>
+ <h2>Напоминания COSMOS</h2>
+ <p class="sub">Одно ежедневное напоминание в выбранное время. Оно может прийти, даже когда COSMOS закрыт.</p>
+ <label class="push-switch-row" for="pushEnabled">
+  <span class="push-switch-copy"><strong>Ежедневное напоминание</strong><small>Мягкий сигнал уделить время себе</small></span>
+  <input class="push-switch" id="pushEnabled" type="checkbox" role="switch" aria-label="Включить ежедневные уведомления">
+ </label>
+ <div class="field"><label for="pushReminderTime">Время напоминания</label><input id="pushReminderTime" type="time" value="08:00"></div>
+ <p class="hint" id="pushStatus" role="status" aria-live="polite">Проверяем поддержку уведомлений…</p>
+</div>
 <div class="panel profile-card"><div class="card-kicker">ТЕКУЩИЙ МЕСЯЦ</div><h2>Мой прогресс за месяц</h2><div class="month-result"><div class="month-result-top"><strong id="overallPercent">0%</strong><span id="overallCounts">0 из 0 приёмов</span></div><div class="progress-track"><span id="overallBar"></span></div><p class="sub">Процент = отмеченные приёмы / все приёмы по графику. Свободный график не завышает результат.</p></div></div><div class="panel profile-card" style="display:none" aria-hidden="true"><div class="card-kicker">МОЯ СТАТИСТИКА</div><h2>Результаты по месяцам</h2><h2>История и анализ</h2><p class="sub">Ваш прогресс отдельно за каждый месяц</p><div class="month-pick"><button class="month-nav" id="statsPrevMonth" type="button" aria-label="Предыдущий месяц">‹</button><div class="month-pick-center"><label for="statsMonth">Выберите месяц</label><input id="statsMonth" type="month"></div><button class="month-nav" id="statsNextMonth" type="button" aria-label="Следующий месяц">›</button></div><button class="month-current" id="statsCurrentMonth" type="button">Вернуться к текущему месяцу</button><div class="month-result"><div class="month-result-top"><strong id="monthPercent">0%</strong><span id="monthCounts">0 из 0 приёмов</span></div><div class="progress-track"><span id="monthBar"></span></div><p id="monthCaption" class="sub">За выбранный месяц</p></div><h3 class="analysis-heading">По месяцам</h3><div id="monthlyHistory" class="monthly-history"></div><h3 class="analysis-heading">Последние 7 дней</h3><div id="weeklyStats" class="stat-grid"></div><p class="hint" style="margin-top:18px">Процент показывает долю отмеченных приёмов от всех запланированных. Он не оценивает медицинскую эффективность добавок.</p></div>
 <div class="panel profile-card"><div class="card-kicker">ВАШИ ДАННЫЕ</div><h2>Данные и конфиденциальность</h2><p class="sub">Ваши записи хранятся только в браузере на этом устройстве. COSMOS не получает к ним доступ и не отправляет их на наши серверы. Экспорт и удаление данных — под вашим контролем.</p><div class="profile-actions"><button class="btn ghost small" id="exportData">Экспортировать данные</button><button class="btn danger small" id="resetData">Сбросить данные</button></div><p class="support-link"><a href="https://t.me/waywhales" target="_blank" rel="noopener">Связаться с Waywhales ↗</a></p></div>
 </section>
@@ -732,6 +743,119 @@ $('aiChatForm').addEventListener('submit',async e=>{
 });
 aiInput.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();$('aiChatForm').requestSubmit()}});
 aiSetReady();
+
+const PUSH_API='https://cosmos-push.waywhales.workers.dev';
+const PUSH_DEVICE_KEY='cosmos.push.deviceId';
+const PUSH_TIME_KEY='cosmos.push.reminderTime';
+let pushRegistration=null;
+let pushBusy=false;
+function pushStatus(message){const el=$('pushStatus');if(el)el.textContent=message}
+function pushDeviceId(){
+ try{let id=localStorage.getItem(PUSH_DEVICE_KEY);if(!id){id=crypto.randomUUID();localStorage.setItem(PUSH_DEVICE_KEY,id)}return id}
+ catch(error){throw new Error('Не удалось создать идентификатор устройства. Разрешите хранение данных сайта.')}
+}
+function pushApplicationKey(value){
+ const normalized=String(value).replace(/-/g,'+').replace(/_/g,'/');
+ const padded=normalized+'='.repeat((4-normalized.length%4)%4);
+ const binary=atob(padded);
+ return Uint8Array.from(binary,function(char){return char.charCodeAt(0)});
+}
+async function getPushRegistration(){
+ if(!('serviceWorker' in navigator))throw new Error('Этот браузер не поддерживает фоновые уведомления.');
+ if(!pushRegistration)pushRegistration=await navigator.serviceWorker.register('./sw.js',{scope:'./'});
+ await navigator.serviceWorker.ready;
+ return pushRegistration;
+}
+async function getPushConfig(){
+ const response=await fetch(PUSH_API+'/config',{method:'GET',cache:'no-store',credentials:'omit'});
+ const config=await response.json().catch(()=>({}));
+ if(!response.ok||!config.configured||!config.publicKey)throw new Error(config.error||'Сервер уведомлений ещё настраивается.');
+ return config;
+}
+async function savePushSubscription(subscription){
+ const reminderTime=$('pushReminderTime').value||'08:00';
+ const timezone=Intl.DateTimeFormat().resolvedOptions().timeZone||'UTC';
+ const response=await fetch(PUSH_API+'/subscribe',{
+  method:'POST',cache:'no-store',credentials:'omit',
+  headers:{'Content-Type':'application/json'},
+  body:JSON.stringify({deviceId:pushDeviceId(),subscription:subscription.toJSON(),reminderTime:reminderTime,timezone:timezone})
+ });
+ const result=await response.json().catch(()=>({}));
+ if(!response.ok)throw new Error(result.error||'Не удалось сохранить настройки уведомлений.');
+ try{localStorage.setItem(PUSH_TIME_KEY,reminderTime)}catch(error){}
+ return result;
+}
+async function enablePush(){
+ if(pushBusy)return;
+ const toggle=$('pushEnabled');
+ pushBusy=true;toggle.disabled=true;pushStatus('Подключаем уведомления…');
+ let subscription=null;
+ try{
+  const isIOS=/iPhone|iPad|iPod/i.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+  const isStandalone=window.matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
+  if(isIOS&&!isStandalone)throw new Error('На iPhone сначала добавьте COSMOS на экран «Домой», затем откройте его с иконки.');
+  if(!('Notification' in window)||!('PushManager' in window))throw new Error('Этот браузер не поддерживает push-уведомления.');
+  let permission=Notification.permission;
+  if(permission!=='granted')permission=await Notification.requestPermission();
+  if(permission!=='granted')throw new Error('Разрешение на уведомления не выдано. Его можно включить в настройках браузера.');
+  const registration=await getPushRegistration();
+  const config=await getPushConfig();
+  subscription=await registration.pushManager.getSubscription();
+  if(!subscription)subscription=await registration.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:pushApplicationKey(config.publicKey)});
+  await savePushSubscription(subscription);
+  toggle.checked=true;
+  pushStatus('Готово! Ежедневное напоминание настроено на '+$('pushReminderTime').value+'.');
+ }catch(error){
+  toggle.checked=false;
+  pushStatus(error&&error.message?error.message:'Не удалось включить уведомления.');
+  if(subscription&&subscription.endpoint){
+   try{await fetch(PUSH_API+'/unsubscribe',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({deviceId:pushDeviceId(),endpoint:subscription.endpoint})})}catch(ignored){}
+   try{await subscription.unsubscribe()}catch(ignored){}
+  }
+ }finally{pushBusy=false;toggle.disabled=false}
+}
+async function disablePush(){
+ if(pushBusy)return;
+ const toggle=$('pushEnabled');pushBusy=true;toggle.disabled=true;pushStatus('Отключаем уведомления…');
+ try{
+  const registration=await getPushRegistration();
+  const subscription=await registration.pushManager.getSubscription();
+  if(subscription){
+   const response=await fetch(PUSH_API+'/unsubscribe',{method:'POST',cache:'no-store',credentials:'omit',headers:{'Content-Type':'application/json'},body:JSON.stringify({deviceId:pushDeviceId(),endpoint:subscription.endpoint})});
+   const result=await response.json().catch(()=>({}));
+   if(!response.ok)throw new Error(result.error||'Не удалось отключить уведомления на сервере.');
+   await subscription.unsubscribe();
+  }
+  toggle.checked=false;
+  pushStatus('Уведомления отключены на этом устройстве.');
+ }catch(error){toggle.checked=true;pushStatus(error&&error.message?error.message:'Не удалось отключить уведомления.')}
+ finally{pushBusy=false;toggle.disabled=false}
+}
+async function updatePushTime(){
+ if(!$('pushEnabled').checked||pushBusy)return;
+ try{
+  const registration=await getPushRegistration();
+  const subscription=await registration.pushManager.getSubscription();
+  if(!subscription)throw new Error('Подписка браузера не найдена. Выключите и снова включите уведомления.');
+  await savePushSubscription(subscription);
+  pushStatus('Время напоминания обновлено: '+$('pushReminderTime').value+'.');
+ }catch(error){pushStatus(error&&error.message?error.message:'Не удалось обновить время уведомления.')}
+}
+async function initializePush(){
+ const toggle=$('pushEnabled'),time=$('pushReminderTime');
+ try{const saved=localStorage.getItem(PUSH_TIME_KEY);if(saved&&/^([01]\\d|2[0-3]):[0-5]\\d$/.test(saved))time.value=saved}catch(error){}
+ if(!('serviceWorker' in navigator)){pushStatus('Этот браузер не поддерживает установку PWA и push-уведомления.');toggle.disabled=true;return}
+ try{
+  const registration=await getPushRegistration();
+  const subscription=await registration.pushManager.getSubscription();
+  toggle.checked=!!subscription&&('Notification' in window)&&Notification.permission==='granted';
+  if(!('Notification' in window)||!('PushManager' in window)){toggle.disabled=true;pushStatus('Push-уведомления недоступны в этом браузере.');return}
+  pushStatus(toggle.checked?'Уведомления включены на этом устройстве.':'Уведомления выключены. Включите переключатель, чтобы настроить напоминание.');
+ }catch(error){pushStatus(error&&error.message?error.message:'Не удалось подготовить фоновое приложение.')}
+}
+$('pushEnabled').addEventListener('change',function(){if(this.checked)enablePush();else disablePush()});
+$('pushReminderTime').addEventListener('change',updatePushTime);
+initializePush();
 
 const dailyScenes=['nebula','forest','galaxy','ocean','sunrise'];let previousTheme='';try{previousTheme=localStorage.getItem('cosmosLastTheme')||''}catch(e){}let choices=dailyScenes.filter(x=>x!==previousTheme);const chosenTheme=choices[Math.floor(Math.random()*choices.length)];try{localStorage.setItem('cosmosLastTheme',chosenTheme)}catch(e){}const scene=document.getElementById('cosmosScene');if(scene)scene.dataset.theme=chosenTheme;document.body.dataset.cosmosTheme=chosenTheme;
 document.addEventListener('cosmos-language-change',()=>{render()});
