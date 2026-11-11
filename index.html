@@ -1278,6 +1278,16 @@ body.calendar-view #calendarView>.panel{margin-top:0}
 <script id="cosmos-navigation-guard">
 (()=>{
 'use strict';
+window.cosmosNavigate=function(target){
+ const button=document.querySelector('.nav button[data-view="'+target+'"]');
+ if(!button)return;
+ const view=document.getElementById(target+'View');
+ if(!view)return;
+ document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b===button));
+ document.querySelectorAll('main .view').forEach(v=>v.classList.toggle('active',v===view));
+ document.body.classList.toggle('calendar-view',target==='calendar');
+ if(target==='calendar'&&typeof window.cosmosRenderCalendar==='function')window.cosmosRenderCalendar();
+};
 const install=()=>{
  const nav=document.querySelector('.nav');
  if(!nav)return;
@@ -1287,6 +1297,7 @@ const install=()=>{
   b.style.setProperty('pointer-events','auto','important');
   b.style.setProperty('touch-action','manipulation','important');
   b.style.setProperty('cursor','pointer','important');
+  b.onclick=()=>window.cosmosNavigate(b.getAttribute('data-view'));
  });
 };
 const activate=(button)=>{
