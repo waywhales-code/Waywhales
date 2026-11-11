@@ -1,0 +1,87 @@
+name: COSMOS validation
+
+on:
+  pull_request:
+    paths:
+      - "index.html"
+      - "sw.js"
+      - "manifest.webmanifest"
+      - "push/**"
+      - ".github/workflows/cosmos-validation.yml"
+  push:
+    branches:
+      - main
+    paths:
+      - "index.html"
+      - "sw.js"
+      - "manifest.webmanifest"
+      - "push/**"
+      - ".github/workflows/cosmos-validation.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    name: Validate PWA and push service
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Check JavaScript syntax
+        run: |
+          node --input-type=module --check < push/worker.js
+          node --check sw.js
+
+      - name: Parse inline scripts in the PWA
+        run: |
+          node --input-type=module <<'NODE'
+          import { readFileSync } from 'node:fs';
+          import { Script } from 'node:vm';
+
+          const html = readFileSync('index.html', 'utf8');
+          const scripts = [...html.matchAll(/<script\\b[^>]*>([\\s\\S]*?)<\\/script>/gi)]
+            .map((match) => match[1])
+            .filter((source) => source.trim().length > 0);
+
+          if (scripts.length === 0) {
+            throw new Error('No inline JavaScript blocks were found in index.html.');
+          }
+
+          scripts.forEach((source, index) => {
+            new Script(source, { filename: `index.html:inline-script-${index + 1}` });
+          });
+
+          console.log(`Validated ${scripts.length} inline script block(s).`);
+          NODE
+
+      - name: Validate manifest and D1 schema
+        run: |
+          python3 <<'PY'
+          import json
+          import sqlite3
+          from pathlib import Path
+
+          manifest = json.loads(Path('manifest.webmanifest').read_text(encoding='utf-8'))
+          assert manifest.get('name') or manifest.get('short_name'), 'PWA manifest needs a name.'
+
+          database = sqlite3.connect(':memory:')
+          database.executescript(Path('push/schema.sql').read_text(encoding='utf-8'))
+          tables = {
+              row[0]
+              for row in database.execute(
+                  "SELECT name FROM sqlite_master WHERE type = 'table'"
+              )
+          }
+          required = {'push_subscriptions', 'vapid_tokens'}
+          missing = required - tables
+          assert not missing, f'Missing D1 table(s): {sorted(missing)}'
+
+          print('Manifest JSON and push database schema are valid.')
+          PY
