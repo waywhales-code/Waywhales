@@ -749,12 +749,19 @@ $('aiChatForm').addEventListener('submit',async e=>{
 aiInput.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();$('aiChatForm').requestSubmit()}});
 aiSetReady();
 
-const PUSH_API='https://cosmos-push.waywhales.workers.dev';
+const PUSH_API=(document.querySelector('meta[name="cosmos-push-endpoint"]')?.content||'https://cosmos-push.waywhales.workers.dev').replace(/\/+$/,'');
 const PUSH_DEVICE_KEY='cosmos.push.deviceId';
 const PUSH_TIME_KEY='cosmos.push.reminderTime';
 let pushRegistration=null;
 let pushBusy=false;
 function pushStatus(message){const el=$('pushStatus');if(el)el.textContent=message}
+async function removeServerPushSubscription(endpoint,deviceId=pushDeviceId()){
+ const body={deviceId};
+ if(endpoint)body.endpoint=endpoint;
+ const response=await fetch(PUSH_API+'/unsubscribe',{method:'POST',cache:'no-store',credentials:'omit',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+ const result=await response.json().catch(()=>({}));
+ if(!response.ok)throw new Error(result.error||'Не удалось удалить подписку на сервере.');
+}
 function pushDeviceId(){
  try{let id=localStorage.getItem(PUSH_DEVICE_KEY);if(!id){id=crypto.randomUUID();localStorage.setItem(PUSH_DEVICE_KEY,id)}return id}
  catch(error){throw new Error('Не удалось создать идентификатор устройства. Разрешите хранение данных сайта.')}
@@ -816,7 +823,7 @@ async function enablePush(){
   $('pushTestButton').disabled=true;
   pushStatus(error&&error.message?error.message:'Не удалось включить уведомления.');
   if(subscription&&subscription.endpoint){
-   try{await fetch(PUSH_API+'/unsubscribe',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({deviceId:pushDeviceId(),endpoint:subscription.endpoint})})}catch(ignored){}
+   try{await removeServerPushSubscription(subscription.endpoint)}catch(ignored){}
    try{await subscription.unsubscribe()}catch(ignored){}
   }
  }finally{pushBusy=false;toggle.disabled=false}
@@ -827,12 +834,8 @@ async function disablePush(){
  try{
   const registration=await getPushRegistration();
   const subscription=await registration.pushManager.getSubscription();
-  if(subscription){
-   const response=await fetch(PUSH_API+'/unsubscribe',{method:'POST',cache:'no-store',credentials:'omit',headers:{'Content-Type':'application/json'},body:JSON.stringify({deviceId:pushDeviceId(),endpoint:subscription.endpoint})});
-   const result=await response.json().catch(()=>({}));
-   if(!response.ok)throw new Error(result.error||'Не удалось отключить уведомления на сервере.');
-   await subscription.unsubscribe();
-  }
+  await removeServerPushSubscription(subscription&&subscription.endpoint);
+  if(subscription)await subscription.unsubscribe();
   toggle.checked=false;
   $('pushTestButton').disabled=true;
   pushStatus('Уведомления отключены на этом устройстве.');
@@ -841,6 +844,7 @@ async function disablePush(){
 }
 async function updatePushTime(){
  if(!$('pushEnabled').checked||pushBusy)return;
+ pushBusy=true;$('pushReminderTime').disabled=true;$('pushEnabled').disabled=true;$('pushTestButton').disabled=true;
  try{
   const registration=await getPushRegistration();
   const subscription=await registration.pushManager.getSubscription();
@@ -848,11 +852,12 @@ async function updatePushTime(){
   await savePushSubscription(subscription);
   pushStatus('Время напоминания обновлено: '+$('pushReminderTime').value+'.');
  }catch(error){pushStatus(error&&error.message?error.message:'Не удалось обновить время уведомления.')}
+ finally{pushBusy=false;$('pushReminderTime').disabled=false;$('pushEnabled').disabled=false;$('pushTestButton').disabled=!$('pushEnabled').checked}
 }
 async function testPushNotification(){
  const button=$('pushTestButton');
  if(!$('pushEnabled').checked||pushBusy)return;
- button.disabled=true;
+ pushBusy=true;button.disabled=true;$('pushEnabled').disabled=true;$('pushReminderTime').disabled=true;
  pushStatus('Отправляем тестовое уведомление…');
  try{
   const response=await fetch(PUSH_API+'/test',{
@@ -866,6 +871,7 @@ async function testPushNotification(){
  }catch(error){
   pushStatus(error&&error.message?error.message:'Не удалось отправить тестовое уведомление.');
  }finally{
+  pushBusy=false;$('pushEnabled').disabled=false;$('pushReminderTime').disabled=false;
   button.disabled=!$('pushEnabled').checked;
  }
 }
@@ -876,7 +882,13 @@ async function initializePush(){
  try{
   const registration=await getPushRegistration();
   const subscription=await registration.pushManager.getSubscription();
-  toggle.checked=!!subscription&&('Notification' in window)&&Notification.permission==='granted';
+  const notificationGranted=('Notification' in window)&&Notification.permission==='granted';
+  const existingDeviceId=(()=>{try{return localStorage.getItem(PUSH_DEVICE_KEY)}catch(error){return null}})();
+  if((!subscription||!notificationGranted)&&existingDeviceId){
+   try{await removeServerPushSubscription(subscription&&subscription.endpoint,existingDeviceId);if(subscription)await subscription.unsubscribe()}
+   catch(error){pushStatus('Не удалось синхронизировать отключение уведомлений: '+(error.message||'ошибка сервера.'))}
+  }
+  toggle.checked=!!subscription&&notificationGranted;
   $('pushTestButton').disabled=!toggle.checked;
   if(!('Notification' in window)||!('PushManager' in window)){toggle.disabled=true;pushStatus('Push-уведомления недоступны в этом браузере.');return}
   pushStatus(toggle.checked?'Уведомления включены на этом устройстве.':'Уведомления выключены. Включите переключатель, чтобы настроить напоминание.');
