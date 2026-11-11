@@ -11,7 +11,26 @@ function bytesToBase64Url(bytes){let binary="";for(let i=0;i<bytes.length;i++)bi
 function concatBytes(...parts){const out=new Uint8Array(parts.reduce((sum,p)=>sum+p.length,0));let offset=0;for(const part of parts){out.set(part,offset);offset+=part.length}return out}
 async function hmacSha256(rawKey,data){const key=await crypto.subtle.importKey("raw",rawKey,{name:"HMAC",hash:"SHA-256"},false,["sign"]);return new Uint8Array(await crypto.subtle.sign("HMAC",key,data))}
 async function hkdfExpand(prk,info,length){let previous=new Uint8Array(0),blocks=[],total=0;for(let counter=1;total<length;counter++){previous=await hmacSha256(prk,concatBytes(previous,info,new Uint8Array([counter])));blocks.push(previous);total+=previous.length}return concatBytes(...blocks).slice(0,length)}
-async function createVapidAuthorization(endpoint,env){const url=new URL(endpoint),audience=url.protocol+"//"+url.host,now=Math.floor(Date.now()/1000);const header=bytesToBase64Url(encoder.encode(JSON.stringify({typ:"JWT",alg:"ES256"})));const payload=bytesToBase64Url(encoder.encode(JSON.stringify({aud:audience,exp:now+12*60*60,sub:env.VAPID_SUBJECT||"mailto:waywhales@gmail.com"})));const unsigned=header+"."+payload;const key=await crypto.subtle.importKey("jwk",JSON.parse(env.VAPID_PRIVATE_JWK),{name:"ECDSA",namedCurve:"P-256"},false,["sign"]);const signature=new Uint8Array(await crypto.subtle.sign({name:"ECDSA",hash:"SHA-256"},key,encoder.encode(unsigned)));return "vapid t="+unsigned+"."+bytesToBase64Url(signature)+", k="+env.VAPID_PUBLIC_KEY}
+async function createVapidAuthorization(endpoint,env){
+ const url=new URL(endpoint);
+ const audience=url.protocol+"//"+url.host;
+ const now=Math.floor(Date.now()/1000);
+ const cached=await env.DB.prepare("SELECT token,expires_at FROM vapid_tokens WHERE audience=?").bind(audience).first();
+ if(cached&&Number(cached.expires_at)>now+3600){
+  return "vapid t="+cached.token+", k="+env.VAPID_PUBLIC_KEY;
+ }
+ const header=bytesToBase64Url(encoder.encode(JSON.stringify({typ:"JWT",alg:"ES256"})));
+ const payload=bytesToBase64Url(encoder.encode(JSON.stringify({
+  aud:audience,exp:now+12*60*60,sub:env.VAPID_SUBJECT||"mailto:waywhales@gmail.com"
+ })));
+ const unsigned=header+"."+payload;
+ const key=await crypto.subtle.importKey("jwk",JSON.parse(env.VAPID_PRIVATE_JWK),{name:"ECDSA",namedCurve:"P-256"},false,["sign"]);
+ const signature=new Uint8Array(await crypto.subtle.sign({name:"ECDSA",hash:"SHA-256"},key,encoder.encode(unsigned)));
+ const token=unsigned+"."+bytesToBase64Url(signature);
+ await env.DB.prepare("INSERT INTO vapid_tokens (audience,token,expires_at,updated_at) VALUES (?,?,?,CURRENT_TIMESTAMP) ON CONFLICT(audience) DO UPDATE SET token=excluded.token,expires_at=excluded.expires_at,updated_at=CURRENT_TIMESTAMP")
+  .bind(audience,token,now+12*60*60).run();
+ return "vapid t="+token+", k="+env.VAPID_PUBLIC_KEY;
+}
 async function encryptPushPayload(subscription,payload){const userPublicKey=base64UrlToBytes(subscription.keys.p256dh),authSecret=base64UrlToBytes(subscription.keys.auth);if(userPublicKey.length!==65||authSecret.length<16)throw new Error("Invalid subscription encryption keys");const userKey=await crypto.subtle.importKey("raw",userPublicKey,{name:"ECDH",namedCurve:"P-256"},false,[]);const ephemeral=await crypto.subtle.generateKey({name:"ECDH",namedCurve:"P-256"},true,["deriveBits"]);const sharedSecret=new Uint8Array(await crypto.subtle.deriveBits({name:"ECDH",public:userKey},ephemeral.privateKey,256));const serverPublicKey=new Uint8Array(await crypto.subtle.exportKey("raw",ephemeral.publicKey));const keyInfo=concatBytes(encoder.encode("WebPush: info\0"),userPublicKey,serverPublicKey);const prk=await hmacSha256(authSecret,sharedSecret),inputKeyMaterial=await hkdfExpand(prk,keyInfo,32),salt=crypto.getRandomValues(new Uint8Array(16)),contentPrk=await hmacSha256(salt,inputKeyMaterial);const contentKey=await hkdfExpand(contentPrk,encoder.encode("Content-Encoding: aes128gcm\0"),16),nonce=await hkdfExpand(contentPrk,encoder.encode("Content-Encoding: nonce\0"),12);const aesKey=await crypto.subtle.importKey("raw",contentKey,{name:"AES-GCM"},false,["encrypt"]);const plain=concatBytes(encoder.encode(JSON.stringify(payload)),new Uint8Array([2]));const encrypted=new Uint8Array(await crypto.subtle.encrypt({name:"AES-GCM",iv:nonce,tagLength:128},aesKey,plain));const header=new Uint8Array(21);header.set(salt,0);new DataView(header.buffer).setUint32(16,4096,false);header[20]=serverPublicKey.length;return concatBytes(header,serverPublicKey,encrypted)}
 function validPushEndpoint(endpoint){try{const url=new URL(endpoint);if(url.protocol!=="https:"||url.username||url.password)return false;const host=url.hostname.toLowerCase();return host==="fcm.googleapis.com"||host.endsWith(".push.services.mozilla.com")||host==="push.services.mozilla.com"||host==="web.push.apple.com"||host.endsWith(".notify.windows.com")||host==="notify.windows.com"}catch{return false}}
 function validTimezone(timezone){try{if(typeof timezone!=="string"||timezone.length>80)return false;new Intl.DateTimeFormat("en",{timeZone:timezone}).format(new Date());return true}catch{return false}}
