@@ -29,6 +29,7 @@ The D1 database must have the schema in `schema.sql`.
 - `GET /config` — public VAPID key and configuration status
 - `POST /subscribe` — save or update one device subscription
 - `POST /unsubscribe` — remove one device subscription
+- `POST /test` — send one generic test push to a registered device
 
 VAPID JWTs are signed with the private key and stored with their expiry in D1. The private key itself is never stored in GitHub; it remains a Cloudflare Worker Secret.
 
