@@ -497,18 +497,10 @@ body:before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opac
 </style>
 </head>
 <body><div class="cosmos-scene" id="cosmosScene" aria-hidden="true"></div><main class="shell">
-<header class="top"><div class="brand"><span class="brand-mark">✦</span><span class="brand-name">COSMOS<small>by Waywhales</small></span></div><div class="date-pill" id="todayLabel"></div></header>
+<header class="top"><div class="brand"><span class="brand-mark">✦</span><span class="brand-name">COSMOS<small>WAYWHALES</small></span></div><div class="date-pill" id="todayLabel"></div></header>
 <section class="hero"><div class="hero-row"><div><div class="eyebrow">ваш спокойный ритм</div><h1 id="greeting">Добро пожаловать</h1><p>Маленькие шаги заботы о себе — день за днём.</p></div><div class="hero-progress-wrap"><div class="progress-ring" id="progress">0%</div><div class="hero-progress-caption" id="progressCaption">Сегодня: 0 из 0 приёмов</div></div></div><div class="daily-quote"><div class="quote-label">МЫСЛЬ ДНЯ <span>✦</span></div><blockquote id="dailyQuote">Большие перемены начинаются с маленьких шагов.</blockquote><div class="quote-signature">— WAYWHALES</div></div></section>
 <section id="homeView" class="view active"><div class="grid"><div class="panel"><div class="section-head plan-section-head"><div><h2 id="planDayTitle">Сегодня</h2><p class="sub" id="todaySub">Ваш план приёма</p></div><button class="btn small" id="addBtn">＋ Добавить</button></div><div class="plan-day-switch" id="planDaySwitch" aria-label="Выбор дня"><button type="button" data-plan-offset="0" class="active">Сегодня</button><button type="button" data-plan-offset="1">Завтра</button><button type="button" data-plan-offset="2">Послезавтра</button><button type="button" data-plan-offset="3">Через 3 дня</button></div><div id="todayList" class="supp-list"></div></div><aside class="panel"><h2>Ваш ритм</h2><p class="sub">Небольшая статистика за выбранный день</p><div class="stat-grid"><div class="stat"><strong id="statDone">0</strong><span>отмечено</span></div><div class="stat"><strong id="statTotal">0</strong><span>в плане</span></div><div class="stat"><strong id="statRate">0%</strong><span>выполнение</span></div><button class="stat stat-button" id="openMarkedHistory" type="button" aria-label="Нажмите, чтобы открыть историю отметок"><strong id="statStreak">0</strong><span id="markedDaysCaption">дней с отметками</span><small class="stat-open-hint">Нажмите, чтобы посмотреть историю ↗</small></button></div><p class="hint" style="margin-top:15px">Отмечайте приём по своему плану. Приложение не заменяет рекомендации врача.</p></aside></div><div class="panel ai-launcher"><div class="ai-launcher-mark">✦</div><div class="ai-launcher-copy"><div class="ai-launcher-kicker">COSMOS AI</div><h3>Помощник по здоровью</h3><p>Разбирайтесь в витаминах, добавках, анализах и вопросах самочувствия простыми словами.</p></div><button class="btn ai-open-button" id="openAiChat" type="button">Открыть помощника</button><span class="ai-launcher-note" id="aiLauncherStatus">Подключение ИИ настраивается</span></div>
 <div class="home-reminder-shortcut"><button class="btn secondary small" id="openReminderSettings" type="button">Настроить ежедневные напоминания</button></div>
-<div class="panel home-rhythm-panel">
- <div class="home-rhythm-head">
-  <div><div class="card-kicker">ВАШ РИТМ</div><h2>Шаг за шагом</h2><p class="sub">Небольшой прогресс тоже имеет значение.</p></div>
-  <strong id="homeTodayPercent">0%</strong>
- </div>
- <div class="progress-track"><span id="homeTodayBar"></span></div>
- <div class="home-rhythm-meta"><span><strong id="homeDoneCount">0</strong> отмечено</span><span>из <strong id="homePlanCount">0</strong> приёмов сегодня</span></div>
-</div>
 </section>
 <section id="calendarView" class="view"><div class="panel"><div class="calendar-head"><button class="btn ghost small" id="prevMonth">‹</button><h2 id="monthTitle"></h2><button class="btn ghost small" id="nextMonth">›</button></div><div class="calendar" id="calendarGrid"></div><div class="calendar-legend"><span><i class="holiday"></i>Праздник / выходной</span><span><i class="marked"></i>Есть отметки</span></div><div class="selected-day-toolbar"><div class="selected-day-copy"><p class="sub" id="selectedDayLabel"></p><p class="selected-day-holiday" id="selectedDayHoliday" hidden></p></div><button class="btn small" id="addForSelectedDay" type="button">＋ Добавить приём</button></div><div class="selected-day-result" id="selectedDayResult"><div><span>Выполнение за день</span><strong id="selectedDayPercent">0%</strong></div><p id="selectedDayCounts">0 из 0 приёмов отмечено</p><div class="progress-track"><span id="selectedDayBar"></span></div></div><div id="dayHistory" class="supp-list"></div></div></section>
 
@@ -532,10 +524,6 @@ body:before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opac
 </div>
 <div class="panel profile-card"><div class="card-kicker">ВАШИ ДАННЫЕ</div><h2>Данные и конфиденциальность</h2><p class="sub">Ваши записи хранятся только в браузере на этом устройстве. COSMOS не получает к ним доступ и не отправляет их на наши серверы. Экспорт и удаление данных — под вашим контролем.</p><div class="profile-actions"><button class="btn ghost small" id="exportData">Экспортировать данные</button><button class="btn danger small" id="resetData">Сбросить данные</button></div><p class="support-link"><a href="https://t.me/waywhales" target="_blank" rel="noopener">Связаться с Waywhales ↗</a></p></div>
 </section>
-<footer class="app-footer" aria-label="COSMOS">
- <span class="app-footer-mark">✦</span>
- <span><strong>COSMOS</strong> · Маленькие шаги заботы о себе</span>
-</footer>
 </main>
 <nav class="nav" aria-label="Основная навигация">
 <button class="active" data-view="home"><span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 10.5 12 3.5l8.5 7v10H3.5z"/><path d="M9 20.5v-6h6v6"/></svg></span><span>Главная</span></button>
@@ -632,7 +620,7 @@ document.addEventListener('visibilitychange',()=>{
 function render(){renderDailyQuote();const n=data.name.trim();$('greeting').textContent=n?'Рады видеть, '+n+' 🌱':'Добро пожаловать';$('profileName').textContent=n||'Гость';$('nameInput').value=data.name||'';$('todayLabel').textContent=new Date().toLocaleDateString((window.cosmosLocale||'ru-RU'),{weekday:'long',day:'numeric',month:'long'});renderToday();renderCalendar();renderStats();renderProfile()}
 function planDay(){const d=new Date(today()+'T12:00:00');d.setDate(d.getDate()+planOffset);return [d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-')}
 function planDayLabel(day){const d=new Date(day+'T12:00:00');if(day===today())return 'Сегодня';const t=new Date(today()+'T12:00:00');t.setDate(t.getDate()+1);if(day===[t.getFullYear(),String(t.getMonth()+1).padStart(2,'0'),String(t.getDate()).padStart(2,'0')].join('-'))return 'Завтра';return d.toLocaleDateString((window.cosmosLocale||'ru-RU'),{day:'numeric',month:'long'})}
-function renderToday(){const day=planDay(),list=$('todayList'),items=data.supplements.filter(x=>isScheduled(x,day)).sort((a,b)=>(a.time||'').localeCompare(b.time||'')),doneItems=items.filter(x=>completed(day,x.id)),pending=items.filter(x=>!completed(day,x.id));$('planDayTitle').textContent=planDayLabel(day);document.querySelectorAll('[data-plan-offset]').forEach(b=>b.classList.toggle('active',Number(b.dataset.planOffset)===planOffset));const done=doneItems.length,total=items.length,pct=total?Math.round(done/total*100):0;$('homeTodayPercent').textContent=pct+'%';$('homeDoneCount').textContent=done;$('homePlanCount').textContent=total;$('homeTodayBar').style.width=pct+'%';const currentMonth=monthRange(day.slice(0,7)),monthProgress=progressBetween(currentMonth.start,currentMonth.end);$('progress').textContent=monthProgress.pct+'%';$('progressCaption').textContent=monthProgress.planned?`За месяц: ${monthProgress.done} из ${monthProgress.planned} приёмов`:'За месяц пока нет приёмов';$('statDone').textContent=done;$('statTotal').textContent=total;$('statRate').textContent=pct+'%';$('statStreak').textContent=markedDaysCount();const marked=markedDaysCount();$('markedDaysCaption').textContent=marked===1?'день с отметками':marked>=2&&marked<=4?'дня с отметками':'дней с отметками';$('todaySub').textContent=total?done+' из '+total+' отмечено':'Добавьте первую позицию в свой план';list.innerHTML=pending.length?pending.map(x=>rowHTML(x,day)).join(''):'<div class="empty">'+(total?'Отличная работа! Все приёмы на сегодня отмечены.':'Пока здесь пусто.<br>Добавьте первую добавку, чтобы начать вести дневник.')+'</div>';if(doneItems.length)list.innerHTML+='<button class="completed-toggle" type="button" id="toggleCompleted">✓ Выполнено: '+doneItems.length+' · показать</button><div id="completedToday" hidden>'+doneItems.map(x=>rowHTML(x,day)).join('')+'</div>';const flexible=data.supplements.filter(x=>x.repeat==='flexible').sort((a,b)=>(a.time||'').localeCompare(b.time||''));if(flexible.length)list.innerHTML+='<div class="flexible-plan-heading">Свободный график <span>отмечай, когда удобно</span></div>'+flexible.map(x=>rowHTML(x,day)).join('')}
+function renderToday(){const day=planDay(),list=$('todayList'),items=data.supplements.filter(x=>isScheduled(x,day)).sort((a,b)=>(a.time||'').localeCompare(b.time||'')),doneItems=items.filter(x=>completed(day,x.id)),pending=items.filter(x=>!completed(day,x.id));$('planDayTitle').textContent=planDayLabel(day);document.querySelectorAll('[data-plan-offset]').forEach(b=>b.classList.toggle('active',Number(b.dataset.planOffset)===planOffset));const done=doneItems.length,total=items.length,pct=total?Math.round(done/total*100):0;const currentMonth=monthRange(day.slice(0,7)),monthProgress=progressBetween(currentMonth.start,currentMonth.end);$('progress').textContent=monthProgress.pct+'%';$('progressCaption').textContent=monthProgress.planned?`За месяц: ${monthProgress.done} из ${monthProgress.planned} приёмов`:'За месяц пока нет приёмов';$('statDone').textContent=done;$('statTotal').textContent=total;$('statRate').textContent=pct+'%';$('statStreak').textContent=markedDaysCount();const marked=markedDaysCount();$('markedDaysCaption').textContent=marked===1?'день с отметками':marked>=2&&marked<=4?'дня с отметками':'дней с отметками';$('todaySub').textContent=total?done+' из '+total+' отмечено':'Добавьте первую позицию в свой план';list.innerHTML=pending.length?pending.map(x=>rowHTML(x,day)).join(''):'<div class="empty">'+(total?'Отличная работа! Все приёмы на сегодня отмечены.':'Пока здесь пусто.<br>Добавьте первую добавку, чтобы начать вести дневник.')+'</div>';if(doneItems.length)list.innerHTML+='<button class="completed-toggle" type="button" id="toggleCompleted">✓ Выполнено: '+doneItems.length+' · показать</button><div id="completedToday" hidden>'+doneItems.map(x=>rowHTML(x,day)).join('')+'</div>';const flexible=data.supplements.filter(x=>x.repeat==='flexible').sort((a,b)=>(a.time||'').localeCompare(b.time||''));if(flexible.length)list.innerHTML+='<div class="flexible-plan-heading">Свободный график <span>отмечай, когда удобно</span></div>'+flexible.map(x=>rowHTML(x,day)).join('')}
 function rowHTML(x,day){const done=completed(day,x.id);return '<article class="supp '+(done?'done':'')+'"><div class="supp-icon">'+safe(x.icon||'🌿')+'</div><div class="supp-main"><div class="supp-name">'+safe(x.name)+'</div><div class="supp-meta">'+safe(x.dose||'Без заметки')+' · '+safe(x.time||'')+'</div></div><button class="check '+(done?'on':'')+'" data-action="toggle" data-id="'+safe(x.id)+'" data-day="'+safe(day)+'" aria-label="'+(done?'Снять отметку':'Отметить приём')+'">'+(done?'✓':'○')+'</button><div class="actions"><button class="icon-btn" data-action="duplicate" data-id="'+safe(x.id)+'" aria-label="Добавить похожую">＋</button><button class="icon-btn" data-action="edit" data-id="'+safe(x.id)+'" aria-label="Изменить">✎</button><button class="icon-btn" data-action="delete" data-id="'+safe(x.id)+'" aria-label="Удалить">×</button></div></article>'}
 function markedDaysCount(){return Object.entries(data.logs).filter(([,log])=>log&&Object.values(log).some(Boolean)).length}
 function russianHolidays(year){
@@ -1727,39 +1715,38 @@ document.dispatchEvent(new Event('cosmos-language-change'));
  #suppModal .dialog-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
  #suppModal .dialog-actions .btn{min-width:0;width:100%;padding-inline:8px}
 }
-<style id="cosmos-final-mobile-layout">
-/* Keep the shell balanced on tall phones without leaving an unlabelled empty tail. */
-main.shell{min-height:100svh;display:flex;flex-direction:column}
-main.shell>.hero{flex:0 0 auto}
-main.shell>.view.active{flex:0 0 auto}
-.app-footer{margin-top:auto;display:flex;align-items:center;justify-content:center;gap:8px;padding:clamp(22px,4vh,42px) 8px 13px;color:rgba(225,235,219,.72);font-size:12px;text-align:center}
-.app-footer strong{color:#e9efdf;letter-spacing:.12em}
-.app-footer-mark{display:inline-grid;place-items:center;width:24px;height:24px;border:1px solid rgba(221,234,212,.35);border-radius:9px;color:#d7e5c8}
-.home-rhythm-panel{margin-top:14px;background:linear-gradient(145deg,rgba(242,246,237,.98),rgba(225,235,224,.98))}
-.home-rhythm-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
-.home-rhythm-head h2{margin:0;color:#204a35;font:26px Georgia,serif}
-.home-rhythm-head .sub{margin:5px 0 0;font-size:13px}
-.home-rhythm-head>strong{flex:none;color:#244b36;font:700 30px Georgia,serif}
-.home-rhythm-panel .progress-track{margin-top:15px}
-.home-rhythm-meta{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:10px;color:#718078;font-size:12px}
-.home-rhythm-meta strong{color:#244b36;font-size:14px}
-.home-reminder-shortcut{position:relative;z-index:3}
-.home-reminder-shortcut button{width:100%;min-height:48px;white-space:normal}
-.nav{z-index:9999!important}
 
-/* The fixed tab bar must never cover Save/Cancel or the AI composer. */
-#suppModal.modal{z-index:10020!important;padding:calc(10px + env(safe-area-inset-top)) 12px calc(10px + env(safe-area-inset-bottom))!important}
+<style id="cosmos-mobile-layout-correction">
+/* Compact mobile layout: content ends with the real content, no decorative footer or flex spacer. */
+html,body{width:100%;max-width:100%;overflow-x:hidden}
+main.shell{display:block!important;min-height:0!important;height:auto!important;max-width:1080px;width:100%;padding-bottom:calc(92px + env(safe-area-inset-bottom))!important}
+main.shell>.view.active{flex:none!important}
+#profileView{grid-template-columns:minmax(0,1fr)!important;gap:12px!important;width:100%;min-width:0}
+#profileView>.profile-card,#profileView>.profile-intro{width:100%;max-width:100%;min-width:0;margin-inline:0!important}
+#profileView .profile-card{box-sizing:border-box;overflow:hidden}
+.push-settings-card{width:100%;max-width:100%;min-width:0;box-sizing:border-box;padding:clamp(16px,4vw,22px)!important}
+.push-settings-card .push-switch-row{width:100%;min-width:0;gap:12px}
+.push-settings-card .push-switch-copy{flex:1 1 auto;min-width:0}
+.push-settings-card .push-switch{flex:0 0 62px}
+.push-settings-card .field{display:grid;grid-template-columns:minmax(0,1fr);gap:7px;width:100%;min-width:0;margin:14px 0}
+.push-settings-card .field label{display:block;width:100%;min-width:0}
+.push-settings-card #pushReminderTime{display:block;width:100%!important;max-width:100%!important;min-width:0!important;height:54px;box-sizing:border-box!important;padding:10px 14px!important;text-align:center;-webkit-appearance:none;appearance:none;border:1px solid var(--line);border-radius:14px;background:#fffefa;color:var(--ink);font-size:17px}
+.push-settings-card .push-action-row{display:flex;justify-content:flex-start;align-items:stretch;width:100%;min-width:0}
+.push-settings-card .push-test-action{width:auto;max-width:100%;min-height:48px;white-space:normal;line-height:1.3}
+#suppModal.modal{z-index:10020!important;box-sizing:border-box;padding:calc(10px + env(safe-area-inset-top)) 12px calc(10px + env(safe-area-inset-bottom))!important}
 #suppModal .dialog{box-sizing:border-box;width:min(100%,480px);max-width:100%;max-height:calc(100dvh - 20px - env(safe-area-inset-top) - env(safe-area-inset-bottom));overflow-x:hidden;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
-#suppModal .dialog-actions{position:sticky!important;bottom:-16px!important;z-index:30!important;display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important;margin:16px -16px -16px!important;padding:12px 16px calc(12px + env(safe-area-inset-bottom))!important;border-top:1px solid rgba(210,221,205,.85);background:linear-gradient(180deg,rgba(245,245,237,.94),#f5f5ed 24%)!important;backdrop-filter:blur(14px)}
-#suppModal .dialog-actions button{width:100%!important;min-width:0!important;min-height:50px!important;white-space:normal!important}
+#suppModal .dialog-actions{position:sticky;bottom:-16px;z-index:30;display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important;margin:16px -16px -16px!important;padding:12px 16px calc(12px + env(safe-area-inset-bottom))!important;border-top:1px solid #dce4da;background:#f5f5ed}
+#suppModal .dialog-actions button{width:100%;min-width:0;min-height:50px;white-space:normal}
 .ai-modal{z-index:10030!important}
 body.ai-chat-open .nav{visibility:hidden!important}
-@media(max-width:600px){
- #suppModal.modal{align-items:flex-start!important;justify-content:center!important}
- #suppModal .dialog{width:100%!important;max-width:440px!important;max-height:calc(100dvh - 20px - env(safe-area-inset-top) - env(safe-area-inset-bottom))!important;padding:16px 14px!important;margin:0 auto!important;border-radius:20px!important}
+.nav{z-index:9999!important}
+@media(max-width:720px){
+ main.shell{padding:13px 13px calc(92px + env(safe-area-inset-bottom))!important}
+ #profileView{gap:12px!important}
+ #profileView .profile-card{padding:17px!important;border-radius:19px!important}
+ .push-settings-card .push-test-action{width:100%;font-size:15px}
+ #suppModal .dialog{width:100%;max-width:440px;max-height:calc(100dvh - 20px - env(safe-area-inset-top) - env(safe-area-inset-bottom));padding:16px 14px;border-radius:20px}
  #suppModal .dialog-actions{margin:14px -14px -16px!important;padding:12px 14px calc(12px + env(safe-area-inset-bottom))!important}
- .home-rhythm-head h2{font-size:23px}
- .app-footer{padding-top:28px;padding-bottom:14px}
 }
 </style>
 </body></html>
