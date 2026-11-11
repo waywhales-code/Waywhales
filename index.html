@@ -478,11 +478,6 @@ body:before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opac
 }
 
 
-.push-controls{margin-top:16px;padding:15px 16px;border-radius:18px;background:#eef2e8}
-#pushSettingsCard .push-switch-row{min-height:60px;align-items:center}
-#pushSettingsCard #pushReminderTime{font-size:17px;min-height:50px}
-#pushStatus{min-height:20px;margin:12px 0;color:#526b59;line-height:1.55}
-#pushSettingsCard .profile-actions{margin-top:8px}
 </style>
 </head>
 <body><div class="cosmos-scene" id="cosmosScene" aria-hidden="true"></div><main class="shell">
@@ -504,25 +499,9 @@ body:before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opac
  </label>
  <div class="field"><label for="pushReminderTime">Время напоминания</label><input id="pushReminderTime" type="time" value="08:00"></div>
  <p class="hint" id="pushStatus" role="status" aria-live="polite">Проверяем поддержку уведомлений…</p>
+ <div class="profile-actions"><button class="btn ghost small" id="pushTestButton" type="button" disabled>Отправить тестовое уведомление</button></div>
 </div>
 <div class="panel profile-card"><div class="card-kicker">ТЕКУЩИЙ МЕСЯЦ</div><h2>Мой прогресс за месяц</h2><div class="month-result"><div class="month-result-top"><strong id="overallPercent">0%</strong><span id="overallCounts">0 из 0 приёмов</span></div><div class="progress-track"><span id="overallBar"></span></div><p class="sub">Процент = отмеченные приёмы / все приёмы по графику. Свободный график не завышает результат.</p></div></div><div class="panel profile-card" style="display:none" aria-hidden="true"><div class="card-kicker">МОЯ СТАТИСТИКА</div><h2>Результаты по месяцам</h2><h2>История и анализ</h2><p class="sub">Ваш прогресс отдельно за каждый месяц</p><div class="month-pick"><button class="month-nav" id="statsPrevMonth" type="button" aria-label="Предыдущий месяц">‹</button><div class="month-pick-center"><label for="statsMonth">Выберите месяц</label><input id="statsMonth" type="month"></div><button class="month-nav" id="statsNextMonth" type="button" aria-label="Следующий месяц">›</button></div><button class="month-current" id="statsCurrentMonth" type="button">Вернуться к текущему месяцу</button><div class="month-result"><div class="month-result-top"><strong id="monthPercent">0%</strong><span id="monthCounts">0 из 0 приёмов</span></div><div class="progress-track"><span id="monthBar"></span></div><p id="monthCaption" class="sub">За выбранный месяц</p></div><h3 class="analysis-heading">По месяцам</h3><div id="monthlyHistory" class="monthly-history"></div><h3 class="analysis-heading">Последние 7 дней</h3><div id="weeklyStats" class="stat-grid"></div><p class="hint" style="margin-top:18px">Процент показывает долю отмеченных приёмов от всех запланированных. Он не оценивает медицинскую эффективность добавок.</p></div>
-<div class="panel profile-card" id="pushSettingsCard">
- <div class="card-kicker">ВАШИ НАПОМИНАНИЯ</div>
- <h2>Уведомления COSMOS</h2>
- <p class="sub">Одно мягкое ежедневное напоминание в выбранное время — даже когда приложение закрыто.</p>
- <div class="field">
-  <label for="pushReminderTime">Время напоминания</label>
-  <input id="pushReminderTime" type="time" value="09:00">
- </div>
- <div class="push-controls">
-  <label class="push-switch-row" for="pushEnabled">
-   <span class="push-switch-copy"><strong>Push-уведомления</strong><small>Получать напоминание каждый день</small></span>
-   <input class="push-switch" id="pushEnabled" type="checkbox" aria-label="Включить push-уведомления">
-  </label>
- </div>
- <p class="hint" id="pushStatus" role="status" aria-live="polite">Уведомления выключены. Выберите время и включите переключатель.</p>
- <div class="profile-actions"><button class="btn secondary small" id="pushSaveTime" type="button">Сохранить время</button></div>
- <p class="hint" style="margin-top:12px">Настройка хранится для этого устройства. Названия добавок и ваши записи COSMOS на сервер не отправляются.</p>
 </div>
 <div class="panel profile-card"><div class="card-kicker">ВАШИ ДАННЫЕ</div><h2>Данные и конфиденциальность</h2><p class="sub">Ваши записи хранятся только в браузере на этом устройстве. COSMOS не получает к ним доступ и не отправляет их на наши серверы. Экспорт и удаление данных — под вашим контролем.</p><div class="profile-actions"><button class="btn ghost small" id="exportData">Экспортировать данные</button><button class="btn danger small" id="resetData">Сбросить данные</button></div><p class="support-link"><a href="https://t.me/waywhales" target="_blank" rel="noopener">Связаться с Waywhales ↗</a></p></div>
 </section>
@@ -829,9 +808,11 @@ async function enablePush(){
   if(!subscription)subscription=await registration.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:pushApplicationKey(config.publicKey)});
   await savePushSubscription(subscription);
   toggle.checked=true;
+  $('pushTestButton').disabled=false;
   pushStatus('Готово! Ежедневное напоминание настроено на '+$('pushReminderTime').value+'.');
  }catch(error){
   toggle.checked=false;
+  $('pushTestButton').disabled=true;
   pushStatus(error&&error.message?error.message:'Не удалось включить уведомления.');
   if(subscription&&subscription.endpoint){
    try{await fetch(PUSH_API+'/unsubscribe',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({deviceId:pushDeviceId(),endpoint:subscription.endpoint})})}catch(ignored){}
@@ -852,8 +833,9 @@ async function disablePush(){
    await subscription.unsubscribe();
   }
   toggle.checked=false;
+  $('pushTestButton').disabled=true;
   pushStatus('Уведомления отключены на этом устройстве.');
- }catch(error){toggle.checked=true;pushStatus(error&&error.message?error.message:'Не удалось отключить уведомления.')}
+ }catch(error){toggle.checked=true;$('pushTestButton').disabled=false;pushStatus(error&&error.message?error.message:'Не удалось отключить уведомления.')}
  finally{pushBusy=false;toggle.disabled=false}
 }
 async function updatePushTime(){
@@ -866,6 +848,26 @@ async function updatePushTime(){
   pushStatus('Время напоминания обновлено: '+$('pushReminderTime').value+'.');
  }catch(error){pushStatus(error&&error.message?error.message:'Не удалось обновить время уведомления.')}
 }
+async function testPushNotification(){
+ const button=$('pushTestButton');
+ if(!$('pushEnabled').checked||pushBusy)return;
+ button.disabled=true;
+ pushStatus('Отправляем тестовое уведомление…');
+ try{
+  const response=await fetch(PUSH_API+'/test',{
+   method:'POST',cache:'no-store',credentials:'omit',
+   headers:{'Content-Type':'application/json'},
+   body:JSON.stringify({deviceId:pushDeviceId()})
+  });
+  const result=await response.json().catch(()=>({}));
+  if(!response.ok)throw new Error(result.error||'Не удалось отправить тестовое уведомление.');
+  pushStatus('Тест отправлен. Проверьте уведомления на телефоне — доставка может занять несколько секунд.');
+ }catch(error){
+  pushStatus(error&&error.message?error.message:'Не удалось отправить тестовое уведомление.');
+ }finally{
+  button.disabled=!$('pushEnabled').checked;
+ }
+}
 async function initializePush(){
  const toggle=$('pushEnabled'),time=$('pushReminderTime');
  try{const saved=localStorage.getItem(PUSH_TIME_KEY);if(saved&&/^([01]\\d|2[0-3]):[0-5]\\d$/.test(saved))time.value=saved}catch(error){}
@@ -874,12 +876,14 @@ async function initializePush(){
   const registration=await getPushRegistration();
   const subscription=await registration.pushManager.getSubscription();
   toggle.checked=!!subscription&&('Notification' in window)&&Notification.permission==='granted';
+  $('pushTestButton').disabled=!toggle.checked;
   if(!('Notification' in window)||!('PushManager' in window)){toggle.disabled=true;pushStatus('Push-уведомления недоступны в этом браузере.');return}
   pushStatus(toggle.checked?'Уведомления включены на этом устройстве.':'Уведомления выключены. Включите переключатель, чтобы настроить напоминание.');
  }catch(error){pushStatus(error&&error.message?error.message:'Не удалось подготовить фоновое приложение.')}
 }
 $('pushEnabled').addEventListener('change',function(){if(this.checked)enablePush();else disablePush()});
 $('pushReminderTime').addEventListener('change',updatePushTime);
+$('pushTestButton').addEventListener('click',testPushNotification);
 initializePush();
 
 const dailyScenes=['nebula','forest','galaxy','ocean','sunrise'];let previousTheme='';try{previousTheme=localStorage.getItem('cosmosLastTheme')||''}catch(e){}let choices=dailyScenes.filter(x=>x!==previousTheme);const chosenTheme=choices[Math.floor(Math.random()*choices.length)];try{localStorage.setItem('cosmosLastTheme',chosenTheme)}catch(e){}const scene=document.getElementById('cosmosScene');if(scene)scene.dataset.theme=chosenTheme;document.body.dataset.cosmosTheme=chosenTheme;
@@ -1522,127 +1526,5 @@ document.dispatchEvent(new Event('cosmos-language-change'));
 
 })();
 </script>
-<script id="cosmos-push-client">
-(()=>{
-'use strict';
-const API=(document.querySelector('meta[name="cosmos-push-endpoint"]')?.content||'').replace(/\/+$/,'');
-const DEVICE_KEY='cosmos.push.deviceId';
-const TIME_KEY='cosmos.push.reminderTime';
-const toggle=document.getElementById('pushEnabled');
-const timeInput=document.getElementById('pushReminderTime');
-const status=document.getElementById('pushStatus');
-const saveButton=document.getElementById('pushSaveTime');
-if(!toggle||!timeInput||!status||!saveButton)return;
-let registration=null;
-function say(message){status.textContent=message}
-function isIOS(){return /iPad|iPhone|iPod/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1)}
-function isStandalone(){return navigator.standalone===true||window.matchMedia('(display-mode: standalone)').matches}
-function supported(){return !!(API&&'serviceWorker'in navigator&&'PushManager'in window&&'Notification'in window&&'crypto'in window&&crypto.subtle)}
-function deviceId(){
- let value='';
- try{value=localStorage.getItem(DEVICE_KEY)||''}catch(_){}
- if(!/^[0-9a-f-]{36}$/i.test(value)){
-  value=crypto.randomUUID?crypto.randomUUID():'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,c=>{const r=Math.random()*16|0;return(c==='x'?r:(r&3|8)).toString(16)});
-  try{localStorage.setItem(DEVICE_KEY,value)}catch(_){}
- }
- return value;
-}
-function applicationServerKey(value){
- const normalized=value.replace(/-/g,'+').replace(/_/g,'/');
- const binary=atob(normalized+'='.repeat((4-normalized.length%4)%4));
- return Uint8Array.from(binary,c=>c.charCodeAt(0));
-}
-async function getRegistration(){
- if(!registration)registration=await navigator.serviceWorker.register('./sw.js',{scope:'./'});
- await navigator.serviceWorker.ready;
- return registration;
-}
-async function sendSubscription(subscription,reminderTime){
- const timezone=Intl.DateTimeFormat().resolvedOptions().timeZone||'UTC';
- const response=await fetch(API+'/subscribe',{
-  method:'POST',headers:{'Content-Type':'application/json'},
-  body:JSON.stringify({deviceId:deviceId(),subscription:subscription.toJSON(),reminderTime,timezone})
- });
- const result=await response.json().catch(()=>({}));
- if(!response.ok)throw new Error(result.error||'Не удалось сохранить настройки уведомлений.');
- try{localStorage.setItem(TIME_KEY,reminderTime)}catch(_){}
-}
-async function enablePush(){
- if(!supported()){toggle.checked=false;say('Этот браузер не поддерживает push-уведомления. Попробуйте установить COSMOS и открыть его в Safari или Chrome.');return}
- if(isIOS()&&!isStandalone()){toggle.checked=false;say('На iPhone сначала добавьте COSMOS на экран «Домой»: откройте сайт в Safari → «Поделиться» → «На экран Домой», затем запустите приложение с иконки.');return}
- if(!timeInput.value){toggle.checked=false;say('Сначала выберите время напоминания.');return}
- let permissionRequest;
- try{permissionRequest=Notification.requestPermission()}catch(error){toggle.checked=false;say(error.message||'Не удалось запросить разрешение на уведомления.');return}
- try{
-  const permission=await permissionRequest;
-  if(permission!=='granted'){toggle.checked=false;say(permission==='denied'?'Уведомления запрещены в настройках браузера или телефона. Разрешите их в настройках устройства.':'Разрешение на уведомления не предоставлено.');return}
-  say('Подключаем уведомления…');
-  const configResponse=await fetch(API+'/config',{cache:'no-store'});
-  const config=await configResponse.json().catch(()=>({}));
-  if(!configResponse.ok||!config.configured||!config.publicKey)throw new Error('Сервис уведомлений пока не готов. Попробуйте немного позже.');
-  const reg=await getRegistration();
-  let subscription=await reg.pushManager.getSubscription();
-  if(!subscription)subscription=await reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:applicationServerKey(config.publicKey)});
-  await sendSubscription(subscription,timeInput.value);
-  toggle.checked=true;
-  say('Готово! COSMOS будет присылать одно напоминание каждый день в '+timeInput.value+'.');
- }catch(error){
-  toggle.checked=false;
-  say(error.message||'Не удалось включить уведомления. Проверьте подключение и попробуйте ещё раз.');
- }
-}
-async function disablePush(){
- try{
-  say('Отключаем уведомления…');
-  const reg=await getRegistration();
-  const subscription=await reg.pushManager.getSubscription();
-  if(subscription){
-   const response=await fetch(API+'/unsubscribe',{
-    method:'POST',headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({deviceId:deviceId(),endpoint:subscription.endpoint})
-   });
-   const result=await response.json().catch(()=>({}));
-   if(!response.ok)throw new Error(result.error||'Не удалось отключить уведомления на сервере.');
-   await subscription.unsubscribe();
-  }
-  try{localStorage.removeItem(DEVICE_KEY);localStorage.removeItem(TIME_KEY)}catch(_){}
-  toggle.checked=false;
-  say('Уведомления отключены.');
- }catch(error){
-  toggle.checked=true;
-  say(error.message||'Не удалось отключить уведомления. Попробуйте ещё раз.');
- }
-}
-async function saveTime(){
- const value=timeInput.value;
- if(!/^([01]\d|2[0-3]):[0-5]\d$/.test(value)){say('Укажите корректное время.');return}
- try{localStorage.setItem(TIME_KEY,value)}catch(_){}
- if(!toggle.checked){say('Время сохранено. Включите уведомления, чтобы получать напоминания.');return}
- try{
-  const reg=await getRegistration();
-  const subscription=await reg.pushManager.getSubscription();
-  if(!subscription)throw new Error('Подписка не найдена. Выключите и снова включите уведомления.');
-  await sendSubscription(subscription,value);
-  say('Время напоминания обновлено: '+value+'.');
- }catch(error){say(error.message||'Не удалось изменить время.')}
-}
-toggle.addEventListener('change',()=>{if(toggle.checked)enablePush();else disablePush()});
-saveButton.addEventListener('click',saveTime);
-try{const saved=localStorage.getItem(TIME_KEY);if(saved&&/^([01]\d|2[0-3]):[0-5]\d$/.test(saved))timeInput.value=saved}catch(_){}
-if(!supported()){
- toggle.disabled=true;saveButton.disabled=true;
- say('Push-уведомления недоступны в этом браузере. Откройте COSMOS в актуальном Safari или Chrome.');
-}else{
- getRegistration().then(async reg=>{
-  const subscription=await reg.pushManager.getSubscription();
-  if(subscription&&Notification.permission==='granted'){
-   toggle.checked=true;
-   say('Уведомления включены. Ежедневное напоминание настроено на '+timeInput.value+'.');
-  }else if(isIOS()&&!isStandalone()){
-   say('Для push-уведомлений на iPhone установите COSMOS на экран «Домой» через Safari.');
-  }
- }).catch(()=>say('Не удалось подготовить фоновые уведомления. Перезагрузите страницу и попробуйте снова.'));
-}
-})();
-</script>
+
 </body></html>
