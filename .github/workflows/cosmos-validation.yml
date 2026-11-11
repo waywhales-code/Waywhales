@@ -46,9 +46,22 @@ jobs:
           import { Script } from 'node:vm';
 
           const html = readFileSync('index.html', 'utf8');
-          const scripts = [...html.matchAll(/<script\\b[^>]*>([\\s\\S]*?)<\\/script>/gi)]
-            .map((match) => match[1])
-            .filter((source) => source.trim().length > 0);
+          const lowerHtml = html.toLowerCase();
+          const scripts = [];
+          let cursor = 0;
+
+          while (true) {
+            const start = lowerHtml.indexOf('<script', cursor);
+            if (start === -1) break;
+            const openEnd = html.indexOf('>', start);
+            const close = lowerHtml.indexOf('</script>', openEnd + 1);
+            if (openEnd === -1 || close === -1) {
+              throw new Error('Malformed script element in index.html.');
+            }
+            const source = html.slice(openEnd + 1, close);
+            if (source.trim().length > 0) scripts.push(source);
+            cursor = close + '</script>'.length;
+          }
 
           if (scripts.length === 0) {
             throw new Error('No inline JavaScript blocks were found in index.html.');
