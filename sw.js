@@ -10,10 +10,11 @@ self.addEventListener('fetch',event=>{
 });
 self.addEventListener('push',event=>{
  let payload={};
- try{payload=event.data?event.data.json():{}}catch(error){payload={body:event.data?event.data.text():''}}
- const title=payload.title||'COSMOS ✦';
+ try{payload=event.data?event.data.json():{}}catch(_){}
+ const title=typeof payload.title==='string'&&payload.title.trim()?payload.title:'COSMOS ✦';
+ const body=typeof payload.body==='string'&&payload.body.trim()?payload.body:'Пора уделить немного времени себе.';
  const options={
-  body:payload.body||'Пора уделить немного времени себе.',
+  body,
   icon:payload.icon||'./apple-touch-icon.png',
   badge:payload.badge||'./apple-touch-icon.png',
   tag:payload.tag||'cosmos-reminder',
@@ -24,11 +25,20 @@ self.addEventListener('push',event=>{
 });
 self.addEventListener('notificationclick',event=>{
  event.notification.close();
- const destination=new URL(event.notification.data&&event.notification.data.url||'./',self.registration.scope).href;
- event.waitUntil(self.clients.matchAll({type:'window',includeUncontrolled:true}).then(async clients=>{
-  for(const client of clients){
-   if(client.url.startsWith(self.registration.scope))return client.focus();
+ const appRoot=new URL('./',self.registration.scope);
+ let target=appRoot;
+ try{
+  const candidate=new URL(event.notification.data&&event.notification.data.url||'./',appRoot);
+  if(candidate.origin===self.location.origin&&candidate.pathname.startsWith(appRoot.pathname))target=candidate;
+ }catch(_){}
+ event.waitUntil(self.clients.matchAll({type:'window',includeUncontrolled:true}).then(windows=>{
+  const existing=windows.find(client=>{
+   try{const url=new URL(client.url);return url.origin===self.location.origin&&url.pathname.startsWith(appRoot.pathname)}catch(_){return false}
+  });
+  if(existing){
+   if('navigate'in existing)existing.navigate(target.href);
+   return existing.focus();
   }
-  if(self.clients.openWindow)return self.clients.openWindow(destination);
+  return self.clients.openWindow(target.href);
  }));
 });
