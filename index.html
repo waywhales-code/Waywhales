@@ -489,6 +489,12 @@ body:before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opac
 .home-reminder-shortcut .btn{min-height:44px}
 @media(max-width:720px){.home-reminder-shortcut{justify-content:stretch}.home-reminder-shortcut .btn{width:100%}}
 </style>
+<style id="cosmos-touch-safety">
+.nav{position:fixed!important;z-index:9999!important;pointer-events:auto!important;isolation:isolate}
+.nav button{position:relative!important;z-index:1!important;pointer-events:auto!important;touch-action:manipulation!important;-webkit-tap-highlight-color:rgba(180,205,170,.25)}
+.home-reminder-shortcut{position:relative;z-index:3;pointer-events:auto}
+.home-reminder-shortcut button,.push-test-action{position:relative!important;z-index:4!important;pointer-events:auto!important;touch-action:manipulation!important;-webkit-tap-highlight-color:rgba(180,205,170,.25)}
+</style>
 </head>
 <body><div class="cosmos-scene" id="cosmosScene" aria-hidden="true"></div><main class="shell">
 <header class="top"><div class="brand"><span class="brand-mark">✦</span><span class="brand-name">COSMOS<small>by Waywhales</small></span></div><div class="date-pill" id="todayLabel"></div></header>
@@ -547,6 +553,28 @@ body:before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opac
  </section>
 </div>
 <div class="toast" id="toast" role="status"></div>
+<script id="cosmos-boot-monitor">
+(()=> {
+ 'use strict';
+ window.__COSMOS_BOOT_ERROR = '';
+ const report = (message) => {
+  window.__COSMOS_BOOT_ERROR = String(message || 'Неизвестная ошибка запуска');
+  const status = document.getElementById('pushStatus');
+  if (status) status.textContent = 'Ошибка запуска COSMOS: ' + window.__COSMOS_BOOT_ERROR;
+  console.error('COSMOS runtime:', window.__COSMOS_BOOT_ERROR);
+ };
+ window.addEventListener('error', event => report(event.message || 'Ошибка JavaScript'));
+ window.addEventListener('unhandledrejection', event => report(event.reason && (event.reason.message || event.reason) || 'Ошибка фоновой операции'));
+ document.addEventListener('pointerdown', event => {
+  const button = event.target && event.target.closest ? event.target.closest('#pushTestButton') : null;
+  if (button) {
+   const status = document.getElementById('pushStatus');
+   if (status) status.textContent = 'Нажатие получено. Запускаем настройку уведомлений…';
+  }
+ }, true);
+})();
+</script>
+
 <script>
 (()=>{
 'use strict';
@@ -928,6 +956,10 @@ async function initializePush(){
 }
 $('pushEnabled').addEventListener('change',function(){if(this.checked)enablePush();else disablePush()});
 $('pushReminderTime').addEventListener('change',updatePushTime);
+window.cosmosEnableAndTestPush=enableAndTestPush;
+window.cosmosEnablePush=enablePush;
+window.cosmosDisablePush=disablePush;
+window.cosmosUpdatePushTime=updatePushTime;
 $('pushTestButton').addEventListener('click',enableAndTestPush);
 initializePush();
 
@@ -1288,46 +1320,88 @@ body.calendar-view #calendarView>.panel{margin-top:0}
 
 
 <script id="cosmos-navigation-guard">
-(()=>{
-'use strict';
-window.cosmosNavigate=function(target){
- const button=document.querySelector('.nav button[data-view="'+target+'"]');
- if(!button)return;
- const view=document.getElementById(target+'View');
- if(!view)return;
- document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b===button));
- document.querySelectorAll('main .view').forEach(v=>v.classList.toggle('active',v===view));
- document.body.classList.toggle('calendar-view',target==='calendar');
- if(target==='calendar'&&typeof window.cosmosRenderCalendar==='function')window.cosmosRenderCalendar();
-};
-const install=()=>{
- const nav=document.querySelector('.nav');
- if(!nav)return;
- nav.style.setProperty('z-index','1000','important');
- nav.style.setProperty('pointer-events','auto','important');
- nav.querySelectorAll('button').forEach(b=>{
-  b.style.setProperty('pointer-events','auto','important');
-  b.style.setProperty('touch-action','manipulation','important');
-  b.style.setProperty('cursor','pointer','important');
- });
-};
-const activate=(button)=>{
- const target=button&&button.getAttribute('data-view');
- if(!['home','calendar','profile'].includes(target))return;
- const view=document.getElementById(target+'View');
- if(!view)return;
- document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b===button));
- document.querySelectorAll('main .view').forEach(v=>v.classList.toggle('active',v===view));
- document.body.classList.toggle('calendar-view',target==='calendar');
- if(target==='calendar'&&typeof window.cosmosRenderCalendar==='function')window.cosmosRenderCalendar();
-};
-document.addEventListener('click',event=>{
- const button=event.target&&event.target.closest?event.target.closest('.nav button[data-view]'):null;
- if(!button)return;
- activate(button);
-},true);
-document.addEventListener('DOMContentLoaded',install,{once:true});
-install();
+(()=> {
+ 'use strict';
+ const status = message => {
+  const el = document.getElementById('pushStatus');
+  if (el) el.textContent = message;
+ };
+ const activate = target => {
+  if (!['home','calendar','profile'].includes(target)) return false;
+  const button = document.querySelector('.nav button[data-view="'+target+'"]');
+  const view = document.getElementById(target+'View');
+  if (!button || !view) return false;
+  document.querySelectorAll('.nav button').forEach(item => item.classList.toggle('active', item === button));
+  document.querySelectorAll('main .view').forEach(item => item.classList.toggle('active', item === view));
+  document.body.classList.toggle('calendar-view', target === 'calendar');
+  if (target === 'calendar') {
+   if (typeof window.cosmosRenderCalendar === 'function') {
+    try { window.cosmosRenderCalendar(); }
+    catch (error) { status('Не удалось открыть календарь: '+(error.message||error)); }
+   } else {
+    status('Календарь не запустился: сценарий приложения не загрузился. Перезагрузите страницу в Safari.');
+   }
+  }
+  return true;
+ };
+ window.cosmosNavigate = activate;
+ const install = () => {
+  const nav = document.querySelector('.nav');
+  if (!nav) return;
+  nav.style.setProperty('z-index','9999','important');
+  nav.style.setProperty('pointer-events','auto','important');
+  nav.querySelectorAll('button').forEach(button => {
+   button.style.setProperty('pointer-events','auto','important');
+   button.style.setProperty('touch-action','manipulation','important');
+   button.style.setProperty('position','relative','important');
+  });
+ };
+ const find = (event, selector) => event.target && event.target.closest ? event.target.closest(selector) : null;
+ document.addEventListener('click', event => {
+  const tab = find(event,'.nav button[data-view]');
+  if (tab) {
+   event.preventDefault();
+   event.stopImmediatePropagation();
+   activate(tab.getAttribute('data-view'));
+   return;
+  }
+  const shortcut = find(event,'#openReminderSettings');
+  if (shortcut) {
+   event.preventDefault();
+   event.stopImmediatePropagation();
+   activate('profile');
+   const card = document.querySelector('.push-settings-card');
+   if (card) card.scrollIntoView({behavior:'smooth',block:'start'});
+   return;
+  }
+  const test = find(event,'#pushTestButton');
+  if (test) {
+   event.preventDefault();
+   event.stopImmediatePropagation();
+   if (typeof window.cosmosEnableAndTestPush === 'function') {
+    window.cosmosEnableAndTestPush();
+   } else {
+    status(window.__COSMOS_BOOT_ERROR
+      ? 'COSMOS не запустился: '+window.__COSMOS_BOOT_ERROR
+      : 'Модуль уведомлений не загрузился. Откройте эту страницу во внешнем Safari и обновите её.');
+   }
+  }
+ }, true);
+ document.addEventListener('change', event => {
+  if (event.target && event.target.id === 'pushEnabled') {
+   event.stopImmediatePropagation();
+   if (event.target.checked && typeof window.cosmosEnablePush === 'function') window.cosmosEnablePush();
+   else if (!event.target.checked && typeof window.cosmosDisablePush === 'function') window.cosmosDisablePush();
+   else status('Не удалось запустить модуль уведомлений.');
+  }
+  if (event.target && event.target.id === 'pushReminderTime') {
+   event.stopImmediatePropagation();
+   if (typeof window.cosmosUpdatePushTime === 'function') window.cosmosUpdatePushTime();
+   else status('Не удалось запустить модуль уведомлений.');
+  }
+ }, true);
+ install();
+ document.addEventListener('DOMContentLoaded',install,{once:true});
 })();
 </script>
 
