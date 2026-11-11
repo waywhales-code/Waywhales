@@ -945,6 +945,7 @@ async function initializePush(){
  if(!('serviceWorker' in navigator)){pushStatus('Этот браузер не поддерживает установку PWA и push-уведомления.');toggle.disabled=true;return}
  if(!('Notification' in window)||!('PushManager' in window)){toggle.checked=false;$('pushTestButton').disabled=false;pushStatus('В этом режиме браузера фоновые уведомления недоступны. Для iPhone используйте установленный COSMOS с экрана «Домой».');return}
  try{
+  await getPushConfig();
   const registration=await getPushRegistration();
   const subscription=await registration.pushManager.getSubscription();
   const notificationGranted=Notification.permission==='granted';
@@ -956,7 +957,9 @@ async function initializePush(){
   toggle.checked=!!subscription&&notificationGranted;
   $('pushTestButton').disabled=false;
   if(!('Notification' in window)||!('PushManager' in window)){pushStatus('Push-уведомления недоступны в этом браузере. Нажмите кнопку ниже, чтобы увидеть доступные инструкции.');return}
-  pushStatus(toggle.checked?'Уведомления включены на этом устройстве.':'Уведомления выключены. Включите переключатель, чтобы настроить напоминание.');
+  pushStatus(toggle.checked
+   ? 'Сервер доступен. Ежедневные уведомления включены на этом устройстве.'
+   : 'Сервер доступен. Напоминания пока выключены. Включите переключатель и выберите время.');
  }catch(error){pushStatus(error&&error.message?error.message:'Не удалось подготовить фоновое приложение.')}
 }
 $('pushEnabled').addEventListener('change',function(){if(this.checked)enablePush();else disablePush()});
@@ -1339,6 +1342,10 @@ body.calendar-view #calendarView>.panel{margin-top:0}
   document.querySelectorAll('.nav button').forEach(item => item.classList.toggle('active', item === button));
   document.querySelectorAll('main .view').forEach(item => item.classList.toggle('active', item === view));
   document.body.classList.toggle('calendar-view', target === 'calendar');
+  // A tab change starts at the top of that screen, never at the previous screen's scroll offset.
+  window.scrollTo(0, 0);
+  document.documentElement.scrollTop = 0;
+  document.body.scrollTop = 0;
   if (target === 'calendar') {
    if (typeof window.cosmosRenderCalendar === 'function') {
     try { window.cosmosRenderCalendar(); }
