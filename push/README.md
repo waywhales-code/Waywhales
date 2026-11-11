@@ -16,6 +16,7 @@ The Worker is named `cosmos-push` and uses:
 - D1 binding: `DB`
 - Plain text variables: `VAPID_PUBLIC_KEY`, `VAPID_SUBJECT`
 - Secret: `VAPID_PRIVATE_JWK`
+- D1 table `vapid_tokens`: caches signed VAPID JWTs by push-provider audience so the server reuses tokens instead of creating one for each notification.
 - Cron: `* * * * *`
 
 The D1 database must have the schema in `schema.sql`.
@@ -28,6 +29,8 @@ The D1 database must have the schema in `schema.sql`.
 - `GET /config` — public VAPID key and configuration status
 - `POST /subscribe` — save or update one device subscription
 - `POST /unsubscribe` — remove one device subscription
+
+VAPID JWTs are signed with the private key and stored with their expiry in D1. The private key itself is never stored in GitHub; it remains a Cloudflare Worker Secret.
 
 The Worker only accepts browser-originated management requests from the GitHub Pages origin. Rate limiting is a lightweight pilot safeguard; persistent abuse controls should be added before a broad public launch.
 
