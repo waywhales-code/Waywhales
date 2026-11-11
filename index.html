@@ -213,6 +213,12 @@ body:before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opac
 .push-controls .profile-actions{gap:10px}
 
 
+/* Keep notification controls directly tappable on touch screens */
+.push-settings-card{position:relative;z-index:2;overflow:visible}
+.push-action-row{position:relative;z-index:3;margin-top:14px}
+.push-test-action{position:relative;z-index:4;display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:12px 18px;pointer-events:auto;touch-action:manipulation;cursor:pointer}
+.push-test-action:disabled{opacity:.6;cursor:wait}
+
 /* Simple accessible on/off switch for push notifications */
 .push-controls{margin-top:18px;padding:16px 18px;border-radius:18px;background:#eef2e8}
 .push-switch-row{display:flex;align-items:center;justify-content:space-between;gap:18px;cursor:pointer;min-height:58px}
@@ -499,7 +505,7 @@ body:before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opac
  </label>
  <div class="field"><label for="pushReminderTime">Время напоминания</label><input id="pushReminderTime" type="time" value="08:00"></div>
  <p class="hint" id="pushStatus" role="status" aria-live="polite">Проверяем поддержку уведомлений…</p>
- <div class="profile-actions"><button class="btn ghost small" id="pushTestButton" type="button" disabled>Отправить тестовое уведомление</button></div>
+ <div class="profile-actions push-action-row"><button class="btn small push-test-action" id="pushTestButton" type="button">Включить напоминания и проверить</button></div>
  <p class="hint">Сервис уведомлений хранит только техническую подписку устройства, часовой пояс и выбранное время. Названия добавок, дозировки и ваши записи COSMOS не передаются.</p>
 </div>
 <div class="panel profile-card"><div class="card-kicker">ТЕКУЩИЙ МЕСЯЦ</div><h2>Мой прогресс за месяц</h2><div class="month-result"><div class="month-result-top"><strong id="overallPercent">0%</strong><span id="overallCounts">0 из 0 приёмов</span></div><div class="progress-track"><span id="overallBar"></span></div><p class="sub">Процент = отмеченные приёмы / все приёмы по графику. Свободный график не завышает результат.</p></div></div><div class="panel profile-card" style="display:none" aria-hidden="true"><div class="card-kicker">МОЯ СТАТИСТИКА</div><h2>Результаты по месяцам</h2><h2>История и анализ</h2><p class="sub">Ваш прогресс отдельно за каждый месяц</p><div class="month-pick"><button class="month-nav" id="statsPrevMonth" type="button" aria-label="Предыдущий месяц">‹</button><div class="month-pick-center"><label for="statsMonth">Выберите месяц</label><input id="statsMonth" type="month"></div><button class="month-nav" id="statsNextMonth" type="button" aria-label="Следующий месяц">›</button></div><button class="month-current" id="statsCurrentMonth" type="button">Вернуться к текущему месяцу</button><div class="month-result"><div class="month-result-top"><strong id="monthPercent">0%</strong><span id="monthCounts">0 из 0 приёмов</span></div><div class="progress-track"><span id="monthBar"></span></div><p id="monthCaption" class="sub">За выбранный месяц</p></div><h3 class="analysis-heading">По месяцам</h3><div id="monthlyHistory" class="monthly-history"></div><h3 class="analysis-heading">Последние 7 дней</h3><div id="weeklyStats" class="stat-grid"></div><p class="hint" style="margin-top:18px">Процент показывает долю отмеченных приёмов от всех запланированных. Он не оценивает медицинскую эффективность добавок.</p></div>
@@ -798,7 +804,7 @@ async function savePushSubscription(subscription){
  return result;
 }
 async function enablePush(){
- if(pushBusy)return;
+ if(pushBusy)return false;
  const toggle=$('pushEnabled');
  pushBusy=true;toggle.disabled=true;pushStatus('Подключаем уведомления…');
  let subscription=null;
@@ -818,6 +824,7 @@ async function enablePush(){
   toggle.checked=true;
   $('pushTestButton').disabled=false;
   pushStatus('Готово! Ежедневное напоминание настроено на '+$('pushReminderTime').value+'.');
+  return true;
  }catch(error){
   toggle.checked=false;
   $('pushTestButton').disabled=true;
@@ -826,6 +833,7 @@ async function enablePush(){
    try{await removeServerPushSubscription(subscription.endpoint)}catch(ignored){}
    try{await subscription.unsubscribe()}catch(ignored){}
   }
+  return false;
  }finally{pushBusy=false;toggle.disabled=false}
 }
 async function disablePush(){
@@ -853,6 +861,18 @@ async function updatePushTime(){
   pushStatus('Время напоминания обновлено: '+$('pushReminderTime').value+'.');
  }catch(error){pushStatus(error&&error.message?error.message:'Не удалось обновить время уведомления.')}
  finally{pushBusy=false;$('pushReminderTime').disabled=false;$('pushEnabled').disabled=false;$('pushTestButton').disabled=!$('pushEnabled').checked}
+}
+async function enableAndTestPush(){
+ if(pushBusy)return;
+ if(!$('pushEnabled').checked){
+  const enabled=await enablePush();
+  if(!enabled)return;
+ }
+ if(!('Notification' in window)||!('PushManager' in window)||Notification.permission!=='granted'){
+  pushStatus('Сначала разрешите уведомления в настройках браузера или установите COSMOS на экран «Домой» на iPhone.');
+  return;
+ }
+ await testPushNotification();
 }
 async function testPushNotification(){
  const button=$('pushTestButton');
@@ -890,13 +910,13 @@ async function initializePush(){
   }
   toggle.checked=!!subscription&&notificationGranted;
   $('pushTestButton').disabled=!toggle.checked;
-  if(!('Notification' in window)||!('PushManager' in window)){toggle.disabled=true;pushStatus('Push-уведомления недоступны в этом браузере.');return}
+  if(!('Notification' in window)||!('PushManager' in window)){pushStatus('Push-уведомления недоступны в этом браузере. Нажмите кнопку ниже, чтобы увидеть доступные инструкции.');return}
   pushStatus(toggle.checked?'Уведомления включены на этом устройстве.':'Уведомления выключены. Включите переключатель, чтобы настроить напоминание.');
  }catch(error){pushStatus(error&&error.message?error.message:'Не удалось подготовить фоновое приложение.')}
 }
 $('pushEnabled').addEventListener('change',function(){if(this.checked)enablePush();else disablePush()});
 $('pushReminderTime').addEventListener('change',updatePushTime);
-$('pushTestButton').addEventListener('click',testPushNotification);
+$('pushTestButton').addEventListener('click',enableAndTestPush);
 initializePush();
 
 const dailyScenes=['nebula','forest','galaxy','ocean','sunrise'];let previousTheme='';try{previousTheme=localStorage.getItem('cosmosLastTheme')||''}catch(e){}let choices=dailyScenes.filter(x=>x!==previousTheme);const chosenTheme=choices[Math.floor(Math.random()*choices.length)];try{localStorage.setItem('cosmosLastTheme',chosenTheme)}catch(e){}const scene=document.getElementById('cosmosScene');if(scene)scene.dataset.theme=chosenTheme;document.body.dataset.cosmosTheme=chosenTheme;
