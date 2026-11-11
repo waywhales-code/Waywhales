@@ -1275,6 +1275,44 @@ body.calendar-view #calendarView>.panel{margin-top:0}
 </style>
 
 
+<script id="cosmos-navigation-guard">
+(()=>{
+'use strict';
+const install=()=>{
+ const nav=document.querySelector('.nav');
+ if(!nav)return;
+ nav.style.setProperty('z-index','1000','important');
+ nav.style.setProperty('pointer-events','auto','important');
+ nav.querySelectorAll('button').forEach(b=>{
+  b.style.setProperty('pointer-events','auto','important');
+  b.style.setProperty('touch-action','manipulation','important');
+  b.style.setProperty('cursor','pointer','important');
+ });
+};
+const activate=(button)=>{
+ const target=button&&button.getAttribute('data-view');
+ if(!['home','calendar','profile'].includes(target))return;
+ const view=document.getElementById(target+'View');
+ if(!view)return;
+ document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b===button));
+ document.querySelectorAll('main .view').forEach(v=>v.classList.toggle('active',v===view));
+ document.body.classList.toggle('calendar-view',target==='calendar');
+ if(target==='calendar'){
+  try{if(typeof renderCalendar==='function')renderCalendar()}catch(error){console.error('COSMOS calendar render:',error)}
+ }
+};
+document.addEventListener('click',event=>{
+ const button=event.target&&event.target.closest?event.target.closest('.nav button[data-view]'):null;
+ if(!button)return;
+ event.preventDefault();
+ event.stopImmediatePropagation();
+ activate(button);
+},true);
+document.addEventListener('DOMContentLoaded',install,{once:true});
+install();
+})();
+</script>
+
 <script id="cosmos-language-switcher">
 (()=>{
 'use strict';
