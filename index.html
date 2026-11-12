@@ -3623,4 +3623,167 @@ textarea:focus-visible,a:focus-visible{
 .quote-signature{color:rgba(211,230,221,.78)!important}
 </style>
 
+
+
+<style id="waywhales-glass-specificity-repair">
+/* Final glass layer: deliberately outranks the older daily forest palette. */
+body[data-cosmos-theme] .hero{
+ color:#f3faf7!important;
+ background:
+  radial-gradient(ellipse at 92% 8%,rgba(220,197,143,.12),transparent 35%),
+  linear-gradient(135deg,rgba(44,86,97,.78),rgba(15,43,58,.90) 58%,rgba(37,40,67,.82))!important;
+ background-image:
+  radial-gradient(ellipse at 92% 8%,rgba(220,197,143,.12),transparent 35%),
+  linear-gradient(135deg,rgba(44,86,97,.78),rgba(15,43,58,.90) 58%,rgba(37,40,67,.82))!important;
+ border:1px solid rgba(215,239,231,.24)!important;
+ box-shadow:0 18px 46px rgba(0,8,17,.25),inset 0 1px 0 rgba(255,255,255,.13)!important;
+ -webkit-backdrop-filter:blur(26px) saturate(1.35)!important;
+ backdrop-filter:blur(26px) saturate(1.35)!important;
+}
+body[data-cosmos-theme] .hero:after{display:block!important;content:""!important}
+body[data-cosmos-theme] .hero .eyebrow{color:rgba(221,238,230,.82)!important}
+body[data-cosmos-theme] .hero h1{color:#f6faf6!important}
+body[data-cosmos-theme] .hero p{color:rgba(225,239,233,.90)!important}
+body[data-cosmos-theme] .hero-progress-caption{color:rgba(221,238,230,.82)!important}
+body[data-cosmos-theme] .daily-quote{
+ background:rgba(5,22,34,.12)!important;
+ border:1px solid rgba(213,235,226,.12)!important;
+ border-top-color:rgba(221,241,233,.20)!important;
+ border-radius:16px!important;
+ -webkit-backdrop-filter:blur(10px)!important;backdrop-filter:blur(10px)!important;
+}
+body[data-cosmos-theme] .quote-label{color:#d9eae2!important}
+body[data-cosmos-theme] .daily-quote blockquote{color:#f4f9f6!important}
+body[data-cosmos-theme] .quote-signature{color:rgba(216,233,225,.78)!important}
+
+/* All content cards stay dark, translucent and consistent across daily scenes. */
+body[data-cosmos-theme] .panel,
+body[data-cosmos-theme] .profile-card,
+body[data-cosmos-theme] .profile-edit-panel,
+body[data-cosmos-theme] .push-settings-card,
+body[data-cosmos-theme] .selected-day-result{
+ color:#eaf4f0!important;
+ background:linear-gradient(145deg,rgba(36,69,79,.78),rgba(14,39,53,.88))!important;
+ background-image:linear-gradient(145deg,rgba(36,69,79,.78),rgba(14,39,53,.88))!important;
+ border:1px solid rgba(208,232,226,.18)!important;
+ box-shadow:0 9px 28px rgba(0,8,17,.17),inset 0 1px 0 rgba(244,251,247,.065)!important;
+ -webkit-backdrop-filter:blur(20px) saturate(1.28)!important;
+ backdrop-filter:blur(20px) saturate(1.28)!important;
+}
+body[data-cosmos-theme] .panel h2,
+body[data-cosmos-theme] .profile-card h2,
+body[data-cosmos-theme] .profile-card h3,
+body[data-cosmos-theme] .selected-day-result strong,
+body[data-cosmos-theme] .stat strong{color:#f0f7f3!important}
+body[data-cosmos-theme] .panel .sub,
+body[data-cosmos-theme] .panel .hint,
+body[data-cosmos-theme] .profile-card .sub,
+body[data-cosmos-theme] .profile-card .hint,
+body[data-cosmos-theme] .profile-card .field label,
+body[data-cosmos-theme] .push-switch-copy strong,
+body[data-cosmos-theme] .push-switch-copy small,
+body[data-cosmos-theme] .card-kicker,
+body[data-cosmos-theme] .calendar-legend,
+body[data-cosmos-theme] .selected-day-result p{
+ color:rgba(201,222,213,.82)!important;
+}
+body[data-cosmos-theme] #profileView > .profile-card:first-of-type{
+ background:linear-gradient(145deg,rgba(36,69,79,.84),rgba(14,39,53,.93))!important;
+ background-image:linear-gradient(145deg,rgba(36,69,79,.84),rgba(14,39,53,.93))!important;
+ border:1px solid rgba(208,232,226,.18)!important;
+ box-shadow:0 9px 28px rgba(0,8,17,.17),inset 0 1px 0 rgba(244,251,247,.065)!important;
+}
+body[data-cosmos-theme] #profileView .profile-card .profile .hint{color:rgba(199,220,211,.84)!important}
+body[data-cosmos-theme] #profileView .profile-card .field label{color:rgba(208,228,219,.88)!important}
+body[data-cosmos-theme] #profileView .profile-card .field input,
+body[data-cosmos-theme] #profileView .profile-card .field select,
+body[data-cosmos-theme] #profileView #nameInput{
+ color:#f0f7f3!important;background:rgba(7,28,41,.80)!important;
+ border-color:rgba(205,230,222,.20)!important;
+}
+body[data-cosmos-theme] #profileView .profile-edit-panel{
+ background:linear-gradient(145deg,rgba(29,61,72,.94),rgba(10,32,46,.98))!important;
+ border-color:rgba(208,232,226,.18)!important;
+ box-shadow:0 8px 22px rgba(0,8,17,.20)!important;
+}
+body[data-cosmos-theme] #profileView .profile-edit-panel .profile-cancel-btn{
+ color:#eaf5ef!important;background:rgba(92,161,151,.16)!important;
+ border-color:rgba(194,225,215,.20)!important;
+}
+body[data-cosmos-theme] #profileView .profile-card .profile strong,
+body[data-cosmos-theme] #profileView #profileName{color:#f3f9f5!important}
+body[data-cosmos-theme] #profileView .push-settings-card .push-status{
+ color:#dff3ea!important;background:rgba(18,74,69,.58)!important;
+ border-color:rgba(118,210,184,.30)!important;
+}
+
+/* Home segmented day control and calendar cells. */
+body[data-cosmos-theme] #homeView .plan-day-switch{
+ background:rgba(6,27,40,.62)!important;
+ border:1px solid rgba(202,231,222,.18)!important;
+ box-shadow:inset 0 1px 0 rgba(245,252,248,.055),0 5px 16px rgba(0,8,17,.10)!important;
+ -webkit-backdrop-filter:blur(16px) saturate(1.25)!important;
+ backdrop-filter:blur(16px) saturate(1.25)!important;
+}
+body[data-cosmos-theme] #homeView .plan-day-switch button{
+ color:rgba(213,231,223,.82)!important;background:transparent!important;
+}
+body[data-cosmos-theme] #homeView .plan-day-switch button.active{
+ color:#f4faf6!important;
+ background:linear-gradient(135deg,rgba(102,190,176,.48),rgba(43,119,124,.58))!important;
+ border:1px solid rgba(190,232,216,.25)!important;
+ box-shadow:0 3px 12px rgba(0,8,17,.18),inset 0 1px 0 rgba(255,255,255,.13)!important;
+}
+body[data-cosmos-theme] #calendarView .calendar-head #monthTitle{color:#f2f8f4!important}
+body[data-cosmos-theme] #calendarView .day{
+ color:#edf6f2!important;background:rgba(9,32,45,.58)!important;
+ border:1px solid rgba(206,231,224,.15)!important;
+}
+body[data-cosmos-theme] #calendarView .day.today{border:2px solid rgba(220,198,139,.90)!important}
+body[data-cosmos-theme] #calendarView .day.selected{
+ color:#f7fbf8!important;background:rgba(89,166,155,.30)!important;
+ border-color:rgba(137,220,202,.70)!important;
+}
+body[data-cosmos-theme] #calendarView .day.holiday-day,
+body[data-cosmos-theme] #calendarView .day.holiday-day.selected{
+ color:#f5d5cd!important;background:rgba(132,62,66,.30)!important;
+ border-color:rgba(220,139,128,.46)!important;
+}
+body[data-cosmos-theme] #calendarView .calendar-legend{color:rgba(201,222,213,.82)!important}
+body[data-cosmos-theme] #calendarView .selected-day-result{
+ background:linear-gradient(145deg,rgba(28,71,79,.76),rgba(12,38,52,.90))!important;
+}
+
+/* Preserve readable glass buttons on every daily theme. */
+body[data-cosmos-theme] .btn{
+ color:#f4faf7!important;
+ background:linear-gradient(135deg,#4caa9e,#247c7d)!important;
+ border:1px solid rgba(179,232,216,.24)!important;
+ box-shadow:0 5px 16px rgba(0,10,18,.18),inset 0 1px 0 rgba(255,255,255,.13)!important;
+}
+body[data-cosmos-theme] .btn.secondary{
+ color:#e8f5ef!important;
+ background:linear-gradient(135deg,rgba(91,171,158,.34),rgba(38,106,111,.48))!important;
+ border:1px solid rgba(185,228,215,.20)!important;
+}
+body[data-cosmos-theme] .btn.ghost{
+ color:#e5f2ec!important;background:rgba(12,39,53,.40)!important;
+ border:1px solid rgba(204,230,221,.22)!important;box-shadow:none!important;
+}
+body[data-cosmos-theme] .btn.danger{
+ color:#f4d6ce!important;background:rgba(113,51,54,.48)!important;
+ border:1px solid rgba(221,151,136,.28)!important;
+}
+body[data-cosmos-theme] .supp{
+ color:#edf6f2!important;
+ background:linear-gradient(145deg,rgba(40,75,84,.72),rgba(14,39,53,.88))!important;
+ border:1px solid rgba(207,232,226,.15)!important;
+ box-shadow:0 5px 17px rgba(0,8,17,.13),inset 0 1px 0 rgba(245,252,248,.045)!important;
+}
+body[data-cosmos-theme] .supp.done{background:linear-gradient(145deg,rgba(36,91,84,.68),rgba(13,53,54,.84))!important}
+body[data-cosmos-theme] .supp .supp-main,
+body[data-cosmos-theme] .supp .supp-name{color:#f0f7f3!important}
+body[data-cosmos-theme] .stat{background:rgba(8,30,43,.42)!important;border:1px solid rgba(205,230,222,.14)!important}
+</style>
+
 </body></html>
