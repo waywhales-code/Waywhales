@@ -525,6 +525,25 @@ body:before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opac
 }
 </style>
 
+
+<style id="waywhales-safe-area-glass-unified">
+/* iPhone: one continuous translucent surface from the tab bar through the home-indicator inset */
+@supports (padding: env(safe-area-inset-bottom)) {
+  html, body { background-color:#0b1f2a!important; }
+  body nav.nav {
+    box-sizing:border-box!important;
+    height:calc(60px + env(safe-area-inset-bottom, 0px))!important;
+    min-height:calc(60px + env(safe-area-inset-bottom, 0px))!important;
+    max-height:calc(60px + env(safe-area-inset-bottom, 0px))!important;
+    padding-bottom:env(safe-area-inset-bottom, 0px)!important;
+    background-color:rgba(23,49,61,.78)!important;
+    background-image:linear-gradient(135deg,rgba(183,213,216,.16),rgba(13,35,49,.34))!important;
+    -webkit-backdrop-filter:blur(26px) saturate(1.5)!important;
+    backdrop-filter:blur(26px) saturate(1.5)!important;
+  }
+}
+</style>
+
 </head>
 <body><div class="cosmos-scene" id="cosmosScene" aria-hidden="true"></div><main class="shell">
 <header class="top"><div class="brand"><span class="brand-mark">✦</span><span class="brand-name">COSMOS<small>WAYWHALES</small></span></div><div class="date-pill" id="todayLabel"></div></header>
