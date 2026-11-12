@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#102b20"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png"><meta name="description" content="COSMOS — дневник заботы о теле, душе и внутренней гармонии. by Waywhales."><meta name="cosmos-ai-endpoint" content="https://long-haze-d1a9bady-cosmos-api.waywhales.workers.dev/">
+<meta name="cosmos-push-endpoint" content="https://cosmos-push.waywhales.workers.dev">
 <link rel="manifest" href="./manifest.webmanifest"><link rel="icon" href="./apple-touch-icon.png" type="image/png"><link rel="icon" href="./apple-touch-icon.png" type="image/png">
 <title>COSMOS ✦</title>
 <style>
@@ -211,6 +212,12 @@ body:before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opac
 .push-controls .hint{margin:0 0 14px;color:#526b59;line-height:1.55}
 .push-controls .profile-actions{gap:10px}
 
+
+/* Keep notification controls directly tappable on touch screens */
+.push-settings-card{position:relative;z-index:2;overflow:visible}
+.push-action-row{position:relative;z-index:3;margin-top:14px}
+.push-test-action{position:relative;z-index:4;display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:12px 18px;pointer-events:auto;touch-action:manipulation;cursor:pointer}
+.push-test-action:disabled{opacity:.6;cursor:wait}
 
 /* Simple accessible on/off switch for push notifications */
 .push-controls{margin-top:18px;padding:16px 18px;border-radius:18px;background:#eef2e8}
@@ -476,20 +483,130 @@ body:before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opac
  #todayList>.supp .icon-btn{width:27px;height:32px;min-width:27px;flex-basis:27px;font-size:15px}
 }
 
+
+
+.home-reminder-shortcut{display:flex;justify-content:flex-end;margin:14px 0 0}
+.home-reminder-shortcut .btn{min-height:44px}
+@media(max-width:720px){.home-reminder-shortcut{justify-content:stretch}.home-reminder-shortcut .btn{width:100%}}
 </style>
+<style id="cosmos-touch-safety">
+.nav{position:fixed!important;z-index:9999!important;pointer-events:auto!important;isolation:isolate}
+.nav button{position:relative!important;z-index:1!important;pointer-events:auto!important;touch-action:manipulation!important;-webkit-tap-highlight-color:rgba(180,205,170,.25)}
+.home-reminder-shortcut{position:relative;z-index:3;pointer-events:auto}
+.home-reminder-shortcut button,.push-test-action{position:relative!important;z-index:4!important;pointer-events:auto!important;touch-action:manipulation!important;-webkit-tap-highlight-color:rgba(180,205,170,.25)}
+</style>
+
+<style id="cosmos-gh-pages-glass-navigation">
+/* COSMOS Dark Glass — three balanced square tabs, with a clear active tile. */
+@media(max-width:720px){
+ nav.nav{
+  position:fixed!important;left:0!important;right:0!important;top:auto!important;bottom:0!important;
+  inset:auto 0 0 0!important;width:100%!important;box-sizing:border-box!important;
+  display:flex!important;align-items:flex-start!important;justify-content:space-around!important;
+  gap:4px!important;margin:0!important;
+  height:calc(94px + env(safe-area-inset-bottom,0px))!important;
+  min-height:calc(94px + env(safe-area-inset-bottom,0px))!important;
+  max-height:calc(94px + env(safe-area-inset-bottom,0px))!important;
+  padding:3px 8px env(safe-area-inset-bottom,0px)!important;
+  overflow:hidden!important;border:0!important;border-top:1px solid rgba(197,226,236,.24)!important;
+  border-radius:0!important;
+  background:rgba(7,22,32,.72)!important;
+  background-image:linear-gradient(180deg,rgba(56,87,101,.58),rgba(8,24,34,.76))!important;
+  box-shadow:0 -6px 24px rgba(0,7,13,.16),inset 0 1px 0 rgba(227,244,249,.10)!important;
+  -webkit-backdrop-filter:blur(26px) saturate(170%)!important;
+  backdrop-filter:blur(26px) saturate(170%)!important;
+  z-index:9999!important;
+ }
+ nav.nav button{
+  box-sizing:border-box!important;flex:0 0 88px!important;
+  width:88px!important;min-width:88px!important;max-width:88px!important;
+  height:88px!important;min-height:88px!important;max-height:88px!important;
+  aspect-ratio:1/1!important;margin:0!important;padding:5px 2px!important;
+  display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;
+  gap:2px!important;border:1px solid transparent!important;border-radius:23px!important;
+  background:transparent!important;color:#e3eef0!important;box-shadow:none!important;
+  font-size:13px!important;line-height:1.12!important;font-weight:560!important;
+  white-space:nowrap!important;text-align:center!important;
+  -webkit-tap-highlight-color:transparent!important;
+ }
+ nav.nav button.active{
+  background:linear-gradient(145deg,rgba(136,177,193,.30),rgba(87,132,151,.22))!important;
+  border-color:rgba(206,234,242,.30)!important;
+  color:#f7fcfd!important;font-weight:750!important;
+  box-shadow:inset 0 1px 0 rgba(238,250,253,.22),0 4px 14px rgba(0,8,14,.18)!important;
+ }
+ nav.nav .nav-icon{
+  width:49px!important;height:49px!important;flex:0 0 49px!important;
+  display:grid!important;place-items:center!important;transform:none!important;
+ }
+ nav.nav .nav-icon svg{
+  display:block!important;width:47px!important;height:47px!important;
+  fill:none!important;stroke:currentColor!important;stroke-width:2.05!important;
+  stroke-linecap:round!important;stroke-linejoin:round!important;
+ }
+ nav.nav button.active .nav-icon svg{stroke-width:2.2!important}
+ main.shell{padding-bottom:calc(102px + env(safe-area-inset-bottom,0px))!important}
+ #cosmosLanguageToggle{bottom:calc(102px + env(safe-area-inset-bottom,0px))!important}
+ #cosmosLanguageMenu{bottom:calc(150px + env(safe-area-inset-bottom,0px))!important}
+}
+@media(max-width:390px){
+ nav.nav{justify-content:space-evenly!important;gap:2px!important;padding-left:4px!important;padding-right:4px!important}
+ nav.nav button{flex-basis:84px!important;width:84px!important;min-width:84px!important;max-width:84px!important;height:84px!important;min-height:84px!important;max-height:84px!important;border-radius:22px!important}
+ nav.nav .nav-icon{width:46px!important;height:46px!important;flex-basis:46px!important}
+ nav.nav .nav-icon svg{width:44px!important;height:44px!important}
+}
+@media(prefers-reduced-motion:reduce){nav.nav button{transition:none!important}}
+</style>
+
+
+<style id="cosmos-ios-glass-bottom-safearea">
+/* The navigation surface paints the home-indicator safe area itself. */
+html{background:#081923!important;background-color:#081923!important}
+body::after{display:none!important;content:none!important}
+nav.nav{z-index:9999!important}
+</style>
+
 </head>
 <body><div class="cosmos-scene" id="cosmosScene" aria-hidden="true"></div><main class="shell">
-<header class="top"><div class="brand"><span class="brand-mark">✦</span><span class="brand-name">COSMOS<small>by Waywhales</small></span></div><div class="date-pill" id="todayLabel"></div></header>
+<header class="top"><div class="brand"><span class="brand-mark">✦</span><span class="brand-name">COSMOS<small>WAYWHALES</small></span></div><div class="date-pill" id="todayLabel"></div></header>
 <section class="hero"><div class="hero-row"><div><div class="eyebrow">ваш спокойный ритм</div><h1 id="greeting">Добро пожаловать</h1><p>Маленькие шаги заботы о себе — день за днём.</p></div><div class="hero-progress-wrap"><div class="progress-ring" id="progress">0%</div><div class="hero-progress-caption" id="progressCaption">Сегодня: 0 из 0 приёмов</div></div></div><div class="daily-quote"><div class="quote-label">МЫСЛЬ ДНЯ <span>✦</span></div><blockquote id="dailyQuote">Большие перемены начинаются с маленьких шагов.</blockquote><div class="quote-signature">— WAYWHALES</div></div></section>
-<section id="homeView" class="view active"><div class="grid"><div class="panel"><div class="section-head plan-section-head"><div><h2 id="planDayTitle">Сегодня</h2><p class="sub" id="todaySub">Ваш план приёма</p></div><button class="btn small" id="addBtn">＋ Добавить</button></div><div class="plan-day-switch" id="planDaySwitch" aria-label="Выбор дня"><button type="button" data-plan-offset="0" class="active">Сегодня</button><button type="button" data-plan-offset="1">Завтра</button><button type="button" data-plan-offset="2">Послезавтра</button><button type="button" data-plan-offset="3">Через 3 дня</button></div><div id="todayList" class="supp-list"></div></div><aside class="panel"><h2>Ваш ритм</h2><p class="sub">Небольшая статистика за выбранный день</p><div class="stat-grid"><div class="stat"><strong id="statDone">0</strong><span>отмечено</span></div><div class="stat"><strong id="statTotal">0</strong><span>в плане</span></div><div class="stat"><strong id="statRate">0%</strong><span>выполнение</span></div><button class="stat stat-button" id="openMarkedHistory" type="button" aria-label="Нажмите, чтобы открыть историю отметок"><strong id="statStreak">0</strong><span id="markedDaysCaption">дней с отметками</span><small class="stat-open-hint">Нажмите, чтобы посмотреть историю ↗</small></button></div><p class="hint" style="margin-top:15px">Отмечайте приём по своему плану. Приложение не заменяет рекомендации врача.</p></aside></div><div class="panel ai-launcher"><div class="ai-launcher-mark">✦</div><div class="ai-launcher-copy"><div class="ai-launcher-kicker">COSMOS AI</div><h3>Помощник по здоровью</h3><p>Разбирайтесь в витаминах, добавках, анализах и вопросах самочувствия простыми словами.</p></div><button class="btn ai-open-button" id="openAiChat" type="button">Открыть помощника</button><span class="ai-launcher-note" id="aiLauncherStatus">Подключение ИИ настраивается</span></div></section>
+<section id="homeView" class="view active"><div class="grid"><div class="panel"><div class="section-head plan-section-head"><div><h2 id="planDayTitle">Сегодня</h2><p class="sub" id="todaySub">Ваш план приёма</p></div><button class="btn small" id="addBtn">＋ Добавить</button></div><div class="plan-day-switch" id="planDaySwitch" aria-label="Выбор дня"><button type="button" data-plan-offset="0" class="active">Сегодня</button><button type="button" data-plan-offset="1">Завтра</button><button type="button" data-plan-offset="2">Послезавтра</button><button type="button" data-plan-offset="3">Через 3 дня</button></div><div id="todayList" class="supp-list"></div></div><aside class="panel"><h2>Ваш ритм</h2><p class="sub">Небольшая статистика за выбранный день</p><div class="stat-grid"><div class="stat"><strong id="statDone">0</strong><span>отмечено</span></div><div class="stat"><strong id="statTotal">0</strong><span>в плане</span></div><div class="stat"><strong id="statRate">0%</strong><span>выполнение</span></div><button class="stat stat-button" id="openMarkedHistory" type="button" aria-label="Нажмите, чтобы открыть историю отметок"><strong id="statStreak">0</strong><span id="markedDaysCaption">дней с отметками</span><small class="stat-open-hint">Нажмите, чтобы посмотреть историю ↗</small></button></div><p class="hint" style="margin-top:15px">Отмечайте приём по своему плану. Приложение не заменяет рекомендации врача.</p></aside></div><div class="panel ai-launcher"><div class="ai-launcher-mark">✦</div><div class="ai-launcher-copy"><div class="ai-launcher-kicker">COSMOS AI</div><h3>Помощник по здоровью</h3><p>Разбирайтесь в витаминах, добавках, анализах и вопросах самочувствия простыми словами.</p></div><button class="btn ai-open-button" id="openAiChat" type="button">Открыть помощника</button><span class="ai-launcher-note" id="aiLauncherStatus">ИИ-помощник подключён</span></div>
+<div class="home-reminder-shortcut"><button class="btn secondary small" id="openReminderSettings" type="button">Настроить ежедневные напоминания</button></div>
+</section>
 <section id="calendarView" class="view"><div class="panel"><div class="calendar-head"><button class="btn ghost small" id="prevMonth">‹</button><h2 id="monthTitle"></h2><button class="btn ghost small" id="nextMonth">›</button></div><div class="calendar" id="calendarGrid"></div><div class="calendar-legend"><span><i class="holiday"></i>Праздник / выходной</span><span><i class="marked"></i>Есть отметки</span></div><div class="selected-day-toolbar"><div class="selected-day-copy"><p class="sub" id="selectedDayLabel"></p><p class="selected-day-holiday" id="selectedDayHoliday" hidden></p></div><button class="btn small" id="addForSelectedDay" type="button">＋ Добавить приём</button></div><div class="selected-day-result" id="selectedDayResult"><div><span>Выполнение за день</span><strong id="selectedDayPercent">0%</strong></div><p id="selectedDayCounts">0 из 0 приёмов отмечено</p><div class="progress-track"><span id="selectedDayBar"></span></div></div><div id="dayHistory" class="supp-list"></div></div></section>
 
+<style id="cosmos-profile-hide-home-hero">
+/* Keep the welcome card on Home; hide it only while the Profile tab is active. */
+body:has(#profileView.active) .hero{display:none!important}
+</style>
 <section id="profileView" class="view profile-layout">
 <div class="profile-intro"><span class="eyebrow">ВАШЕ ЛИЧНОЕ ПРОСТРАНСТВО</span><h2>Профиль</h2><p>Настройте COSMOS под свой ритм</p></div>
-<div class="panel profile-card profile-main-card"><div class="profile"><div class="avatar" id="avatar">🌱</div><div class="profile-identity"><strong id="profileName">Гость</strong><div class="hint">Ваш профиль на этом устройстве</div></div><details class="photo-menu profile-menu"><summary aria-label="Действия с профилем" title="Действия с профилем">…</summary><div class="photo-menu-pop"><label class="profile-menu-action" for="photoInput">Изменить фото</label><button type="button" id="removePhoto">Удалить фото</button><button type="button" id="openProfileEdit">Изменить имя</button></div></details></div><input id="photoInput" type="file" accept="image/*" hidden><div id="profileEditPanel" class="profile-edit-panel" hidden><div class="field"><label for="nameInput">Новое имя</label><input id="nameInput" maxlength="40" placeholder="Ваше имя"></div><div class="profile-edit-actions" style="display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important;align-items:stretch!important"><button class="btn" id="saveProfile" type="button" style="display:flex!important;align-items:center!important;justify-content:center!important;box-sizing:border-box!important;width:100%!important;height:52px!important;min-height:52px!important;max-height:52px!important;padding:0 10px!important;margin:0!important;flex:none!important;font-size:16px!important;line-height:1.2!important;white-space:nowrap!important">Сохранить</button><button class="profile-cancel-btn" id="cancelProfileEdit" type="button" style="display:flex!important;align-items:center!important;justify-content:center!important;box-sizing:border-box!important;width:100%!important;height:52px!important;min-height:52px!important;max-height:52px!important;padding:0 10px!important;margin:0!important;flex:none!important;font-size:16px!important;line-height:1.2!important;white-space:nowrap!important">Отмена</button></div></div></div>
+<div class="panel profile-card profile-main-card"><div class="profile"><div class="avatar" id="avatar">🌱</div><div class="profile-identity"><strong id="profileName">Гость</strong><div class="hint">Ваш профиль на этом устройстве</div></div></div><input id="photoInput" type="file" accept="image/*" hidden><div class="profile-inline-actions" aria-label="Действия с профилем"><label class="profile-inline-action" for="photoInput"><span class="profile-action-icon" aria-hidden="true">＋</span><span id="photoActionLabel">Добавить фото</span></label><button class="profile-inline-action profile-remove-action" type="button" id="removePhoto" hidden><span class="profile-action-icon" aria-hidden="true">×</span><span>Удалить фото</span></button><button class="profile-inline-action" type="button" id="openProfileEdit"><span class="profile-action-icon" aria-hidden="true">✎</span><span>Изменить имя</span></button></div><div id="profileEditPanel" class="profile-edit-panel" hidden><div class="field"><label for="nameInput">Новое имя</label><input id="nameInput" maxlength="40" placeholder="Ваше имя"></div><div class="profile-edit-actions" style="display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important;align-items:stretch!important"><button class="btn" id="saveProfile" type="button" style="display:flex!important;align-items:center!important;justify-content:center!important;box-sizing:border-box!important;width:100%!important;height:52px!important;min-height:52px!important;max-height:52px!important;padding:0 10px!important;margin:0!important;flex:none!important;font-size:16px!important;line-height:1.2!important;white-space:nowrap!important">Сохранить</button><button class="profile-cancel-btn" id="cancelProfileEdit" type="button" style="display:flex!important;align-items:center!important;justify-content:center!important;box-sizing:border-box!important;width:100%!important;height:52px!important;min-height:52px!important;max-height:52px!important;padding:0 10px!important;margin:0!important;flex:none!important;font-size:16px!important;line-height:1.2!important;white-space:nowrap!important">Отмена</button></div></div></div>
+<div class="panel profile-card push-settings-card">
+ <div class="card-kicker">ЗАБОТА О СЕБЕ</div>
+ <h2>Напоминания COSMOS</h2>
+ <p class="sub">Напомним вам в выбранное время.</p>
+ <label class="push-switch-row" for="pushEnabled">
+  <span class="push-switch-copy"><strong>Ежедневное напоминание</strong><small>Мягкий сигнал уделить время себе</small></span>
+  <input class="push-switch" id="pushEnabled" type="checkbox" role="switch" aria-label="Включить ежедневные уведомления">
+ </label>
+ <div class="field"><label for="pushReminderTime">Время напоминания</label><input id="pushReminderTime" type="time" value="08:00"></div>
+ <p class="hint push-status" id="pushStatus" role="status" aria-live="polite">Проверяем напоминания…</p>
+ <div class="push-install-help" id="pushInstallHelp" hidden>
+  <strong>Как включить напоминания на iPhone</strong>
+  <p>Сейчас COSMOS открыт во вкладке браузера. Откройте эту страницу в Safari, нажмите «Поделиться» → «На экран Домой» → «Добавить». Затем запустите COSMOS с новой иконки и включите напоминания ещё раз.</p>
+ </div>
+ <div class="profile-actions push-action-row"><button class="btn small push-test-action" id="pushTestButton" type="button">Проверить уведомление</button></div>
+ <p class="hint push-privacy-note">Личные записи остаются на этом устройстве. Для напоминаний используются только настройки уведомлений.</p>
+</div>
 <div class="panel profile-card"><div class="card-kicker">ТЕКУЩИЙ МЕСЯЦ</div><h2>Мой прогресс за месяц</h2><div class="month-result"><div class="month-result-top"><strong id="overallPercent">0%</strong><span id="overallCounts">0 из 0 приёмов</span></div><div class="progress-track"><span id="overallBar"></span></div><p class="sub">Процент = отмеченные приёмы / все приёмы по графику. Свободный график не завышает результат.</p></div></div><div class="panel profile-card" style="display:none" aria-hidden="true"><div class="card-kicker">МОЯ СТАТИСТИКА</div><h2>Результаты по месяцам</h2><h2>История и анализ</h2><p class="sub">Ваш прогресс отдельно за каждый месяц</p><div class="month-pick"><button class="month-nav" id="statsPrevMonth" type="button" aria-label="Предыдущий месяц">‹</button><div class="month-pick-center"><label for="statsMonth">Выберите месяц</label><input id="statsMonth" type="month"></div><button class="month-nav" id="statsNextMonth" type="button" aria-label="Следующий месяц">›</button></div><button class="month-current" id="statsCurrentMonth" type="button">Вернуться к текущему месяцу</button><div class="month-result"><div class="month-result-top"><strong id="monthPercent">0%</strong><span id="monthCounts">0 из 0 приёмов</span></div><div class="progress-track"><span id="monthBar"></span></div><p id="monthCaption" class="sub">За выбранный месяц</p></div><h3 class="analysis-heading">По месяцам</h3><div id="monthlyHistory" class="monthly-history"></div><h3 class="analysis-heading">Последние 7 дней</h3><div id="weeklyStats" class="stat-grid"></div><p class="hint" style="margin-top:18px">Процент показывает долю отмеченных приёмов от всех запланированных. Он не оценивает медицинскую эффективность добавок.</p></div>
+</div>
 <div class="panel profile-card"><div class="card-kicker">ВАШИ ДАННЫЕ</div><h2>Данные и конфиденциальность</h2><p class="sub">Ваши записи хранятся только в браузере на этом устройстве. COSMOS не получает к ним доступ и не отправляет их на наши серверы. Экспорт и удаление данных — под вашим контролем.</p><div class="profile-actions"><button class="btn ghost small" id="exportData">Экспортировать данные</button><button class="btn danger small" id="resetData">Сбросить данные</button></div><p class="support-link"><a href="https://t.me/waywhales" target="_blank" rel="noopener">Связаться с Waywhales ↗</a></p></div>
 </section>
+<footer class="waywhales-signature" aria-label="Автор приложения">
+ <span class="waywhales-signature-mark">✦</span>
+ <span>WAYWHALES</span>
+</footer>
 </main>
 <nav class="nav" aria-label="Основная навигация">
 <button class="active" data-view="home"><span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 10.5 12 3.5l8.5 7v10H3.5z"/><path d="M9 20.5v-6h6v6"/></svg></span><span>Главная</span></button>
@@ -519,6 +636,28 @@ body:before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opac
  </section>
 </div>
 <div class="toast" id="toast" role="status"></div>
+<script id="cosmos-boot-monitor">
+(()=> {
+ 'use strict';
+ window.__COSMOS_BOOT_ERROR = '';
+ const report = (message) => {
+  window.__COSMOS_BOOT_ERROR = String(message || 'Неизвестная ошибка запуска');
+  const status = document.getElementById('pushStatus');
+  if (status) status.textContent = 'Ошибка запуска COSMOS: ' + window.__COSMOS_BOOT_ERROR;
+  console.error('COSMOS runtime:', window.__COSMOS_BOOT_ERROR);
+ };
+ window.addEventListener('error', event => report(event.message || 'Ошибка JavaScript'));
+ window.addEventListener('unhandledrejection', event => report(event.reason && (event.reason.message || event.reason) || 'Ошибка фоновой операции'));
+ document.addEventListener('pointerdown', event => {
+  const button = event.target && event.target.closest ? event.target.closest('#pushTestButton') : null;
+  if (button) {
+   const status = document.getElementById('pushStatus');
+   if (status) status.textContent = 'Нажатие получено. Запускаем настройку уведомлений…';
+  }
+ }, true);
+})();
+</script>
+
 <script>
 (()=>{
 'use strict';
@@ -633,8 +772,10 @@ function progressBetween(start,end){
 }
 function monthRange(key){const [y,m]=key.split('-').map(Number),first=new Date(y,m-1,1),last=new Date(y,m,0);const end=last>new Date(today()+'T12:00:00')?new Date(today()+'T12:00:00'):last;return {start:dateKey(first),end:dateKey(end)}}
 function getOverallRange(){const items=[...data.supplements,...(data.archivedSupplements||[])];const dates=items.map(x=>x.startDate).filter(Boolean).concat(Object.keys(data.logs||{}));const start=dates.length?dates.sort()[0]:today();return {start,end:today()}}
-function renderStats(){const now=today().slice(0,7);const picker=$('statsMonth');if(picker&&!picker.value)picker.value=now;const key=picker?.value||now,{start,end}=monthRange(key),monthData=progressBetween(start,end);$('monthPercent').textContent=monthData.pct+'%';$('monthCounts').textContent=monthData.done+' из '+monthData.planned+' приёмов';$('monthBar').style.width=monthData.pct+'%';$('monthCaption').textContent='Результат за '+new Date(start+'T12:00:00').toLocaleDateString((window.cosmosLocale||'ru-RU'),{month:'long',year:'numeric'});const currentMonth=monthRange(today().slice(0,7)),all=progressBetween(currentMonth.start,currentMonth.end);$('overallPercent').textContent=all.pct+'%';$('overallCounts').textContent=all.done+' из '+all.planned+' приёмов';$('overallBar').style.width=all.pct+'%';const months=[];let d=new Date(overall.start+'T12:00:00'),last=new Date(today()+'T12:00:00');d.setDate(1);while(d<=last){const k=monthKey(d),r=monthRange(k),v=progressBetween(r.start,r.end);months.push({key:k,label:d.toLocaleDateString((window.cosmosLocale||'ru-RU'),{month:'long',year:'numeric'}),...v});d.setMonth(d.getMonth()+1)}$('monthlyHistory').innerHTML=months.length?months.reverse().map(x=>'<div class="month-row"><div><strong>'+safe(x.label)+'</strong><span>'+x.done+' из '+x.planned+' приёмов</span></div><b>'+x.pct+'%</b><div class="progress-track"><span style="width:'+x.pct+'%"></span></div></div>').join(''):'<div class="empty">История пока пуста.</div>';const days=[];for(let i=6;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i);const key=dateKey(d),log=data.logs[key]||{};const count=Object.values(log).filter(Boolean).length;days.push({label:d.toLocaleDateString((window.cosmosLocale||'ru-RU'),{weekday:'short',day:'numeric'}),count})}$('weeklyStats').innerHTML=days.map(x=>'<div class="stat"><strong>'+x.count+'</strong><span>'+safe(x.label)+'</span></div>').join('')}
-function renderProfile(){$('avatar').innerHTML=data.photo?'<img src="'+data.photo+'" alt="Фото профиля" style="width:100%;height:100%;object-fit:cover">':'🌱'}
+window.cosmosRenderCalendar=renderCalendar;
+
+function renderStats(){const now=today().slice(0,7);const picker=$('statsMonth');if(picker&&!picker.value)picker.value=now;const key=picker?.value||now,{start,end}=monthRange(key),monthData=progressBetween(start,end);$('monthPercent').textContent=monthData.pct+'%';$('monthCounts').textContent=monthData.done+' из '+monthData.planned+' приёмов';$('monthBar').style.width=monthData.pct+'%';$('monthCaption').textContent='Результат за '+new Date(start+'T12:00:00').toLocaleDateString((window.cosmosLocale||'ru-RU'),{month:'long',year:'numeric'});const currentMonth=monthRange(today().slice(0,7)),all=progressBetween(currentMonth.start,currentMonth.end);$('overallPercent').textContent=all.pct+'%';$('overallCounts').textContent=all.done+' из '+all.planned+' приёмов';$('overallBar').style.width=all.pct+'%';const months=[];let d=new Date(currentMonth.start+'T12:00:00'),last=new Date(today()+'T12:00:00');d.setDate(1);while(d<=last){const k=monthKey(d),r=monthRange(k),v=progressBetween(r.start,r.end);months.push({key:k,label:d.toLocaleDateString((window.cosmosLocale||'ru-RU'),{month:'long',year:'numeric'}),...v});d.setMonth(d.getMonth()+1)}$('monthlyHistory').innerHTML=months.length?months.reverse().map(x=>'<div class="month-row"><div><strong>'+safe(x.label)+'</strong><span>'+x.done+' из '+x.planned+' приёмов</span></div><b>'+x.pct+'%</b><div class="progress-track"><span style="width:'+x.pct+'%"></span></div></div>').join(''):'<div class="empty">История пока пуста.</div>';const days=[];for(let i=6;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i);const key=dateKey(d),log=data.logs[key]||{};const count=Object.values(log).filter(Boolean).length;days.push({label:d.toLocaleDateString((window.cosmosLocale||'ru-RU'),{weekday:'short',day:'numeric'}),count})}$('weeklyStats').innerHTML=days.map(x=>'<div class="stat"><strong>'+x.count+'</strong><span>'+safe(x.label)+'</span></div>').join('')}
+function renderProfile(){$('avatar').innerHTML=data.photo?'<img src="'+data.photo+'" alt="Фото профиля" style="width:100%;height:100%;object-fit:cover">':'🌱';const photoLabel=$('photoActionLabel'),remove=$('removePhoto');if(photoLabel)photoLabel.textContent=data.photo?'Изменить фото':'Добавить фото';if(remove)remove.hidden=!data.photo}
 readProfilePhoto().then(photo=>{if(photo){data.photo=photo;renderProfile()}else if(data.photo){storeProfilePhoto(data.photo).then(()=>{try{localStorage.removeItem(PROFILE_PHOTO_KEY)}catch(_){} }).catch(()=>{})}}).catch(()=>{});
 
 function openModal(item,forSelectedDay=false,asCopy=false){calendarAddMode=!!forSelectedDay;$('suppForm').reset();$('suppId').value=asCopy?'':(item?.id||'');$('modalTitle').textContent=item&&!asCopy?'Изменить добавку':'Новая добавка';$('suppName').value=item?.name||'';$('suppDose').value=item?.dose||'';$('suppTime').value=item?.time||'09:00';$('suppStartDate').value=item?.startDate||(forSelectedDay?(selected||today()):today());$('suppRepeat').value=item?.repeat||(forSelectedDay?'once':'daily');$('suppEndDate').value=item?.endDate||'';document.querySelectorAll('input[name="weekDay"]').forEach(cb=>cb.checked=(item?.weekDays||[]).includes(Number(cb.value)));$('weekDaysField').hidden=$('suppRepeat').value!=='selectedDays';$('suppIcon').value=item?.icon||'🌿';$('suppModal').classList.add('open');$('suppName').focus()}
@@ -649,7 +790,11 @@ function toggleSupplement(button){const id=button.dataset.id,day=button.dataset.
 $('statsMonth').addEventListener('change',renderStats);function shiftStatsMonth(amount){const picker=$('statsMonth'),[y,m]=picker.value.split('-').map(Number),d=new Date(y,m-1+amount,1);picker.value=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');renderStats()}$('statsPrevMonth').addEventListener('click',()=>shiftStatsMonth(-1));$('statsNextMonth').addEventListener('click',()=>shiftStatsMonth(1));$('statsCurrentMonth').addEventListener('click',()=>{$('statsMonth').value=today().slice(0,7);renderStats()});
 $('addForSelectedDay').addEventListener('click',()=>openModal(null,true));
 $('prevMonth').addEventListener('click',()=>{month.setMonth(month.getMonth()-1);renderCalendar()});$('nextMonth').addEventListener('click',()=>{month.setMonth(month.getMonth()+1);renderCalendar()});
-document.querySelectorAll('.nav button').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.nav button').forEach(x=>x.classList.toggle('active',x===b));document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));$(b.dataset.view+'View').classList.add('active');document.body.classList.toggle('calendar-view',b.dataset.view==='calendar');if(b.dataset.view==='calendar')renderCalendar()}));
+$('openReminderSettings').addEventListener('click',()=>{
+ window.cosmosNavigate('profile');
+ const card=document.querySelector('.push-settings-card');
+ if(card)card.scrollIntoView({behavior:'smooth',block:'start'});
+});
 $('openProfileEdit').addEventListener('click',()=>{document.querySelector('.photo-menu')?.removeAttribute('open');$('nameInput').value=data.name||'';$('profileEditPanel').hidden=false;$('nameInput').focus()});
 $('cancelProfileEdit').addEventListener('click',()=>{$('profileEditPanel').hidden=true;$('nameInput').value=data.name||'';$('photoInput').value=''});
 function saveProfileName(){
@@ -732,6 +877,192 @@ $('aiChatForm').addEventListener('submit',async e=>{
 });
 aiInput.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();$('aiChatForm').requestSubmit()}});
 aiSetReady();
+
+const PUSH_API=(document.querySelector('meta[name="cosmos-push-endpoint"]')?.content||'https://cosmos-push.waywhales.workers.dev').replace(/\/+$/,'');
+const PUSH_DEVICE_KEY='cosmos.push.deviceId';
+const PUSH_TIME_KEY='cosmos.push.reminderTime';
+let pushRegistration=null;
+let pushBusy=false;
+function pushStatus(message){const el=$('pushStatus');if(el)el.textContent=message}
+async function removeServerPushSubscription(endpoint,deviceId=pushDeviceId()){
+ const body={deviceId};
+ if(endpoint)body.endpoint=endpoint;
+ const response=await fetch(PUSH_API+'/unsubscribe',{method:'POST',cache:'no-store',credentials:'omit',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+ const result=await response.json().catch(()=>({}));
+ if(!response.ok)throw new Error(result.error||'Не удалось удалить подписку на сервере.');
+}
+function pushDeviceId(){
+ try{let id=localStorage.getItem(PUSH_DEVICE_KEY);if(!id){id=crypto.randomUUID();localStorage.setItem(PUSH_DEVICE_KEY,id)}return id}
+ catch(error){throw new Error('Не удалось создать идентификатор устройства. Разрешите хранение данных сайта.')}
+}
+function pushApplicationKey(value){
+ const normalized=String(value).replace(/-/g,'+').replace(/_/g,'/');
+ const padded=normalized+'='.repeat((4-normalized.length%4)%4);
+ const binary=atob(padded);
+ return Uint8Array.from(binary,function(char){return char.charCodeAt(0)});
+}
+async function getPushRegistration(){
+ if(!('serviceWorker' in navigator))throw new Error('Этот браузер не поддерживает фоновые уведомления.');
+ let registered=pushRegistration;
+ if(!registered)registered=await navigator.serviceWorker.register('./sw.js',{scope:'./'});
+ const ready=await navigator.serviceWorker.ready;
+ pushRegistration=ready||registered;
+ if(!pushRegistration)throw new Error('Браузер не вернул регистрацию фонового приложения. Закройте COSMOS и откройте его снова.');
+ if(!pushRegistration.pushManager)throw new Error('Этот режим браузера не поддерживает push-уведомления. На iPhone откройте установленный COSMOS с экрана «Домой» в Safari.');
+ return pushRegistration;
+}
+async function getPushConfig(){
+ const response=await fetch(PUSH_API+'/config',{method:'GET',cache:'no-store',credentials:'omit'});
+ const config=await response.json().catch(()=>({}));
+ if(!response.ok||!config.configured||!config.publicKey)throw new Error(config.error||'Сервер уведомлений ещё настраивается.');
+ return config;
+}
+async function savePushSubscription(subscription){
+ const reminderTime=$('pushReminderTime').value||'08:00';
+ const timezone=Intl.DateTimeFormat().resolvedOptions().timeZone||'UTC';
+ const response=await fetch(PUSH_API+'/subscribe',{
+  method:'POST',cache:'no-store',credentials:'omit',
+  headers:{'Content-Type':'application/json'},
+  body:JSON.stringify({deviceId:pushDeviceId(),subscription:subscription.toJSON(),reminderTime:reminderTime,timezone:timezone})
+ });
+ const result=await response.json().catch(()=>({}));
+ if(!response.ok)throw new Error(result.error||'Не удалось сохранить настройки уведомлений.');
+ try{localStorage.setItem(PUSH_TIME_KEY,reminderTime)}catch(error){}
+ return result;
+}
+async function enablePush(){
+ if(pushBusy)return false;
+ const toggle=$('pushEnabled');
+ pushBusy=true;toggle.disabled=true;pushStatus('Подключаем уведомления…');
+ let subscription=null;
+ try{
+  const isIOS=/iPhone|iPad|iPod/i.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+  const isStandalone=window.matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
+  if(isIOS&&!isStandalone)throw new Error('На iPhone сначала добавьте COSMOS на экран «Домой», затем откройте его с иконки.');
+  if(!('Notification' in window)||!('PushManager' in window))throw new Error('Этот браузер не поддерживает push-уведомления.');
+  let permission=Notification.permission;
+  if(permission!=='granted')permission=await Notification.requestPermission();
+  if(permission!=='granted')throw new Error('Разрешение на уведомления не выдано. Его можно включить в настройках браузера.');
+  const registration=await getPushRegistration();
+  const config=await getPushConfig();
+  subscription=await registration.pushManager.getSubscription();
+  if(!subscription)subscription=await registration.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:pushApplicationKey(config.publicKey)});
+  await savePushSubscription(subscription);
+  toggle.checked=true;
+  $('pushTestButton').disabled=false;
+  pushStatus('Готово! Ежедневное напоминание настроено на '+$('pushReminderTime').value+'.');
+  return true;
+ }catch(error){
+  toggle.checked=false;
+  $('pushTestButton').disabled=false;
+  pushStatus(error&&error.message?error.message:'Не удалось включить уведомления.');
+  if(subscription&&subscription.endpoint){
+   try{await removeServerPushSubscription(subscription.endpoint)}catch(ignored){}
+   try{await subscription.unsubscribe()}catch(ignored){}
+  }
+  return false;
+ }finally{pushBusy=false;toggle.disabled=false}
+}
+async function disablePush(){
+ if(pushBusy)return;
+ const toggle=$('pushEnabled');pushBusy=true;toggle.disabled=true;pushStatus('Отключаем уведомления…');
+ try{
+  const registration=await getPushRegistration();
+  const subscription=await registration.pushManager.getSubscription();
+  await removeServerPushSubscription(subscription&&subscription.endpoint);
+  if(subscription)await subscription.unsubscribe();
+  toggle.checked=false;
+  $('pushTestButton').disabled=false;
+  pushStatus('Уведомления отключены на этом устройстве.');
+ }catch(error){toggle.checked=true;$('pushTestButton').disabled=false;pushStatus(error&&error.message?error.message:'Не удалось отключить уведомления.')}
+ finally{pushBusy=false;toggle.disabled=false}
+}
+async function updatePushTime(){
+ if(!$('pushEnabled').checked||pushBusy)return;
+ pushBusy=true;$('pushReminderTime').disabled=true;$('pushEnabled').disabled=true;$('pushTestButton').disabled=false;
+ try{
+  const registration=await getPushRegistration();
+  const subscription=await registration.pushManager.getSubscription();
+  if(!subscription)throw new Error('Подписка браузера не найдена. Выключите и снова включите уведомления.');
+  await savePushSubscription(subscription);
+  pushStatus('Время напоминания обновлено: '+$('pushReminderTime').value+'.');
+ }catch(error){pushStatus(error&&error.message?error.message:'Не удалось обновить время уведомления.')}
+ finally{pushBusy=false;$('pushReminderTime').disabled=false;$('pushEnabled').disabled=false;$('pushTestButton').disabled=false}
+}
+async function enableAndTestPush(){
+ if(pushBusy)return;
+ if(!$('pushEnabled').checked){
+  pushStatus('Сначала включите ежедневное напоминание.');
+  return;
+ }
+ if(!('Notification' in window)||!('PushManager' in window)||Notification.permission!=='granted'){
+  pushStatus('Разрешите уведомления в настройках устройства.');
+  return;
+ }
+ await testPushNotification();
+}
+async function testPushNotification(){
+ const button=$('pushTestButton');
+ if(!$('pushEnabled').checked||pushBusy)return;
+ pushBusy=true;button.disabled=true;$('pushEnabled').disabled=true;$('pushReminderTime').disabled=true;
+ pushStatus('Отправляем тестовое уведомление…');
+ try{
+  const response=await fetch(PUSH_API+'/test',{
+   method:'POST',cache:'no-store',credentials:'omit',
+   headers:{'Content-Type':'application/json'},
+   body:JSON.stringify({deviceId:pushDeviceId()})
+  });
+  const result=await response.json().catch(()=>({}));
+  if(!response.ok)throw new Error(result.error||'Не удалось отправить тестовое уведомление.');
+  pushStatus('Тест отправлен. Проверьте уведомления на телефоне — доставка может занять несколько секунд.');
+ }catch(error){
+  pushStatus(error&&error.message?error.message:'Не удалось отправить тестовое уведомление.');
+ }finally{
+  pushBusy=false;$('pushEnabled').disabled=false;$('pushReminderTime').disabled=false;
+  button.disabled=false;
+ }
+}
+async function initializePush(){
+ const toggle=$('pushEnabled'),time=$('pushReminderTime');
+ try{const saved=localStorage.getItem(PUSH_TIME_KEY);if(saved&&/^([01]\\d|2[0-3]):[0-5]\\d$/.test(saved))time.value=saved}catch(error){}
+ const isIOS=/iPhone|iPad|iPod/i.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+ const isStandalone=window.matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
+ if(isIOS&&!isStandalone){
+  toggle.checked=false;toggle.disabled=true;
+  $('pushTestButton').disabled=true;
+  $('pushTestButton').textContent='Сначала установите COSMOS';
+  const help=$('pushInstallHelp');if(help)help.hidden=false;
+  pushStatus('Фоновые напоминания пока недоступны: COSMOS открыт в обычной вкладке браузера.');
+  return;
+ }
+ if(!('serviceWorker' in navigator)){pushStatus('Этот браузер не поддерживает установку PWA и push-уведомления.');toggle.disabled=true;return}
+ if(!('Notification' in window)||!('PushManager' in window)){toggle.checked=false;$('pushTestButton').disabled=false;const help=$('pushInstallHelp');if(help)help.hidden=true;pushStatus('Фоновые уведомления недоступны в этом браузере. Откройте COSMOS в поддерживаемом браузере.');return}
+ try{
+  await getPushConfig();
+  const registration=await getPushRegistration();
+  const subscription=await registration.pushManager.getSubscription();
+  const notificationGranted=Notification.permission==='granted';
+  const existingDeviceId=(()=>{try{return localStorage.getItem(PUSH_DEVICE_KEY)}catch(error){return null}})();
+  if((!subscription||!notificationGranted)&&existingDeviceId){
+   try{await removeServerPushSubscription(subscription&&subscription.endpoint,existingDeviceId);if(subscription)await subscription.unsubscribe()}
+   catch(error){pushStatus('Не удалось синхронизировать отключение уведомлений: '+(error.message||'ошибка сервера.'))}
+  }
+  toggle.checked=!!subscription&&notificationGranted;
+  $('pushTestButton').disabled=false;
+  if(!('Notification' in window)||!('PushManager' in window)){pushStatus('Push-уведомления недоступны в этом браузере. Нажмите кнопку ниже, чтобы увидеть доступные инструкции.');return}
+  pushStatus(toggle.checked
+   ? 'Напоминание включено.'
+   : 'Напоминания выключены.');
+ }catch(error){pushStatus(error&&error.message?error.message:'Не удалось подготовить фоновое приложение.')}
+}
+$('pushEnabled').addEventListener('change',function(){if(this.checked)enablePush();else disablePush()});
+$('pushReminderTime').addEventListener('change',updatePushTime);
+window.cosmosEnableAndTestPush=enableAndTestPush;
+window.cosmosEnablePush=enablePush;
+window.cosmosDisablePush=disablePush;
+window.cosmosUpdatePushTime=updatePushTime;
+$('pushTestButton').addEventListener('click',enableAndTestPush);
+initializePush();
 
 const dailyScenes=['nebula','forest','galaxy','ocean','sunrise'];let previousTheme='';try{previousTheme=localStorage.getItem('cosmosLastTheme')||''}catch(e){}let choices=dailyScenes.filter(x=>x!==previousTheme);const chosenTheme=choices[Math.floor(Math.random()*choices.length)];try{localStorage.setItem('cosmosLastTheme',chosenTheme)}catch(e){}const scene=document.getElementById('cosmosScene');if(scene)scene.dataset.theme=chosenTheme;document.body.dataset.cosmosTheme=chosenTheme;
 document.addEventListener('cosmos-language-change',()=>{render()});
@@ -1089,6 +1420,98 @@ body.calendar-view #calendarView>.panel{margin-top:0}
 </style>
 
 
+<script id="cosmos-navigation-guard">
+(()=> {
+ 'use strict';
+ const status = message => {
+  const el = document.getElementById('pushStatus');
+  if (el) el.textContent = message;
+ };
+ const activate = target => {
+  if (!['home','calendar','profile'].includes(target)) return false;
+  const button = document.querySelector('.nav button[data-view="'+target+'"]');
+  const view = document.getElementById(target+'View');
+  if (!button || !view) return false;
+  document.querySelectorAll('.nav button').forEach(item => item.classList.toggle('active', item === button));
+  document.querySelectorAll('main .view').forEach(item => item.classList.toggle('active', item === view));
+  document.body.classList.toggle('calendar-view', target === 'calendar');
+  // A tab change starts at the top of that screen, never at the previous screen's scroll offset.
+  const appScroller=document.querySelector('main.shell');
+  if(appScroller)appScroller.scrollTo({top:0,behavior:'instant'});
+  window.scrollTo(0,0);
+  document.documentElement.scrollTop=0;
+  document.body.scrollTop=0;
+  if (target === 'calendar') {
+   if (typeof window.cosmosRenderCalendar === 'function') {
+    try { window.cosmosRenderCalendar(); }
+    catch (error) { status('Не удалось открыть календарь: '+(error.message||error)); }
+   } else {
+    status('Календарь не запустился: сценарий приложения не загрузился. Перезагрузите страницу в Safari.');
+   }
+  }
+  return true;
+ };
+ window.cosmosNavigate = activate;
+ const install = () => {
+  const nav = document.querySelector('.nav');
+  if (!nav) return;
+  nav.style.setProperty('z-index','9999','important');
+  nav.style.setProperty('pointer-events','auto','important');
+  nav.querySelectorAll('button').forEach(button => {
+   button.style.setProperty('pointer-events','auto','important');
+   button.style.setProperty('touch-action','manipulation','important');
+   button.style.setProperty('position','relative','important');
+  });
+ };
+ const find = (event, selector) => event.target && event.target.closest ? event.target.closest(selector) : null;
+ document.addEventListener('click', event => {
+  const tab = find(event,'.nav button[data-view]');
+  if (tab) {
+   event.preventDefault();
+   event.stopImmediatePropagation();
+   activate(tab.getAttribute('data-view'));
+   return;
+  }
+  const shortcut = find(event,'#openReminderSettings');
+  if (shortcut) {
+   event.preventDefault();
+   event.stopImmediatePropagation();
+   activate('profile');
+   const card = document.querySelector('.push-settings-card');
+   if (card) card.scrollIntoView({behavior:'smooth',block:'start'});
+   return;
+  }
+  const test = find(event,'#pushTestButton');
+  if (test) {
+   event.preventDefault();
+   event.stopImmediatePropagation();
+   if (typeof window.cosmosEnableAndTestPush === 'function') {
+    window.cosmosEnableAndTestPush();
+   } else {
+    status(window.__COSMOS_BOOT_ERROR
+      ? 'COSMOS не запустился: '+window.__COSMOS_BOOT_ERROR
+      : 'Модуль уведомлений не загрузился. Откройте эту страницу во внешнем Safari и обновите её.');
+   }
+  }
+ }, true);
+ document.addEventListener('change', event => {
+  if (event.target && event.target.id === 'pushEnabled') {
+   event.stopImmediatePropagation();
+   if (event.target.checked && typeof window.cosmosEnablePush === 'function') window.cosmosEnablePush();
+   else if (!event.target.checked && typeof window.cosmosDisablePush === 'function') window.cosmosDisablePush();
+   else status('Не удалось запустить модуль уведомлений.');
+  }
+  if (event.target && event.target.id === 'pushReminderTime') {
+   event.stopImmediatePropagation();
+   if (typeof window.cosmosUpdatePushTime === 'function') window.cosmosUpdatePushTime();
+   else status('Не удалось запустить модуль уведомлений.');
+  }
+ }, true);
+ install();
+ document.addEventListener('DOMContentLoaded',install,{once:true});
+})();
+</script>
+
 <script id="cosmos-language-switcher">
 (()=>{
 'use strict';
@@ -1373,4 +1796,254 @@ document.dispatchEvent(new Event('cosmos-language-change'));
 
 })();
 </script>
+
+
+/* Mobile-safe supplement editor: prevent intrinsic form controls from widening the dialog. */
+@media(max-width:720px){
+ #suppModal{padding:calc(12px + env(safe-area-inset-top)) 12px calc(12px + env(safe-area-inset-bottom));align-items:center;overflow-y:auto}
+ #suppModal .dialog{box-sizing:border-box;width:100%;max-width:440px;min-width:0;max-height:calc(100dvh - 24px - env(safe-area-inset-top) - env(safe-area-inset-bottom));padding:clamp(16px,4vw,22px);overflow-x:hidden;overscroll-behavior:contain}
+ #suppModal .dialog *{box-sizing:border-box;min-width:0}
+ #suppModal .field input,#suppModal .field select{display:block;width:100%;max-width:100%;min-width:0}
+ #suppModal .weekday-picker{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px;width:100%}
+ #suppModal .weekday-picker label{min-width:0}
+ #suppModal .weekday-picker label span{display:flex;justify-content:center;align-items:center;width:100%;min-width:0;padding:10px 0;font-size:clamp(11px,3vw,14px)}
+ #suppModal .dialog-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+ #suppModal .dialog-actions .btn{min-width:0;width:100%;padding-inline:8px}
+}
+
+<style id="cosmos-mobile-layout-correction">
+/* One scroll container for the app: no document-level blank tail. */
+html,body{
+ width:100%;max-width:100%;height:100%;min-height:0;
+ margin:0;overflow:hidden!important;
+}
+body{position:relative}
+main.shell{
+ display:flex!important;flex-direction:column!important;
+ width:100%;height:100svh!important;min-height:0!important;max-height:100svh!important;
+ max-width:1080px;margin:0 auto!important;
+ overflow-x:hidden!important;overflow-y:auto!important;
+ overscroll-behavior-y:contain;-webkit-overflow-scrolling:touch;
+ padding:12px 13px calc(88px + env(safe-area-inset-bottom))!important;
+}
+main.shell>.top,main.shell>.hero{flex:0 0 auto}
+main.shell>.view.active{flex:1 0 auto!important}
+#profileView{grid-template-columns:minmax(0,1fr)!important;gap:12px!important;width:100%;min-width:0}
+#profileView>.profile-card,#profileView>.profile-intro{width:100%;max-width:100%;min-width:0;margin-inline:0!important}
+#profileView .profile-card{box-sizing:border-box;overflow:hidden}
+.push-settings-card{width:100%;max-width:100%;min-width:0;box-sizing:border-box;padding:clamp(16px,4vw,22px)!important}
+.push-settings-card .push-switch-row{width:100%;min-width:0;gap:12px}
+.push-settings-card .push-switch-copy{flex:1 1 auto;min-width:0}
+.push-settings-card .push-switch{flex:0 0 62px}
+.push-settings-card .field{display:grid;grid-template-columns:minmax(0,1fr);gap:7px;width:100%;min-width:0;margin:14px 0}
+.push-settings-card .field label{display:block;width:100%;min-width:0}
+.push-settings-card #pushReminderTime{
+ display:block;width:100%!important;max-width:100%!important;min-width:0!important;height:54px;
+ box-sizing:border-box!important;padding:10px 14px!important;text-align:center;
+ -webkit-appearance:none;appearance:none;border:1px solid var(--line);border-radius:14px;
+ background:#fffefa;color:var(--ink);font-size:17px
+}
+.push-settings-card .push-action-row{display:flex;justify-content:flex-start;align-items:stretch;width:100%;min-width:0}
+.push-settings-card .push-test-action{width:auto;max-width:100%;min-height:48px;white-space:normal;line-height:1.3}
+.push-settings-card #pushStatus{
+ display:block;margin:14px 0 10px;padding:12px 13px;border:1px solid #cbdcc9;
+ border-radius:13px;background:#eef4eb;color:#284d37;font-size:14px;line-height:1.5;font-weight:600
+}
+.push-install-help{
+ margin:10px 0 14px;padding:14px;border:1px solid #cbdcc9;border-radius:15px;
+ background:#f3f6ef;color:#284d37;font-size:14px;line-height:1.5
+}
+.push-install-help[hidden]{display:none!important}
+.push-install-help strong{display:block;margin-bottom:5px;font-size:15px;color:#173d2d}
+.push-install-help p{margin:0}
+.home-reminder-shortcut{margin:14px 0 0}
+.home-reminder-shortcut .btn{
+ width:100%;min-height:50px;white-space:normal;line-height:1.3;
+ background:linear-gradient(135deg,#214c38,#153928)!important;
+ color:#fff!important;-webkit-text-fill-color:#fff!important;font-weight:750!important
+}
+.waywhales-signature{
+ flex:0 0 auto;margin-top:auto;padding:20px 8px 12px;
+ display:flex;align-items:center;justify-content:center;gap:9px;
+ color:rgba(231,239,220,.78);font-size:11px;font-weight:800;letter-spacing:2.4px;text-align:center
+}
+.waywhales-signature-mark{
+ display:grid;place-items:center;width:23px;height:23px;border:1px solid rgba(231,239,220,.45);
+ border-radius:8px;color:#e4edd9;font-size:14px;letter-spacing:0
+}
+#suppModal.modal{z-index:10020!important;box-sizing:border-box;padding:calc(10px + env(safe-area-inset-top)) 12px calc(10px + env(safe-area-inset-bottom))!important}
+#suppModal .dialog{
+ box-sizing:border-box;width:min(100%,480px);max-width:100%;
+ max-height:calc(100dvh - 20px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+ overflow-x:hidden;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch
+}
+#suppModal .dialog-actions{
+ position:sticky;bottom:-16px;z-index:30;display:grid!important;
+ grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important;
+ margin:16px -16px -16px!important;padding:12px 16px calc(12px + env(safe-area-inset-bottom))!important;
+ border-top:1px solid #dce4da;background:#f5f5ed
+}
+#suppModal .dialog-actions button{width:100%;min-width:0;min-height:50px;white-space:normal}
+.ai-modal{z-index:10030!important}
+body.ai-chat-open .nav{visibility:hidden!important}
+.nav{z-index:9999!important}
+@media(max-width:720px){
+ main.shell{padding:10px 13px calc(88px + env(safe-area-inset-bottom))!important}
+ #profileView{gap:12px!important}
+ #profileView .profile-card{padding:17px!important;border-radius:19px!important}
+ .push-settings-card .push-test-action{width:100%;font-size:15px}
+ #suppModal.modal{align-items:flex-start!important;justify-content:center!important}
+ #suppModal .dialog{
+  width:100%;max-width:440px;
+  max-height:calc(100dvh - 140px - env(safe-area-inset-top) - env(safe-area-inset-bottom))!important;height:auto!important;
+  margin-top:0!important;padding:16px 14px;border-radius:20px
+ }
+ #suppModal .dialog-actions{margin:14px -14px -16px!important;padding:12px 14px calc(12px + env(safe-area-inset-bottom))!important}
+ .waywhales-signature{padding:18px 8px calc(10px + env(safe-area-inset-bottom))}
+}
+</style>
+
+<style id="cosmos-mobile-form-safearea">
+/* Mobile forms: keep every action above the fixed bottom navigation. */
+@media(max-width:720px){
+  #profileView .profile-main-card .profile-edit-panel:not([hidden]){
+    position:fixed!important;
+    left:50%!important;
+    right:auto!important;
+    bottom:calc(92px + env(safe-area-inset-bottom))!important;
+    transform:translateX(-50%)!important;
+    width:min(calc(100vw - 28px),440px)!important;
+    max-width:440px!important;
+    max-height:calc(100dvh - 132px - env(safe-area-inset-top) - env(safe-area-inset-bottom))!important;
+    margin:0!important;
+    overflow-x:hidden!important;
+    overflow-y:auto!important;
+    overscroll-behavior:contain!important;
+    -webkit-overflow-scrolling:touch!important;
+    box-shadow:0 18px 48px rgba(2,22,13,.34),0 2px 10px rgba(2,22,13,.12)!important;
+  }
+  #profileView .profile-edit-panel .profile-edit-actions{
+    position:sticky!important;
+    bottom:0!important;
+    z-index:2!important;
+    padding-top:10px!important;
+    background:linear-gradient(180deg,rgba(248,251,244,0),rgba(248,251,244,.98) 35%)!important;
+  }
+  /* The supplement editor scrolls internally; its action row never hangs below it. */
+  #suppModal.modal{
+    align-items:flex-start!important;
+    justify-content:center!important;
+    padding:calc(8px + env(safe-area-inset-top)) 12px calc(92px + env(safe-area-inset-bottom))!important;
+  }
+  #suppModal .dialog{
+    max-height:calc(100dvh - 116px - env(safe-area-inset-top) - env(safe-area-inset-bottom))!important;
+    height:auto!important;
+    overflow-x:hidden!important;
+    overflow-y:auto!important;
+    overscroll-behavior:contain!important;
+    -webkit-overflow-scrolling:touch!important;
+  }
+  #suppModal .dialog-actions{
+    position:sticky!important;
+    bottom:0!important;
+    margin:14px -14px 0!important;
+    padding:12px 14px 12px!important;
+    z-index:30!important;
+    background:linear-gradient(180deg,rgba(245,243,233,.94),#f5f3e9 32%)!important;
+    border-top:1px solid rgba(215,223,208,.9)!important;
+  }
+}
+@media(max-width:360px){
+  #profileView .profile-main-card .profile-edit-panel:not([hidden]){
+    width:calc(100vw - 20px)!important;
+  }
+  #profileView .profile-edit-actions button{
+    font-size:14px!important;
+    padding-left:6px!important;
+    padding-right:6px!important;
+  }
+}
+</style>
+
+
+<style id="cosmos-iphone-header-safearea">
+/* Preserve the working iPhone status-bar / brand spacing. Navigation is defined once below. */
+@media(max-width:720px){
+  main.shell{
+    padding-top:max(58px,calc(env(safe-area-inset-top,0px) + 12px))!important;
+    padding-right:13px!important;
+    padding-left:13px!important;
+  }
+  main.shell>.top{
+    min-height:48px!important;
+    margin:0 0 16px!important;
+    padding:0 2px!important;
+    flex:0 0 auto!important;
+    position:relative!important;
+    z-index:5!important;
+  }
+  main.shell>.top .brand{
+    display:flex!important;align-items:center!important;gap:9px!important;
+    min-height:44px!important;font-size:21px!important;line-height:1.1!important;
+    visibility:visible!important;opacity:1!important;
+  }
+  main.shell>.top .brand-name{display:flex!important;flex-direction:column!important;line-height:1.05!important}
+  main.shell>.top .brand-name small{display:block!important;margin-top:3px!important;font-size:9px!important;letter-spacing:2px!important}
+}
+</style>
+
+
+<style id="cosmos-approved-refined-ui">
+/* Approved COSMOS compact navigation, inline profile actions, and simple reminders. */
+@media(max-width:720px){nav.nav .nav-icon{width:21px!important;height:21px!important;flex:0 0 21px!important;transform:none!important}
+ nav.nav .nav-icon svg{width:20px!important;height:20px!important;stroke-width:1.7!important}.profile-main-card .profile{display:flex!important;align-items:center!important;gap:13px!important;margin:0 0 14px!important}
+ .profile-main-card .profile-identity{flex:1 1 auto!important;min-width:0!important}
+ .profile-inline-actions{
+  display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px!important;
+  width:100%!important;margin-top:10px!important;
+ }
+ .profile-inline-action{
+  min-width:0!important;min-height:44px!important;display:flex!important;align-items:center!important;justify-content:flex-start!important;
+  gap:8px!important;padding:9px 11px!important;border:1px solid #d8e2d3!important;border-radius:13px!important;
+  background:#f4f7ef!important;color:#294d38!important;font:650 13px/1.2 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif!important;
+  text-align:left!important;text-decoration:none!important;cursor:pointer!important;
+ }
+ .profile-inline-action:active{background:#e8efe2!important}
+ .profile-inline-action[hidden]{display:none!important}
+ .profile-action-icon{display:grid!important;place-items:center!important;flex:0 0 22px!important;width:22px!important;height:22px!important;
+  border-radius:8px!important;background:#e3ebdc!important;color:#315a40!important;font-size:17px!important;font-weight:500!important}
+ .profile-remove-action{color:#895247!important;background:#faf0ed!important;border-color:#ecd8d2!important}
+ .profile-remove-action .profile-action-icon{background:#f4e2dd!important;color:#965747!important}
+ .profile-edit-panel{margin-top:12px!important;padding:14px!important;border-radius:16px!important}
+ .push-settings-card{padding:17px!important}
+ .push-settings-card h2{font-size:23px!important;margin-bottom:4px!important}
+ .push-settings-card>.sub{font-size:14px!important;line-height:1.4!important;margin:0 0 12px!important}
+ .push-switch-row{min-height:52px!important;gap:12px!important}
+ .push-switch-copy strong{font-size:15px!important}
+ .push-switch-copy small{font-size:12px!important}
+ .push-settings-card .field{margin:11px 0!important;gap:5px!important}
+ .push-settings-card .field label{font-size:13px!important}
+ .push-settings-card #pushReminderTime{height:48px!important;min-height:48px!important;font-size:17px!important}
+ .push-settings-card #pushStatus{
+  margin:10px 0!important;padding:9px 11px!important;border-radius:11px!important;
+  font-size:13px!important;line-height:1.35!important;font-weight:600!important;
+ }
+ .push-settings-card .push-test-action{
+  width:100%!important;min-height:44px!important;padding:10px 14px!important;border-radius:13px!important;
+  font-size:14px!important;line-height:1.2!important;white-space:normal!important;
+ }
+ .push-settings-card .push-privacy-note{font-size:12px!important;line-height:1.4!important;margin:10px 0 0!important}
+}
+@media(min-width:721px){.profile-inline-actions{display:flex;flex-wrap:wrap;gap:9px;margin-top:12px}
+ .profile-inline-action{display:flex;align-items:center;gap:8px;min-height:42px;padding:9px 13px;border:1px solid #d8e2d3;border-radius:13px;background:#f4f7ef;color:#294d38;font-size:14px;font-weight:650;cursor:pointer}
+ .profile-inline-action[hidden]{display:none!important}
+ .profile-action-icon{display:grid;place-items:center;width:22px;height:22px;border-radius:8px;background:#e3ebdc;color:#315a40}
+ .profile-remove-action{color:#895247;background:#faf0ed;border-color:#ecd8d2}
+ .push-settings-card>.sub{margin-bottom:12px}
+ .push-settings-card #pushStatus{padding:9px 11px;border-radius:11px;background:#eef4eb;color:#284d37}
+}
+@media(prefers-reduced-motion:reduce){}
+</style>
+
+
 </body></html>
