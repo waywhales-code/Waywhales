@@ -1807,7 +1807,7 @@ function setLanguage(lang){
 }
 const style=document.createElement('style');
 style.textContent=`
-main.shell>.top{position:relative!important;z-index:5!important}
+main.shell>.top{position:relative!important;z-index:5!important;padding-right:96px!important}
 #cosmosLanguageToggle{position:absolute;right:2px;top:4px;bottom:auto;z-index:8;display:flex;align-items:center;gap:7px;min-height:38px;padding:0 11px;border:1px solid rgba(209,224,203,.9);border-radius:999px;background:rgba(248,250,243,.98);color:#204a35;box-shadow:none;font:650 12px/1 system-ui,-apple-system,sans-serif;backdrop-filter:none;-webkit-backdrop-filter:none}
 #cosmosLanguageMenu{position:absolute;right:2px;top:48px;bottom:auto;z-index:9;width:190px;padding:7px;border:1px solid #dce5d8;border-radius:14px;background:#fffefa;box-shadow:0 6px 18px rgba(2,22,14,.12)}
 #cosmosLanguageMenu[hidden]{display:none!important}
@@ -2201,13 +2201,11 @@ body.ai-chat-open .nav{visibility:hidden!important}
  --paper:#f4f2e9;--ink:#24362d;--muted:#69776d;--line:#dfe4d9;
  --gold:#bda16c;--white:#fffefa;--shadow:none;
 }
-html{background:#f4f2e9!important;background-color:#f4f2e9!important}
+
 body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif!important}
-body[data-cosmos-theme='forest']{
- background:#f4f2e9!important;background-image:none!important;color:#24362d!important
-}
-body[data-cosmos-theme='forest'] #cosmosScene{display:none!important}
-body[data-cosmos-theme='forest']::before{opacity:.10!important}
+
+
+
 main.shell{max-width:1080px;padding-left:22px;padding-right:22px}
 .brand{color:#214a35!important;font-size:19px;font-weight:650;letter-spacing:0}
 .brand-mark{
