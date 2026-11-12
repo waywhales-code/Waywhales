@@ -2210,4 +2210,31 @@ body.ai-chat-open .nav{visibility:hidden!important}
 }
 </style>
 
+
+<style id="cosmos-bottom-nav-shorter">
+/* Lower, shorter bottom navigation while respecting the iPhone home-indicator safe area. */
+@media(max-width:720px){
+ nav.nav{
+  bottom:0!important;top:auto!important;inset:auto 0 0 0!important;
+  height:calc(50px + env(safe-area-inset-bottom,0px))!important;
+  min-height:calc(50px + env(safe-area-inset-bottom,0px))!important;
+  max-height:calc(50px + env(safe-area-inset-bottom,0px))!important;
+  padding:2px 14px env(safe-area-inset-bottom,0px)!important;
+  gap:4px!important;
+ }
+ nav.nav button,nav.nav button.active{
+  height:44px!important;min-height:44px!important;max-height:44px!important;
+  padding:1px 3px!important;gap:1px!important;
+  font-size:11px!important;line-height:1.05!important;
+ }
+ nav.nav .nav-icon{
+  width:21px!important;height:21px!important;flex:0 0 21px!important;
+ }
+ nav.nav .nav-icon svg{width:21px!important;height:21px!important}
+ main.shell{padding-bottom:calc(70px + env(safe-area-inset-bottom,0px))!important}
+ #cosmosLanguageToggle{bottom:calc(58px + env(safe-area-inset-bottom,0px))!important}
+ #cosmosLanguageMenu{bottom:calc(104px + env(safe-area-inset-bottom,0px))!important}
+}
+</style>
+
 </body></html>
