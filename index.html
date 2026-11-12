@@ -2537,4 +2537,60 @@ main.shell>.view,main.shell>.view.active{background:transparent!important}
  body nav.nav .nav-icon,body nav.nav .nav-icon svg{width:36px!important;height:36px!important;flex-basis:36px!important}
 }
 </style>
+
+<style id="waywhales-iphone-glass-final">
+/* Darker iOS glass and dark canvas through the entire iPhone safe area. */
+html{
+ background:#071b22!important;
+ min-height:100%!important;
+}
+body{
+ background:#071b22!important;
+ min-height:100%!important;
+}
+#cosmosScene{
+ position:fixed!important;inset:0!important;
+ width:100vw!important;height:100vh!important;height:100dvh!important;
+ min-height:100svh!important;background-color:#071b22!important;
+ z-index:0!important;pointer-events:none!important;
+}
+@media(max-width:720px){
+ html,body{
+  background:#071b22!important;
+  overscroll-behavior:none!important;
+ }
+ body{position:fixed!important;inset:0!important}
+ main.shell{
+  background:transparent!important;
+  padding-bottom:calc(94px + env(safe-area-inset-bottom,0px))!important;
+ }
+ body nav.nav{
+  left:0!important;right:0!important;bottom:0!important;
+  width:100vw!important;
+  height:calc(88px + env(safe-area-inset-bottom,0px))!important;
+  min-height:calc(88px + env(safe-area-inset-bottom,0px))!important;
+  max-height:calc(88px + env(safe-area-inset-bottom,0px))!important;
+  padding:7px 12px calc(5px + env(safe-area-inset-bottom,0px))!important;
+  background:rgba(23,49,61,.76)!important;
+  background-image:linear-gradient(135deg,rgba(183,213,216,.17),rgba(13,35,49,.40))!important;
+  -webkit-backdrop-filter:blur(28px) saturate(1.55)!important;
+  backdrop-filter:blur(28px) saturate(1.55)!important;
+  border-top:1px solid rgba(221,240,238,.24)!important;
+  box-shadow:0 -7px 24px rgba(0,10,18,.22)!important;
+ }
+ body nav.nav button,body nav.nav button.active,
+ body[data-cosmos-theme] nav.nav button,
+ body[data-cosmos-theme] nav.nav button.active{
+  background:transparent!important;background-image:none!important;
+  box-shadow:none!important;border-radius:0!important;
+  color:rgba(239,248,247,.82)!important;
+ }
+ body nav.nav button.active,body[data-cosmos-theme] nav.nav button.active{
+  color:#fff!important;font-weight:750!important
+ }
+ body nav.nav button.active::after{
+  background:rgba(226,244,239,.96)!important;height:2px!important
+ }
+}
+</style>
 </body></html>
