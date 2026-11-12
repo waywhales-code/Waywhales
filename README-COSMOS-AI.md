@@ -1,28 +1,38 @@
-# COSMOS AI — server setup
+# COSMOS AI — Cloudflare Worker
 
-The PWA stays on GitHub Pages. The API route in `api/chat.js` is a Vercel Node.js Function.
+COSMOS is a static PWA hosted on GitHub Pages. The chat API runs in Cloudflare Workers AI.
 
-## Deploy
+## Source and deployment
 
-1. In Vercel, import the GitHub repository `waywhales-code/Waywhales`.
-2. Keep the project root at the repository root. No build command or output directory is required for this static HTML + API layout.
-3. In Project → Settings → Environment Variables, add:
-   - `OPENAI_API_KEY` — create a project API key in the OpenAI Platform. Add it as a **Secret** in Vercel. Never put it in this repository or in the PWA.
-   - Optional: `COSMOS_ALLOWED_ORIGINS` — comma-separated browser origins, for example `https://waywhales-code.github.io`.
-4. Redeploy the Vercel project after adding the secret.
-5. Copy the deployment URL, then set the `cosmos-ai-endpoint` meta tag in `index.html` to `https://YOUR-VERCEL-DOMAIN/api/chat`.
+- Worker source: `cloudflare/cosmos-ai/worker.js`
+- Production Worker name: `long-haze-d1a9bady-cosmos-api`
+- Required binding: Workers AI, binding name `AI`
+- Model: `@cf/openai/gpt-oss-20b`
+- PWA endpoint: configured by the `cosmos-ai-endpoint` meta tag in `index.html`
 
-## Test before public launch
+To deploy, update the existing Worker script in Cloudflare with the source file above and keep the Workers AI binding named `AI`. Preserve its existing `workers.dev` endpoint. The Worker supports both JSON replies (for older clients) and Server-Sent Events when the PWA sends `stream: true`.
 
-- Send one short question from the COSMOS home screen.
-- Check that the answer appears and that no API key is present in browser source or network responses.
-- Set a small monthly usage budget / alert on the OpenAI API project.
-- The in-memory IP throttle in this pilot is best-effort only and may reset or be split across serverless instances. Before inviting the public, add persistent rate limiting and an abuse-control step (such as an accessible challenge or sign-in).
+The stream adapter forwards only user-facing text tokens. It intentionally discards model reasoning and metadata fields.
+
+## Behavior
+
+- Friendly, empathetic, conversational style without pretending the AI literally experiences human feelings.
+- Concise answers by default; extra detail for questions that ask for a broader explanation.
+- General-purpose answers rather than a health-only assistant.
+- Factual boundaries for rumors, conspiracy theories and unsupported claims.
+- Health information remains educational: no diagnosis or personal treatment/dosing instructions.
+- Russian, Kazakh, Ukrainian and English responses.
 
 ## Data handling
 
-- The chat transcript stays in page memory only; it is not written to COSMOS localStorage.
-- Requests use the OpenAI Responses API with `store: false`.
-- The API key is read only from the Vercel server environment.
-- Users are warned not to submit identifiers or unnecessary sensitive health details.
-- COSMOS AI provides general educational information, not diagnosis or treatment.
+The chat transcript is held in page memory for the open tab; it is not written to COSMOS local storage. The Worker does not save the conversation to a database. Messages are sent to Cloudflare Workers AI for inference. Do not submit passwords, identity documents or unnecessary sensitive personal information.
+
+## Testing
+
+1. Open the app and ask a simple everyday question.
+2. Ask for advice in a stressful situation; the reply should be supportive, brief and practical.
+3. Ask a factual question containing a false premise; the reply should calmly correct it.
+4. Ask for a short overview of supplement categories; the response should use short headings and a few clear bullets.
+5. Confirm that text appears progressively and the final sentence is complete.
+
+Cloudflare model reference: https://developers.cloudflare.com/workers-ai/models/gpt-oss-20b/

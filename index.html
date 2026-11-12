@@ -570,7 +570,7 @@ nav.nav{z-index:9999!important}
 <body><div class="cosmos-scene" id="cosmosScene" aria-hidden="true"></div><main class="shell">
 <header class="top"><div class="brand"><span class="brand-mark">✦</span><span class="brand-name">COSMOS<small>WAYWHALES</small></span></div><div class="date-pill" id="todayLabel"></div></header>
 <section class="hero"><div class="hero-row"><div><div class="eyebrow">ваш спокойный ритм</div><h1 id="greeting">Добро пожаловать</h1><p>Маленькие шаги заботы о себе — день за днём.</p></div><div class="hero-progress-wrap"><div class="progress-ring" id="progress">0%</div><div class="hero-progress-caption" id="progressCaption">Сегодня: 0 из 0 приёмов</div></div></div><div class="daily-quote"><div class="quote-label">МЫСЛЬ ДНЯ <span>✦</span></div><blockquote id="dailyQuote">Большие перемены начинаются с маленьких шагов.</blockquote><div class="quote-signature">— WAYWHALES</div></div></section>
-<section id="homeView" class="view active"><div class="grid"><div class="panel"><div class="section-head plan-section-head"><div><h2 id="planDayTitle">Сегодня</h2><p class="sub" id="todaySub">Ваш план приёма</p></div><button class="btn small" id="addBtn">＋ Добавить</button></div><div class="plan-day-switch" id="planDaySwitch" aria-label="Выбор дня"><button type="button" data-plan-offset="0" class="active">Сегодня</button><button type="button" data-plan-offset="1">Завтра</button><button type="button" data-plan-offset="2">Послезавтра</button><button type="button" data-plan-offset="3">Через 3 дня</button></div><div id="todayList" class="supp-list"></div></div><aside class="panel"><h2>Ваш ритм</h2><p class="sub">Небольшая статистика за выбранный день</p><div class="stat-grid"><div class="stat"><strong id="statDone">0</strong><span>отмечено</span></div><div class="stat"><strong id="statTotal">0</strong><span>в плане</span></div><div class="stat"><strong id="statRate">0%</strong><span>выполнение</span></div><button class="stat stat-button" id="openMarkedHistory" type="button" aria-label="Нажмите, чтобы открыть историю отметок"><strong id="statStreak">0</strong><span id="markedDaysCaption">дней с отметками</span><small class="stat-open-hint">Нажмите, чтобы посмотреть историю ↗</small></button></div><p class="hint" style="margin-top:15px">Отмечайте приём по своему плану. Приложение не заменяет рекомендации врача.</p></aside></div><div class="panel ai-launcher"><div class="ai-launcher-mark">✦</div><div class="ai-launcher-copy"><div class="ai-launcher-kicker">COSMOS AI</div><h3>Помощник по здоровью</h3><p>Разбирайтесь в витаминах, добавках, анализах и вопросах самочувствия простыми словами.</p></div><button class="btn ai-open-button" id="openAiChat" type="button">Открыть помощника</button><span class="ai-launcher-note" id="aiLauncherStatus">ИИ-помощник подключён</span></div>
+<section id="homeView" class="view active"><div class="grid"><div class="panel"><div class="section-head plan-section-head"><div><h2 id="planDayTitle">Сегодня</h2><p class="sub" id="todaySub">Ваш план приёма</p></div><button class="btn small" id="addBtn">＋ Добавить</button></div><div class="plan-day-switch" id="planDaySwitch" aria-label="Выбор дня"><button type="button" data-plan-offset="0" class="active">Сегодня</button><button type="button" data-plan-offset="1">Завтра</button><button type="button" data-plan-offset="2">Послезавтра</button><button type="button" data-plan-offset="3">Через 3 дня</button></div><div id="todayList" class="supp-list"></div></div><aside class="panel"><h2>Ваш ритм</h2><p class="sub">Небольшая статистика за выбранный день</p><div class="stat-grid"><div class="stat"><strong id="statDone">0</strong><span>отмечено</span></div><div class="stat"><strong id="statTotal">0</strong><span>в плане</span></div><div class="stat"><strong id="statRate">0%</strong><span>выполнение</span></div><button class="stat stat-button" id="openMarkedHistory" type="button" aria-label="Нажмите, чтобы открыть историю отметок"><strong id="statStreak">0</strong><span id="markedDaysCaption">дней с отметками</span><small class="stat-open-hint">Нажмите, чтобы посмотреть историю ↗</small></button></div><p class="hint" style="margin-top:15px">Отмечайте приём по своему плану. Приложение не заменяет рекомендации врача.</p></aside></div><div class="panel ai-launcher"><div class="ai-launcher-mark">✦</div><div class="ai-launcher-copy"><div class="ai-launcher-kicker">COSMOS AI</div><h3>Ваш помощник на каждый день</h3><p>Можно спросить о чём угодно — объяснит, поддержит и поможет найти следующий шаг.</p></div><button class="btn ai-open-button" id="openAiChat" type="button">Открыть помощника</button><span class="ai-launcher-note" id="aiLauncherStatus">ИИ-помощник подключён</span></div>
 <div class="home-reminder-shortcut"><button class="btn secondary small" id="openReminderSettings" type="button">Настроить ежедневные напоминания</button></div>
 </section>
 <section id="calendarView" class="view"><div class="panel"><div class="calendar-head"><button class="btn ghost small" id="prevMonth">‹</button><h2 id="monthTitle"></h2><button class="btn ghost small" id="nextMonth">›</button></div><div class="calendar" id="calendarGrid"></div><div class="calendar-legend"><span><i class="holiday"></i>Праздник / выходной</span><span><i class="marked"></i>Есть отметки</span></div><div class="selected-day-toolbar"><div class="selected-day-copy"><p class="sub" id="selectedDayLabel"></p><p class="selected-day-holiday" id="selectedDayHoliday" hidden></p></div><button class="btn small" id="addForSelectedDay" type="button">＋ Добавить приём</button></div><div class="selected-day-result" id="selectedDayResult"><div><span>Выполнение за день</span><strong id="selectedDayPercent">0%</strong></div><p id="selectedDayCounts">0 из 0 приёмов отмечено</p><div class="progress-track"><span id="selectedDayBar"></span></div></div><div id="dayHistory" class="supp-list"></div></div></section>
@@ -617,22 +617,23 @@ body:has(#profileView.active) .hero{display:none!important}
 <div class="ai-modal" id="aiChatModal" hidden>
  <section class="ai-window" role="dialog" aria-modal="true" aria-labelledby="aiChatTitle">
   <header class="ai-head">
-   <div class="ai-head-brand"><span class="ai-head-symbol">✦</span><div><strong id="aiChatTitle">COSMOS AI</strong><small>Помощник по здоровью</small></div></div>
+   <div class="ai-head-brand"><span class="ai-head-symbol">✦</span><div><strong id="aiChatTitle">COSMOS AI</strong><small>Универсальный помощник</small></div></div>
    <div class="ai-head-actions"><button type="button" id="clearAiChat" aria-label="Очистить переписку">↺</button><button type="button" id="closeAiChat" aria-label="Закрыть чат">×</button></div>
   </header>
   <div class="ai-status" id="aiChatStatus" role="status"></div>
   <div class="ai-messages" id="aiChatMessages" aria-live="polite"></div>
   <div class="ai-topics" id="aiChatTopics">
-   <button type="button" data-ai-prompt="Для чего нужен витамин D и как обычно оценивают его уровень?">Витамины</button>
-   <button type="button" data-ai-prompt="На что обратить внимание при сочетании нескольких добавок?">Сочетание добавок</button>
-   <button type="button" data-ai-prompt="Объясни простыми словами, как читать общий анализ крови.">Анализы</button>
-   <button type="button" data-ai-prompt="Какие привычки помогают улучшить качество сна?">Сон</button>
+   <button type="button" data-ai-prompt="Помоги разобраться в моей ситуации и предложи несколько практичных шагов.">Совет</button>
+   <button type="button" data-ai-prompt="Объясни сложную тему простыми словами и приведи понятный пример.">Объяснить</button>
+   <button type="button" data-ai-prompt="Помоги проверить утверждение: отдели подтверждённые факты от предположений и мифов.">Проверить факт</button>
+   <button type="button" data-ai-prompt="Какие основные виды БАДов бывают, для чего применяются и какие есть риски?">Витамины и БАДы</button>
+   <button type="button" data-ai-prompt="На что обратить внимание при сочетании нескольких лекарств и добавок?">Сочетание</button>
   </div>
   <form class="ai-form" id="aiChatForm">
-   <textarea id="aiChatInput" rows="2" maxlength="2500" placeholder="Напишите свой вопрос…" aria-label="Ваш вопрос помощнику" disabled></textarea>
+   <textarea id="aiChatInput" rows="2" maxlength="2500" placeholder="Спросите о чём угодно или расскажите, что вас беспокоит…" aria-label="Ваш вопрос помощнику" disabled></textarea>
    <button type="submit" id="aiSendButton" disabled>Отправить</button>
   </form>
-  <p class="ai-privacy">Не указывайте ФИО, адрес, телефон и другие личные данные. Ответы ИИ носят информационный характер и не заменяют консультацию врача.</p>
+  <p class="ai-privacy">Не отправляйте пароли и личные документы. По вопросам здоровья COSMOS даёт общую информацию и не заменяет врача.</p>
  </section>
 </div>
 <div class="toast" id="toast" role="status"></div>
@@ -828,18 +829,75 @@ $('resetData').addEventListener('click',()=>{if(confirm('Удалить проф
 const aiEndpoint=(document.querySelector('meta[name="cosmos-ai-endpoint"]')?.content||'').trim();
 const aiModal=$('aiChatModal'),aiMessagesEl=$('aiChatMessages'),aiInput=$('aiChatInput'),aiSend=$('aiSendButton'),aiStatus=$('aiChatStatus'),aiLauncherStatus=$('aiLauncherStatus');
 let aiHistory=[];
+function aiEscapeHtml(value){
+ return String(value).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+function aiFormatInline(value){
+ return aiEscapeHtml(value)
+  .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
+  .replace(/\*(.+?)\*/g,'<em>$1</em>')
+  .replace(/`([^`]+)`/g,'<code>$1</code>');
+}
+function aiRenderContent(value){
+ const lines=String(value).replace(/\r/g,'').split('\n');
+ const html=[];let paragraph=[];
+ const flush=()=>{if(paragraph.length){html.push('<p>'+aiFormatInline(paragraph.join(' '))+'</p>');paragraph=[];}};
+ for(const line of lines){
+  const trimmed=line.trim();
+  if(!trimmed){flush();continue}
+  const heading=trimmed.match(/^#{1,3}\s+(.+)$/);
+  const bullet=trimmed.match(/^[-•*]\s+(.+)$/);
+  const numbered=trimmed.match(/^(\d{1,2})[.)]\s+(.+)$/);
+  if(heading){flush();html.push('<h4>'+aiFormatInline(heading[1])+'</h4>');continue}
+  if(bullet){flush();html.push('<div class="ai-list-item"><span class="ai-list-marker">•</span><span>'+aiFormatInline(bullet[1])+'</span></div>');continue}
+  if(numbered){flush();html.push('<div class="ai-list-item"><span class="ai-list-number">'+numbered[1]+'.</span><span>'+aiFormatInline(numbered[2])+'</span></div>');continue}
+  if(/^---+$/.test(trimmed)){flush();html.push('<hr>');continue}
+  paragraph.push(trimmed);
+ }
+ flush();
+ return html.join('')||'<p></p>';
+}
 function aiAddMessage(role,text,extraClass=''){
  const node=document.createElement('div');node.className='ai-message '+(role==='user'?'ai-user':'ai-assistant')+(extraClass?' '+extraClass:'');
- const label=document.createElement('span');label.className='ai-message-label';label.textContent=role==='user'?'Вы':'COSMOS AI';
+ const label=document.createElement('span');label.className='ai-message-label';label.textContent=role==='user'?'Вы':'COSMOS';
  const body=document.createElement('div');body.className='ai-message-content';
- const escaped=String(text).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
- body.innerHTML=escaped
-  .replace(/^#{1,3}\s+(.+)$/gm,'<strong>$1</strong>')
-  .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
-  .replace(/^\s*[-•]\s+(.+)$/gm,'<div class="ai-bullet">• $1</div>')
-  .replace(/\n{2,}/g,'</p><p>')
-  .replace(/\n/g,'<br>'); body.innerHTML='<p>'+body.innerHTML+'</p>';
+ body.innerHTML=aiRenderContent(text);node.aiBody=body;
  node.append(label,body);aiMessagesEl.appendChild(node);aiMessagesEl.scrollTop=aiMessagesEl.scrollHeight;return node;
+}
+function aiUpdateMessage(node,text){
+ if(!node?.aiBody)return;
+ node.aiBody.innerHTML=aiRenderContent(text);
+ aiMessagesEl.scrollTop=aiMessagesEl.scrollHeight;
+}
+async function aiReadEventStream(response,onUpdate){
+ if(!response.body)throw new Error('Сервер не передал поток ответа.');
+ const reader=response.body.getReader(),decoder=new TextDecoder();
+ let buffer='',answer='',finished=false;
+ const handleEvent=event=>{
+  const data=event.split(/\r?\n/).filter(line=>line.startsWith('data:')).map(line=>line.slice(5).trim()).join('\n').trim();
+  if(!data)return;
+  if(data==='[DONE]'){finished=true;return}
+  let payload;try{payload=JSON.parse(data)}catch{return}
+  if(payload.error)throw new Error(payload.error);
+  const token=typeof payload.token==='string'?payload.token:'';
+  if(token){answer+=token;onUpdate(answer)}
+ };
+ try{
+  while(!finished){
+   const {value,done}=await reader.read();
+   if(done)break;
+   buffer+=decoder.decode(value,{stream:true});
+   let match;
+   while((match=buffer.match(/\r?\n\r?\n/))){
+    const index=match.index;const event=buffer.slice(0,index);
+    buffer=buffer.slice(index+match[0].length);handleEvent(event);
+    if(finished)break;
+   }
+  }
+  buffer+=decoder.decode();
+  if(!finished&&buffer.trim())handleEvent(buffer);
+ }finally{reader.releaseLock()}
+ return answer.trim();
 }
 function aiSetReady(){
  const ready=!!aiEndpoint;
@@ -851,7 +909,7 @@ function aiSetReady(){
 }
 function aiOpen(){
  aiModal.hidden=false;document.body.classList.add('ai-chat-open');aiSetReady();
- if(!aiHistory.length)aiAddMessage('assistant','Здравствуйте! Я COSMOS AI. Помогу разобраться в общей информации о витаминах, добавках, анализах, питании и сне. Не ставлю диагнозы и не назначаю лечение.');
+ if(!aiHistory.length)aiAddMessage('assistant','Привет! Я COSMOS. Можешь спросить меня о чём угодно. Постараюсь понять, что для тебя важно, объяснить простыми словами и предложить полезный следующий шаг.');
 }
 function aiClose(){aiModal.hidden=true;document.body.classList.remove('ai-chat-open')}
 $('openAiChat').addEventListener('click',aiOpen);
@@ -864,15 +922,29 @@ $('aiChatForm').addEventListener('submit',async e=>{
  const question=aiInput.value.trim();if(!question||aiSend.disabled)return;
  aiInput.value='';aiSend.disabled=true;aiInput.disabled=true;
  aiHistory.push({role:'user',content:question});aiAddMessage('user',question);
- const pending=aiAddMessage('assistant','Готовлю ответ…','ai-pending');
+ const pending=aiAddMessage('assistant','Сейчас отвечу…','ai-pending');
  try{
-  const response=await fetch(aiEndpoint,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:aiHistory.slice(-12),language:document.body.dataset.language||'ru'})});
-  const data=await response.json().catch(()=>({}));
-  if(!response.ok)throw new Error(data.error||'Не удалось получить ответ');
-  const answer=String(data.answer||'').trim();if(!answer)throw new Error('Ответ пока пуст. Попробуйте переформулировать вопрос.');
-  pending.remove();aiHistory.push({role:'assistant',content:answer});aiAddMessage('assistant',answer);
+  const response=await fetch(aiEndpoint,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:aiHistory.slice(-12),language:document.body.dataset.language||'ru',stream:true})});
+  if(!response.ok){
+   const errorData=await response.json().catch(()=>({}));
+   throw new Error(errorData.error||'Не удалось получить ответ');
+  }
+  let answer='';
+  if((response.headers.get('content-type')||'').includes('text/event-stream')){
+   answer=await aiReadEventStream(response,text=>{
+    pending.classList.remove('ai-pending');aiUpdateMessage(pending,text);
+   });
+  }else{
+   const data=await response.json().catch(()=>({}));
+   answer=String(data.answer||'').trim();
+   if(answer){pending.classList.remove('ai-pending');aiUpdateMessage(pending,answer)}
+  }
+  if(!answer)throw new Error('Ответ пока не пришёл. Попробуй отправить вопрос ещё раз.');
+  pending.classList.remove('ai-pending');
+  aiHistory.push({role:'assistant',content:answer});
  }catch(err){
-  pending.remove();aiAddMessage('assistant',err.message==='Failed to fetch'?'Не удалось связаться с сервером. Проверьте подключение и попробуйте позже.':(err.message||'Не удалось получить ответ. Попробуйте позже.'),'ai-error');
+  pending.remove();
+  aiAddMessage('assistant',err.message==='Failed to fetch'?'Не удалось связаться с сервером. Проверь подключение и попробуй ещё раз.':(err.message||'Не удалось получить ответ. Попробуй позже.'),'ai-error');
  }finally{aiInput.disabled=false;aiSend.disabled=false;aiInput.focus()}
 });
 aiInput.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();$('aiChatForm').requestSubmit()}});
@@ -2348,4 +2420,27 @@ body.ai-chat-open .nav{visibility:hidden!important}
  #cosmosLanguageMenu{bottom:calc(136px + env(safe-area-inset-bottom,0px))!important}
 }
 </style>
+
+<style id="cosmos-ai-human-stream-ui">
+.ai-message{max-width:min(91%,720px);padding:12px 15px;border-radius:19px}
+.ai-assistant{background:#fff;border-color:#e1e8df;border-bottom-left-radius:6px}
+.ai-user{background:#e7f0e5;border-color:#d1e1cf;border-bottom-right-radius:6px}
+.ai-message-label{font-size:10px;letter-spacing:.45px;text-transform:uppercase}
+.ai-message-content{font-size:14px;line-height:1.58;overflow-wrap:anywhere}
+.ai-message-content p{margin:0 0 8px}
+.ai-message-content p:last-child{margin-bottom:0}
+.ai-message-content h4{margin:11px 0 5px;font-size:14px;line-height:1.35;font-weight:800;color:#234c39}
+.ai-message-content h4:first-child{margin-top:0}
+.ai-message-content strong{font-weight:780;color:#244c39}
+.ai-message-content em{font-style:italic}
+.ai-message-content code{padding:1px 5px;border-radius:5px;background:#eef2eb;font:12px ui-monospace,monospace}
+.ai-list-item{display:flex;align-items:flex-start;gap:8px;margin:4px 0}
+.ai-list-marker,.ai-list-number{flex:0 0 auto;min-width:13px;color:#52795b;font-weight:800}
+.ai-message-content hr{height:1px;margin:10px 0;border:0;background:#e3e9e1}
+.ai-pending .ai-message-content p{color:#718078}
+.ai-pending .ai-message-content p:after{content:' ';display:inline-block;width:12px;animation:cosmos-ai-dots 1s steps(3,end) infinite}
+@keyframes cosmos-ai-dots{0%{content:'.'}33%{content:'..'}66%,100%{content:'...'}}
+@media(max-width:520px){.ai-message{max-width:94%;padding:11px 13px}.ai-message-content{font-size:14px}}
+</style>
+
 </body></html>
