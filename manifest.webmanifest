@@ -5,10 +5,15 @@
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#102b20",
-  "theme_color": "#102b20",
+  "background_color": "#0b2230",
+  "theme_color": "#0b2230",
   "description": "COSMOS — дневник заботы о теле, душе и внутренней гармонии. by Waywhales.",
   "icons": [
-    { "src": "./apple-touch-icon.png", "sizes": "180x180", "type": "image/png", "purpose": "any" }
+    {
+      "src": "./cosmos-icon-v2.png",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "any"
+    }
   ]
 }
