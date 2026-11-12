@@ -7,20 +7,21 @@ COSMOS is a static PWA hosted on GitHub Pages. The chat API runs in Cloudflare W
 - Worker source: `cloudflare/cosmos-ai/worker.js`
 - Production Worker name: `long-haze-d1a9bady-cosmos-api`
 - Required binding: Workers AI, binding name `AI`
-- Model: `@cf/openai/gpt-oss-20b`
+- Model: `@cf/openai/gpt-oss-120b`, using low reasoning effort for the interactive chat
 - PWA endpoint: configured by the `cosmos-ai-endpoint` meta tag in `index.html`
 
-To deploy, update the existing Worker script in Cloudflare with the source file above and keep the Workers AI binding named `AI`. Preserve its existing `workers.dev` endpoint. The Worker supports both JSON replies (for older clients) and Server-Sent Events when the PWA sends `stream: true`.
+Deploy the Worker source to the existing Worker and preserve its current `workers.dev` endpoint and AI binding. The Worker supports both JSON replies (for older clients) and Server-Sent Events when the PWA sends `stream: true`.
 
 The stream adapter forwards only user-facing text tokens. It intentionally discards model reasoning and metadata fields.
 
-## Behavior
+## Assistant behavior
 
 - Friendly, empathetic, conversational style without pretending the AI literally experiences human feelings.
-- Concise answers by default; extra detail for questions that ask for a broader explanation.
-- General-purpose answers rather than a health-only assistant.
+- General-purpose answers across everyday topics, not limited to health.
+- Concise by default, with extra detail only when the user asks for it.
 - Factual boundaries for rumors, conspiracy theories and unsupported claims.
-- Health information remains educational: no diagnosis or personal treatment/dosing instructions.
+- Health information stays educational: no diagnosis or personal treatment/dosing instructions.
+- Vitamins and supplement explanations distinguish established evidence from limited or uncertain claims.
 - Russian, Kazakh, Ukrainian and English responses.
 
 ## Data handling
@@ -32,7 +33,8 @@ The chat transcript is held in page memory for the open tab; it is not written t
 1. Open the app and ask a simple everyday question.
 2. Ask for advice in a stressful situation; the reply should be supportive, brief and practical.
 3. Ask a factual question containing a false premise; the reply should calmly correct it.
-4. Ask for a short overview of supplement categories; the response should use short headings and a few clear bullets.
+4. Ask for a short overview of supplement categories; the response should use compact bullets and careful evidence language.
 5. Confirm that text appears progressively and the final sentence is complete.
 
-Cloudflare model reference: https://developers.cloudflare.com/workers-ai/models/gpt-oss-20b/
+Cloudflare model reference: https://developers.cloudflare.com/workers-ai/models/gpt-oss-120b/
+Cloudflare pricing: https://developers.cloudflare.com/workers-ai/platform/pricing/
