@@ -3026,4 +3026,74 @@ main.shell>.top .brand-mark{
 }
 </style>
 
+
+
+<style id="waywhales-ios-card-system">
+/* Unified iOS-inspired dark glass surfaces for COSMOS content cards.
+   Layout, card dimensions, controls and app behavior are intentionally unchanged. */
+:root{
+ --cosmos-glass-card:rgba(22,47,58,.78);
+ --cosmos-glass-border:rgba(207,232,226,.16);
+ --cosmos-glass-text:#edf5f1;
+ --cosmos-glass-muted:#b8cbc5;
+}
+.hero,.panel,
+.profile-card,.profile-edit-panel,.push-settings-card,
+.selected-day-result{
+ background:linear-gradient(145deg,rgba(38,68,76,.88),rgba(15,38,50,.94))!important;
+ background-image:linear-gradient(145deg,rgba(38,68,76,.88),rgba(15,38,50,.94))!important;
+ border:1px solid var(--cosmos-glass-border)!important;
+ border-radius:20px!important;
+ box-shadow:0 8px 24px rgba(0,10,18,.13),
+  inset 0 1px 0 rgba(244,251,247,.055)!important;
+ -webkit-backdrop-filter:blur(22px) saturate(1.25)!important;
+ backdrop-filter:blur(22px) saturate(1.25)!important;
+}
+.hero h1,.panel h2,
+.profile-card h2,.profile-card h3,
+.profile-edit-panel h2,.push-settings-card h2{
+ color:var(--cosmos-glass-text)!important;
+}
+.hero p,.hero .eyebrow,.hero-progress-caption,
+.panel .sub,.panel .hint,.panel .date-pill,
+.profile-card,.profile-card .sub,.profile-card .hint,
+.profile-edit-panel,.push-settings-card{
+ color:var(--cosmos-glass-muted)!important;
+}
+.panel .card-kicker,.profile-card .card-kicker{
+ color:rgba(190,213,204,.76)!important;
+}
+.supp{
+ background:linear-gradient(145deg,rgba(35,63,72,.82),rgba(17,41,52,.91))!important;
+ color:var(--cosmos-glass-text)!important;
+ border:1px solid rgba(207,232,226,.13)!important;
+ border-radius:15px!important;
+ box-shadow:0 4px 14px rgba(0,10,18,.10),
+  inset 0 1px 0 rgba(244,251,247,.045)!important;
+}
+.supp.done{
+ background:linear-gradient(145deg,rgba(42,75,69,.78),rgba(20,51,50,.90))!important;
+}
+.supp-icon{
+ background:rgba(190,218,207,.12)!important;
+ border:1px solid rgba(207,232,226,.12)!important;
+}
+.stat{
+ background:rgba(9,29,40,.38)!important;
+ border:1px solid rgba(207,232,226,.12)!important;
+ border-radius:14px!important;
+}
+.stat strong,.selected-day-result strong{
+ color:var(--cosmos-glass-text)!important;
+}
+.selected-day-result{
+ background:linear-gradient(145deg,rgba(33,64,70,.82),rgba(15,39,50,.92))!important;
+}
+@media(max-width:720px){
+ .hero,.panel,.profile-card,.profile-edit-panel,.push-settings-card,
+ .selected-day-result{border-radius:18px!important}
+ .supp{border-radius:14px!important}
+}
+</style>
+
 </body></html>
