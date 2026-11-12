@@ -2882,4 +2882,32 @@ body.ai-chat-open .nav{visibility:hidden!important}
 }
 </style>
 
+
+<style id="cosmos-glass-bottom-fill">
+/* Continue the existing glass material through the last bottom strip.
+   Navigation buttons, icon geometry and dock position remain untouched. */
+@media(max-width:720px){
+  body::after{
+    content:"";
+    position:fixed;
+    left:0;
+    right:0;
+    bottom:0;
+    height:64px;
+    z-index:9998;
+    pointer-events:none;
+    background:linear-gradient(
+      180deg,
+      rgba(105,128,122,.70) 0%,
+      rgba(91,114,108,.76) 38%,
+      rgba(70,94,87,.78) 100%
+    );
+    -webkit-backdrop-filter:blur(24px) saturate(175%);
+    backdrop-filter:blur(24px) saturate(175%);
+    border-top:1px solid rgba(231,244,235,.18);
+  }
+  nav.nav{z-index:9999!important}
+}
+</style>
+
 </body></html>
