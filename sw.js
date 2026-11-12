@@ -1,4 +1,4 @@
-const CACHE='waywhales-static-v77';
+const CACHE='waywhales-static-v78';
 const ASSETS=['./','./index.html','./manifest.webmanifest','./icon.svg','./apple-touch-icon.png'];
 self.addEventListener('install',event=>event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(ASSETS)).then(()=>self.skipWaiting())));
 self.addEventListener('activate',event=>event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(key=>key.startsWith('waywhales-static-')&&key!==CACHE).map(key=>caches.delete(key)))).then(()=>self.clients.claim())));
@@ -11,7 +11,7 @@ self.addEventListener('fetch',event=>{
 self.addEventListener('push',event=>{
  let payload={};
  try{payload=event.data?event.data.json():{}}catch(_){}
- const title=typeof payload.title==='string'&&payload.title.trim()?payload.title:'COSMOS ✦';
+ const title=typeof payload.title==='string'&&payload.title.trim()?payload.title:'Время для себя';
  const body=typeof payload.body==='string'&&payload.body.trim()?payload.body:'Пора уделить немного времени себе.';
  const options={
   body,
