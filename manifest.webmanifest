@@ -2,15 +2,15 @@
   "name": "✦ Waywhales",
   "short_name": "✦ Waywhales",
   "lang": "ru",
-  "start_url": "./",
-  "scope": "./",
+  "start_url": "/Waywhales/",
+  "scope": "/Waywhales/",
   "display": "standalone",
   "background_color": "#0b2230",
   "theme_color": "#0b2230",
   "description": "COSMOS — дневник заботы о теле, душе и внутренней гармонии. by Waywhales.",
   "icons": [
     {
-      "src": "./cosmos-icon-v2.png",
+      "src": "/Waywhales/cosmos-icon-v2.png?v=3",
       "sizes": "180x180",
       "type": "image/png",
       "purpose": "any"
