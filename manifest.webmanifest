@@ -1,6 +1,6 @@
 {
-  "name": "✦ Waywhales",
-  "short_name": "✦ Waywhales",
+  "name": "COSMOS",
+  "short_name": "COSMOS",
   "lang": "ru",
   "start_url": "/Waywhales/",
   "scope": "/Waywhales/",
@@ -10,7 +10,7 @@
   "description": "COSMOS — дневник заботы о теле, душе и внутренней гармонии. by Waywhales.",
   "icons": [
     {
-      "src": "/Waywhales/apple-touch-icon.png?v=8",
+      "src": "/Waywhales/apple-touch-icon.png?v=9",
       "sizes": "180x180",
       "type": "image/png",
       "purpose": "any"
