@@ -1827,4 +1827,67 @@ body.ai-chat-open .nav{visibility:hidden!important}
  .waywhales-signature{padding:18px 8px calc(10px + env(safe-area-inset-bottom))}
 }
 </style>
+
+<style id="cosmos-mobile-form-safearea">
+/* Mobile forms: keep every action above the fixed bottom navigation. */
+@media(max-width:720px){
+  #profileView .profile-main-card .profile-edit-panel:not([hidden]){
+    position:fixed!important;
+    left:50%!important;
+    right:auto!important;
+    bottom:calc(92px + env(safe-area-inset-bottom))!important;
+    transform:translateX(-50%)!important;
+    width:min(calc(100vw - 28px),440px)!important;
+    max-width:440px!important;
+    max-height:calc(100dvh - 132px - env(safe-area-inset-top) - env(safe-area-inset-bottom))!important;
+    margin:0!important;
+    overflow-x:hidden!important;
+    overflow-y:auto!important;
+    overscroll-behavior:contain!important;
+    -webkit-overflow-scrolling:touch!important;
+    box-shadow:0 18px 48px rgba(2,22,13,.34),0 2px 10px rgba(2,22,13,.12)!important;
+  }
+  #profileView .profile-edit-panel .profile-edit-actions{
+    position:sticky!important;
+    bottom:0!important;
+    z-index:2!important;
+    padding-top:10px!important;
+    background:linear-gradient(180deg,rgba(248,251,244,0),rgba(248,251,244,.98) 35%)!important;
+  }
+  /* The supplement editor scrolls internally; its action row never hangs below it. */
+  #suppModal.modal{
+    align-items:flex-start!important;
+    justify-content:center!important;
+    padding:calc(8px + env(safe-area-inset-top)) 12px calc(92px + env(safe-area-inset-bottom))!important;
+  }
+  #suppModal .dialog{
+    max-height:calc(100dvh - 116px - env(safe-area-inset-top) - env(safe-area-inset-bottom))!important;
+    height:auto!important;
+    overflow-x:hidden!important;
+    overflow-y:auto!important;
+    overscroll-behavior:contain!important;
+    -webkit-overflow-scrolling:touch!important;
+  }
+  #suppModal .dialog-actions{
+    position:sticky!important;
+    bottom:0!important;
+    margin:14px -14px 0!important;
+    padding:12px 14px 12px!important;
+    z-index:30!important;
+    background:linear-gradient(180deg,rgba(245,243,233,.94),#f5f3e9 32%)!important;
+    border-top:1px solid rgba(215,223,208,.9)!important;
+  }
+}
+@media(max-width:360px){
+  #profileView .profile-main-card .profile-edit-panel:not([hidden]){
+    width:calc(100vw - 20px)!important;
+  }
+  #profileView .profile-edit-actions button{
+    font-size:14px!important;
+    padding-left:6px!important;
+    padding-right:6px!important;
+  }
+}
+</style>
+
 </body></html>
