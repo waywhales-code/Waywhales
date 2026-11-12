@@ -2046,4 +2046,41 @@ body.ai-chat-open .nav{visibility:hidden!important}
 </style>
 
 
+
+<style id="cosmos-profile-compact">
+/* Compact profile layout: reduce empty vertical space without changing app behavior or the botanical backdrop. */
+@media(max-width:720px){
+  #profileView{gap:10px!important}
+  #profileView .profile-intro{padding:4px 3px 2px!important}
+  #profileView .profile-intro h2{font-size:30px!important;margin:3px 0!important;line-height:1.15!important}
+  #profileView .profile-intro p{font-size:15px!important;line-height:1.35!important}
+  #profileView>.profile-card{
+    height:auto!important;min-height:0!important;
+    padding:14px!important;border-radius:18px!important;
+  }
+  #profileView .profile-card .card-kicker{font-size:9px!important;letter-spacing:1.6px!important;margin-bottom:5px!important}
+  #profileView .profile-card h2{font-size:21px!important;line-height:1.22!important;margin:0 0 4px!important}
+  #profileView .profile-main-card .profile{gap:12px!important;margin:0!important}
+  #profileView .profile-main-card .avatar{
+    width:92px!important;height:92px!important;flex-basis:92px!important;
+  }
+  #profileView #profileName{font-size:24px!important;line-height:1.2!important}
+  #profileView .profile-card .profile .hint{font-size:14px!important;line-height:1.4!important}
+  #profileView .month-result{
+    min-height:0!important;padding:13px!important;margin:10px 0 12px!important;border-radius:15px!important;
+  }
+  #profileView .month-result-top{gap:8px!important;margin-bottom:7px!important}
+  #profileView .month-result-top strong{font-size:31px!important;line-height:1.1!important}
+  #profileView .month-result-top span{font-size:12px!important}
+  #profileView .month-result .sub{font-size:13px!important;line-height:1.4!important;margin-top:5px!important}
+  #profileView .profile-card .field{margin:10px 0!important}
+  #profileView .profile-inline-actions{gap:7px!important;margin-top:8px!important}
+  #profileView .profile-inline-action{min-height:44px!important;padding:8px 10px!important}
+  #profileView .push-settings-card{padding:14px!important}
+  #profileView .push-settings-card h2{font-size:21px!important}
+  #profileView .push-settings-card #pushReminderTime{min-height:48px!important;height:48px!important}
+  #profileView .push-settings-card .push-test-action{min-height:44px!important}
+}
+</style>
+
 </body></html>
