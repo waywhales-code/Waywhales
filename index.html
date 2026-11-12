@@ -1987,4 +1987,62 @@ body.ai-chat-open .nav{visibility:hidden!important}
 }
 </style>
 
+
+<style id="cosmos-bottom-nav-hard-limit">
+/* Final iPhone correction: constrain the whole dock, not just its buttons. */
+@media(max-width:720px){
+  main.shell{
+    padding-bottom:104px!important;
+  }
+  nav.nav{
+    position:fixed!important;
+    inset:auto 0 0 0!important;
+    display:flex!important;
+    align-items:center!important;
+    justify-content:space-between!important;
+    box-sizing:border-box!important;
+    width:100%!important;
+    height:88px!important;
+    min-height:88px!important;
+    max-height:88px!important;
+    padding:4px 8px 22px!important;
+    margin:0!important;
+    gap:5px!important;
+    overflow:hidden!important;
+    border-radius:0!important;
+  }
+  nav.nav button{
+    box-sizing:border-box!important;
+    flex:1 1 0!important;
+    width:auto!important;
+    min-width:0!important;
+    height:58px!important;
+    min-height:58px!important;
+    max-height:58px!important;
+    margin:0!important;
+    padding:4px 2px!important;
+    display:flex!important;
+    flex-direction:column!important;
+    align-items:center!important;
+    justify-content:center!important;
+    gap:3px!important;
+    border-radius:14px!important;
+    font-size:12px!important;
+    line-height:1.1!important;
+    white-space:nowrap!important;
+  }
+  nav.nav .nav-icon{
+    width:22px!important;
+    height:22px!important;
+    flex:0 0 22px!important;
+    transform:none!important;
+  }
+  nav.nav .nav-icon svg{width:21px!important;height:21px!important}
+}
+@media(max-width:390px){
+  nav.nav{padding-left:6px!important;padding-right:6px!important;gap:3px!important}
+  nav.nav button{font-size:11px!important}
+}
+</style>
+
 </body></html>
