@@ -2734,4 +2734,43 @@ main.shell>.top .brand-mark{
  }
 }
 </style>
+
+<style id="waywhales-nav-50px">
+/* Compact iPhone dock: 50px glass surface; safe area remains separate and clear. */
+@media(max-width:720px){
+ body nav.nav{
+  height:calc(50px + env(safe-area-inset-bottom,0px))!important;
+  min-height:calc(50px + env(safe-area-inset-bottom,0px))!important;
+  max-height:calc(50px + env(safe-area-inset-bottom,0px))!important;
+  padding:0 12px env(safe-area-inset-bottom,0px)!important;
+  align-items:flex-start!important;
+ }
+ body nav.nav::before{
+  left:10px!important;right:10px!important;top:0!important;
+  bottom:env(safe-area-inset-bottom,0px)!important;
+  border-radius:22px!important;
+ }
+ body nav.nav button,body nav.nav button.active,
+ body[data-cosmos-theme] nav.nav button,
+ body[data-cosmos-theme] nav.nav button.active{
+  height:50px!important;min-height:50px!important;max-height:50px!important;
+  margin:0!important;padding:0!important;
+  gap:0!important;justify-content:center!important;
+  font-size:15px!important;line-height:16px!important;
+ }
+ body nav.nav .nav-icon{
+  width:32px!important;height:32px!important;flex:0 0 32px!important;
+  margin:0!important;transform:none!important;
+ }
+ body nav.nav .nav-icon svg{
+  width:32px!important;height:32px!important;
+ }
+ body nav.nav button.active::after{
+  bottom:1px!important;height:2px!important;
+ }
+ main.shell{
+  padding-bottom:calc(60px + env(safe-area-inset-bottom,0px))!important;
+ }
+}
+</style>
 </body></html>
