@@ -2983,4 +2983,35 @@ main.shell>.top .brand-mark{
  body nav.nav .nav-icon,body nav.nav .nav-icon svg{width:42px!important;height:42px!important;flex-basis:48px!important}
 }
 </style>
+
+
+<style id="waywhales-unified-dark-glass-nav">
+/* Unified darker glass finish for the bottom navigation on every tab. */
+@media(max-width:720px){
+ body nav.nav{
+  background:linear-gradient(180deg,
+   rgba(29,57,67,.88) 0%,
+   rgba(15,40,52,.93) 48%,
+   rgba(7,27,39,.97) 100%)!important;
+  -webkit-backdrop-filter:blur(30px) saturate(1.35)!important;
+  backdrop-filter:blur(30px) saturate(1.35)!important;
+  border-top:1px solid rgba(205,231,226,.22)!important;
+  box-shadow:0 -8px 28px rgba(0,8,15,.30),
+   inset 0 1px 0 rgba(240,250,246,.07)!important;
+ }
+ body nav.nav button,body nav.nav button.active,
+ body[data-cosmos-theme] nav.nav button,
+ body[data-cosmos-theme] nav.nav button.active{
+  color:rgba(235,245,242,.78)!important;
+ }
+ body nav.nav button.active,body[data-cosmos-theme] nav.nav button.active{
+  color:#fff!important;
+ }
+ body nav.nav button.active::after{
+  background:rgba(222,241,232,.96)!important;
+  box-shadow:0 0 8px rgba(194,229,215,.28)!important;
+ }
+}
+</style>
+
 </body></html>
