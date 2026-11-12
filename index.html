@@ -2824,4 +2824,62 @@ body.ai-chat-open .nav{visibility:hidden!important}
 }
 </style>
 
+
+<style id="cosmos-glass-dock-content-lower">
+/* Keep the glass sheet flush to the screen bottom; place tabs lower inside it.
+   Safe area belongs to the dock background, not as unused padding above the tabs. */
+@media(max-width:720px){
+  nav.nav{
+    position:fixed!important;
+    left:0!important;
+    right:0!important;
+    top:auto!important;
+    bottom:0!important;
+    inset:auto 0 0 0!important;
+    width:100%!important;
+    height:calc(68px + env(safe-area-inset-bottom,0px))!important;
+    min-height:calc(68px + env(safe-area-inset-bottom,0px))!important;
+    max-height:calc(68px + env(safe-area-inset-bottom,0px))!important;
+    box-sizing:border-box!important;
+    display:flex!important;
+    align-items:flex-end!important;
+    justify-content:space-between!important;
+    gap:5px!important;
+    margin:0!important;
+    padding:3px 9px 8px!important;
+    overflow:hidden!important;
+    border:0!important;
+    border-top:1px solid rgba(231,244,235,.22)!important;
+    border-radius:0!important;
+    background:rgba(8,31,25,.58)!important;
+    background-image:linear-gradient(180deg,rgba(222,240,231,.075),rgba(5,27,21,.20))!important;
+    box-shadow:0 -8px 28px rgba(0,12,10,.12)!important;
+    -webkit-backdrop-filter:blur(24px) saturate(175%)!important;
+    backdrop-filter:blur(24px) saturate(175%)!important;
+    z-index:9999!important;
+  }
+  nav.nav button{
+    height:58px!important;
+    min-height:58px!important;
+    max-height:58px!important;
+    margin:0!important;
+    padding:1px 2px!important;
+    gap:1px!important;
+  }
+  nav.nav .nav-icon{
+    width:37px!important;height:37px!important;flex:0 0 37px!important;
+  }
+  nav.nav .nav-icon svg{
+    width:35px!important;height:35px!important;stroke-width:1.95!important;
+  }
+  nav.nav button.active .nav-icon svg{stroke-width:2.1!important}
+}
+@media(max-width:390px){
+  nav.nav{padding-left:7px!important;padding-right:7px!important;gap:4px!important}
+  nav.nav button{font-size:12px!important}
+  nav.nav .nav-icon{width:36px!important;height:36px!important;flex-basis:36px!important}
+  nav.nav .nav-icon svg{width:34px!important;height:34px!important}
+}
+</style>
+
 </body></html>
