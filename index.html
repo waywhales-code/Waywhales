@@ -2653,4 +2653,42 @@ main.shell>.top .brand-mark{
  #cosmosLanguageToggle{top:9px!important;right:2px!important}
 }
 </style>
+
+<style id="waywhales-compact-bottom-nav">
+/* Compact bottom tabs: glass only behind the controls; keep iPhone home-indicator inset clear. */
+@media(max-width:720px){
+ main.shell{
+  padding-bottom:calc(70px + env(safe-area-inset-bottom,0px))!important;
+ }
+ body nav.nav{
+  height:calc(70px + env(safe-area-inset-bottom,0px))!important;
+  min-height:calc(70px + env(safe-area-inset-bottom,0px))!important;
+  max-height:calc(70px + env(safe-area-inset-bottom,0px))!important;
+  padding:4px 12px env(safe-area-inset-bottom,0px)!important;
+  background:linear-gradient(to bottom,
+    rgba(23,49,61,.78) 0,
+    rgba(23,49,61,.78) 70px,
+    rgba(23,49,61,0) 70px,
+    rgba(23,49,61,0) 100%)!important;
+  background-image:linear-gradient(to bottom,
+    rgba(23,49,61,.78) 0,
+    rgba(23,49,61,.78) 70px,
+    rgba(23,49,61,0) 70px,
+    rgba(23,49,61,0) 100%)!important;
+  -webkit-backdrop-filter:blur(24px) saturate(1.5)!important;
+  backdrop-filter:blur(24px) saturate(1.5)!important;
+  border-top:1px solid rgba(221,240,238,.2)!important;
+  box-shadow:0 -4px 16px rgba(0,10,18,.16)!important;
+ }
+ body nav.nav button,body nav.nav button.active,
+ body[data-cosmos-theme] nav.nav button,body[data-cosmos-theme] nav.nav button.active{
+  height:62px!important;min-height:62px!important;max-height:62px!important;
+  padding:1px 3px 3px!important;gap:2px!important;
+ }
+ body nav.nav .nav-icon,body nav.nav .nav-icon svg{
+  width:34px!important;height:34px!important;flex-basis:34px!important;
+ }
+ body nav.nav button,body nav.nav button.active{font-size:14px!important}
+}
+</style>
 </body></html>
