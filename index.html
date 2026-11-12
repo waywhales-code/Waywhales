@@ -2262,4 +2262,29 @@ body.ai-chat-open .nav{visibility:hidden!important}
 }
 </style>
 
+
+<style id="cosmos-bottom-nav-icons-40">
+/* Trial: 40px navigation icons with a slightly taller but still compact bottom row. */
+@media(max-width:720px){
+ nav.nav{
+  height:calc(70px + env(safe-area-inset-bottom,0px))!important;
+  min-height:calc(70px + env(safe-area-inset-bottom,0px))!important;
+  max-height:calc(70px + env(safe-area-inset-bottom,0px))!important;
+  padding:2px 14px env(safe-area-inset-bottom,0px)!important;
+ }
+ nav.nav button,nav.nav button.active{
+  height:64px!important;min-height:64px!important;max-height:64px!important;
+  padding:1px 3px!important;gap:0!important;
+  font-size:11px!important;line-height:1.05!important;
+ }
+ nav.nav .nav-icon{
+  width:40px!important;height:40px!important;flex:0 0 40px!important;
+ }
+ nav.nav .nav-icon svg{width:40px!important;height:40px!important}
+ main.shell{padding-bottom:calc(90px + env(safe-area-inset-bottom,0px))!important}
+ #cosmosLanguageToggle{bottom:calc(78px + env(safe-area-inset-bottom,0px))!important}
+ #cosmosLanguageMenu{bottom:calc(124px + env(safe-area-inset-bottom,0px))!important}
+}
+</style>
+
 </body></html>
