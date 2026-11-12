@@ -2,7 +2,7 @@ const MODEL = "@cf/openai/gpt-oss-20b";
 const ALLOWED_ORIGIN = "https://waywhales-code.github.io";
 const MAX_MESSAGES = 12;
 const MAX_MESSAGE_CHARS = 2500;
-const MAX_BODY_BYTES = 24000;
+const MAX_BODY_BYTES = 36000;
 
 const SYSTEM_PROMPT = `
 Ты — COSMOS, универсальный помощник. Общайся естественно, тепло и уважительно — как внимательный собеседник, а не как сухая инструкция.
