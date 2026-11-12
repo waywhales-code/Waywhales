@@ -569,7 +569,7 @@ nav.nav{z-index:9999!important}
 </head>
 <body><div class="cosmos-scene" id="cosmosScene" aria-hidden="true"></div><main class="shell">
 <header class="top"><div class="brand"><span class="brand-mark">✦</span><span class="brand-name">COSMOS<small>WAYWHALES</small></span></div><div class="date-pill" id="todayLabel"></div></header>
-<section class="hero"><div class="hero-row"><div><div class="eyebrow">ваш спокойный ритм</div><h1 id="greeting">Добро пожаловать</h1><p>Маленькие шаги заботы о себе — день за днём.</p></div><div class="hero-progress-wrap"><div class="progress-ring" id="progress">0%</div><div class="hero-progress-caption" id="progressCaption">Сегодня: 0 из 0 приёмов</div></div></div><div class="daily-quote"><div class="quote-label">МЫСЛЬ ДНЯ <span>✦</span></div><blockquote id="dailyQuote">Большие перемены начинаются с маленьких шагов.</blockquote><div class="quote-signature">— WAYWHALES</div></div></section>
+<section class="hero"><div class="hero-row"><div><div class="eyebrow">Ваш спокойный ритм</div><h1 id="greeting">Добро пожаловать</h1><p>Маленькие шаги заботы о себе — день за днём.</p></div><div class="hero-progress-wrap"><div class="progress-ring" id="progress">0%</div><div class="hero-progress-caption" id="progressCaption">Сегодня: 0 из 0 приёмов</div></div></div><div class="daily-quote"><div class="quote-label">Мысль дня <span>✦</span></div><blockquote id="dailyQuote">Большие перемены начинаются с маленьких шагов.</blockquote><div class="quote-signature">— WAYWHALES</div></div></section>
 <section id="homeView" class="view active"><div class="grid"><div class="panel"><div class="section-head plan-section-head"><div><h2 id="planDayTitle">Сегодня</h2><p class="sub" id="todaySub">Ваш план приёма</p></div><button class="btn small" id="addBtn">＋ Добавить</button></div><div class="plan-day-switch" id="planDaySwitch" aria-label="Выбор дня"><button type="button" data-plan-offset="0" class="active">Сегодня</button><button type="button" data-plan-offset="1">Завтра</button><button type="button" data-plan-offset="2">Послезавтра</button><button type="button" data-plan-offset="3">Через 3 дня</button></div><div id="todayList" class="supp-list"></div></div><aside class="panel"><h2>Ваш ритм</h2><p class="sub">Небольшая статистика за выбранный день</p><div class="stat-grid"><div class="stat"><strong id="statDone">0</strong><span>отмечено</span></div><div class="stat"><strong id="statTotal">0</strong><span>в плане</span></div><div class="stat"><strong id="statRate">0%</strong><span>выполнение</span></div><button class="stat stat-button" id="openMarkedHistory" type="button" aria-label="Нажмите, чтобы открыть историю отметок"><strong id="statStreak">0</strong><span id="markedDaysCaption">дней с отметками</span><small class="stat-open-hint">Нажмите, чтобы посмотреть историю ↗</small></button></div><p class="hint" style="margin-top:15px">Отмечайте приём по своему плану. Приложение не заменяет рекомендации врача.</p></aside></div><div class="panel ai-launcher"><div class="ai-launcher-mark">✦</div><div class="ai-launcher-copy"><div class="ai-launcher-kicker">COSMOS AI</div><h3>Ваш помощник на каждый день</h3><p>Можно спросить о чём угодно — объяснит, поддержит и поможет найти следующий шаг.</p></div><button class="btn ai-open-button" id="openAiChat" type="button">Открыть помощника</button><span class="ai-launcher-note" id="aiLauncherStatus">ИИ-помощник подключён</span></div>
 <div class="home-reminder-shortcut"><button class="btn secondary small" id="openReminderSettings" type="button">Настроить ежедневные напоминания</button></div>
 </section>
@@ -580,10 +580,10 @@ nav.nav{z-index:9999!important}
 body:has(#profileView.active) .hero{display:none!important}
 </style>
 <section id="profileView" class="view profile-layout">
-<div class="profile-intro"><span class="eyebrow">ВАШЕ ЛИЧНОЕ ПРОСТРАНСТВО</span><h2>Профиль</h2><p>Настройте COSMOS под свой ритм</p></div>
+<div class="profile-intro"><span class="eyebrow">Ваше личное пространство</span><h2>Профиль</h2><p>Настройте COSMOS под свой ритм</p></div>
 <div class="panel profile-card profile-main-card"><div class="profile"><div class="avatar" id="avatar">🌱</div><div class="profile-identity"><strong id="profileName">Гость</strong><div class="hint">Ваш профиль на этом устройстве</div></div></div><input id="photoInput" type="file" accept="image/*" hidden><div class="profile-inline-actions" aria-label="Действия с профилем"><label class="profile-inline-action" for="photoInput"><span class="profile-action-icon" aria-hidden="true">＋</span><span id="photoActionLabel">Добавить фото</span></label><button class="profile-inline-action profile-remove-action" type="button" id="removePhoto" hidden><span class="profile-action-icon" aria-hidden="true">×</span><span>Удалить фото</span></button><button class="profile-inline-action" type="button" id="openProfileEdit"><span class="profile-action-icon" aria-hidden="true">✎</span><span>Изменить имя</span></button></div><div id="profileEditPanel" class="profile-edit-panel" hidden><div class="field"><label for="nameInput">Новое имя</label><input id="nameInput" maxlength="40" placeholder="Ваше имя"></div><div class="profile-edit-actions" style="display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important;align-items:stretch!important"><button class="btn" id="saveProfile" type="button" style="display:flex!important;align-items:center!important;justify-content:center!important;box-sizing:border-box!important;width:100%!important;height:52px!important;min-height:52px!important;max-height:52px!important;padding:0 10px!important;margin:0!important;flex:none!important;font-size:16px!important;line-height:1.2!important;white-space:nowrap!important">Сохранить</button><button class="profile-cancel-btn" id="cancelProfileEdit" type="button" style="display:flex!important;align-items:center!important;justify-content:center!important;box-sizing:border-box!important;width:100%!important;height:52px!important;min-height:52px!important;max-height:52px!important;padding:0 10px!important;margin:0!important;flex:none!important;font-size:16px!important;line-height:1.2!important;white-space:nowrap!important">Отмена</button></div></div></div>
 <div class="panel profile-card push-settings-card">
- <div class="card-kicker">ЗАБОТА О СЕБЕ</div>
+ <div class="card-kicker">Забота о себе</div>
  <h2>Напоминания COSMOS</h2>
  <p class="sub">Напомним вам в выбранное время.</p>
  <label class="push-switch-row" for="pushEnabled">
@@ -599,7 +599,7 @@ body:has(#profileView.active) .hero{display:none!important}
  <div class="profile-actions push-action-row"><button class="btn small push-test-action" id="pushTestButton" type="button">Проверить уведомление</button></div>
  <p class="hint push-privacy-note">Личные записи остаются на этом устройстве. Для напоминаний используются только настройки уведомлений.</p>
 </div>
-<div class="panel profile-card"><div class="card-kicker">ТЕКУЩИЙ МЕСЯЦ</div><h2>Мой прогресс за месяц</h2><div class="month-result"><div class="month-result-top"><strong id="overallPercent">0%</strong><span id="overallCounts">0 из 0 приёмов</span></div><div class="progress-track"><span id="overallBar"></span></div><p class="sub">Процент = отмеченные приёмы / все приёмы по графику. Свободный график не завышает результат.</p></div></div><div class="panel profile-card" style="display:none" aria-hidden="true"><div class="card-kicker">МОЯ СТАТИСТИКА</div><h2>Результаты по месяцам</h2><h2>История и анализ</h2><p class="sub">Ваш прогресс отдельно за каждый месяц</p><div class="month-pick"><button class="month-nav" id="statsPrevMonth" type="button" aria-label="Предыдущий месяц">‹</button><div class="month-pick-center"><label for="statsMonth">Выберите месяц</label><input id="statsMonth" type="month"></div><button class="month-nav" id="statsNextMonth" type="button" aria-label="Следующий месяц">›</button></div><button class="month-current" id="statsCurrentMonth" type="button">Вернуться к текущему месяцу</button><div class="month-result"><div class="month-result-top"><strong id="monthPercent">0%</strong><span id="monthCounts">0 из 0 приёмов</span></div><div class="progress-track"><span id="monthBar"></span></div><p id="monthCaption" class="sub">За выбранный месяц</p></div><h3 class="analysis-heading">По месяцам</h3><div id="monthlyHistory" class="monthly-history"></div><h3 class="analysis-heading">Последние 7 дней</h3><div id="weeklyStats" class="stat-grid"></div><p class="hint" style="margin-top:18px">Процент показывает долю отмеченных приёмов от всех запланированных. Он не оценивает медицинскую эффективность добавок.</p></div>
+<div class="panel profile-card"><div class="card-kicker">Текущий месяц</div><h2>Мой прогресс за месяц</h2><div class="month-result"><div class="month-result-top"><strong id="overallPercent">0%</strong><span id="overallCounts">0 из 0 приёмов</span></div><div class="progress-track"><span id="overallBar"></span></div><p class="sub">Процент = отмеченные приёмы / все приёмы по графику. Свободный график не завышает результат.</p></div></div><div class="panel profile-card" style="display:none" aria-hidden="true"><div class="card-kicker">Моя статистика</div><h2>Результаты по месяцам</h2><h2>История и анализ</h2><p class="sub">Ваш прогресс отдельно за каждый месяц</p><div class="month-pick"><button class="month-nav" id="statsPrevMonth" type="button" aria-label="Предыдущий месяц">‹</button><div class="month-pick-center"><label for="statsMonth">Выберите месяц</label><input id="statsMonth" type="month"></div><button class="month-nav" id="statsNextMonth" type="button" aria-label="Следующий месяц">›</button></div><button class="month-current" id="statsCurrentMonth" type="button">Вернуться к текущему месяцу</button><div class="month-result"><div class="month-result-top"><strong id="monthPercent">0%</strong><span id="monthCounts">0 из 0 приёмов</span></div><div class="progress-track"><span id="monthBar"></span></div><p id="monthCaption" class="sub">За выбранный месяц</p></div><h3 class="analysis-heading">По месяцам</h3><div id="monthlyHistory" class="monthly-history"></div><h3 class="analysis-heading">Последние 7 дней</h3><div id="weeklyStats" class="stat-grid"></div><p class="hint" style="margin-top:18px">Процент показывает долю отмеченных приёмов от всех запланированных. Он не оценивает медицинскую эффективность добавок.</p></div>
 </div>
 <div class="panel profile-card"><div class="card-kicker">ВАШИ ДАННЫЕ</div><h2>Данные и конфиденциальность</h2><p class="sub">Ваши записи хранятся только в браузере на этом устройстве. COSMOS не получает к ним доступ и не отправляет их на наши серверы. Экспорт и удаление данных — под вашим контролем.</p><div class="profile-actions"><button class="btn ghost small" id="exportData">Экспортировать данные</button><button class="btn danger small" id="resetData">Сбросить данные</button></div><p class="support-link"><a href="https://t.me/waywhales" target="_blank" rel="noopener">Связаться с Waywhales ↗</a></p></div>
 </section>
@@ -2473,6 +2473,159 @@ body.ai-chat-open .nav{visibility:hidden!important}
 .ai-table-wrap th:last-child,.ai-table-wrap td:last-child{border-right:0}
 .ai-table-wrap td strong{color:#294c38}
 .ai-message-content h4{letter-spacing:-.1px}
+</style>
+
+
+<style id="unslop-waywhales-polish">
+/* Waywhales design pass — restrained botanical palette, quieter surfaces, no feature logic changes. */
+:root{
+ color-scheme:light!important;
+ --forest:#214a35;--deep:#183726;--leaf:#829b76;--mint:#e8eee3;
+ --paper:#f4f2e9;--ink:#24362d;--muted:#69776d;--line:#dfe4d9;
+ --gold:#bda16c;--white:#fffefa;--shadow:none;
+}
+html,body{background:#f4f2e9!important;color:#24362d!important}
+body{
+ background-image:none!important;
+ font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif!important;
+}
+body:before,.cosmos-scene{display:none!important}
+main.shell{max-width:1080px;padding-left:22px;padding-right:22px}
+.brand{color:#214a35!important;font-size:19px;font-weight:650;letter-spacing:0}
+.brand-mark{
+ background:#e7ecdf!important;color:#214a35!important;
+ border:1px solid #d7dfd1!important;box-shadow:none!important;border-radius:12px
+}
+.brand-name small{font-size:10px;letter-spacing:.08em;font-weight:600;opacity:.72}
+.date-pill{color:#69776d!important}
+.hero{
+ background:#214a35!important;background-image:none!important;
+ border:1px solid rgba(24,55,38,.12)!important;border-radius:20px!important;
+ box-shadow:none!important;padding:24px!important
+}
+.hero:after{display:none!important;content:none!important}
+.hero .eyebrow{color:#cbd8c6!important;text-transform:none!important;letter-spacing:.02em!important;font-size:12px!important;font-weight:500}
+.hero h1{font-weight:400!important;letter-spacing:-.015em}
+.hero p{color:#dce5d8!important}
+.hero-progress-caption{color:#d1ddcf!important}
+.progress-ring{border-width:4px!important;border-color:rgba(240,243,230,.32)!important;border-top-color:#c7ae79!important;border-right-color:#c7ae79!important;font-weight:600!important}
+.daily-quote{
+ margin-top:22px!important;padding:15px 0 0!important;border-top:1px solid rgba(232,238,215,.25)!important;
+ background:transparent!important;border-radius:0!important;backdrop-filter:none!important
+}
+.quote-label{color:#cbd8c6!important;font-size:12px!important;font-weight:500!important;letter-spacing:.02em!important}
+.quote-label span{color:#c7ae79!important}
+.daily-quote blockquote{font-style:normal!important;font-weight:400!important}
+.quote-signature{font-size:10px!important;letter-spacing:.08em!important;color:#c5d3c0!important}
+html body[data-cosmos-theme] .panel,
+html body[data-cosmos-theme='nebula'] .panel,
+html body[data-cosmos-theme='galaxy'] .panel,
+html body[data-cosmos-theme='forest'] .panel,
+html body[data-cosmos-theme='ocean'] .panel,
+html body[data-cosmos-theme='sunrise'] .panel{
+ background:#fffefa!important;border:1px solid #dfe4d9!important;
+ border-radius:18px!important;box-shadow:none!important;backdrop-filter:none!important
+}
+html body[data-cosmos-theme] .panel h2,
+html body[data-cosmos-theme='nebula'] .panel h2,
+html body[data-cosmos-theme='galaxy'] .panel h2,
+html body[data-cosmos-theme='forest'] .panel h2,
+html body[data-cosmos-theme='ocean'] .panel h2,
+html body[data-cosmos-theme='sunrise'] .panel h2{color:#214a35!important;font-weight:400!important}
+.sub,.hint,.date-pill{color:#69776d!important}
+.card-kicker{font-size:12px!important;letter-spacing:.02em!important;font-weight:550!important;color:#78867b!important}
+.section-head{gap:12px}
+.btn,html body[data-cosmos-theme] .btn,
+html body[data-cosmos-theme='nebula'] .btn,
+html body[data-cosmos-theme='galaxy'] .btn,
+html body[data-cosmos-theme='forest'] .btn,
+html body[data-cosmos-theme='ocean'] .btn,
+html body[data-cosmos-theme='sunrise'] .btn{
+ background:#214a35!important;background-image:none!important;color:#fffefa!important;
+ box-shadow:none!important;border:1px solid #214a35!important;border-radius:10px!important;
+ font-weight:600!important;transition:background-color .16s ease,border-color .16s ease,color .16s ease!important
+}
+.btn:hover{background:#183926!important}
+.btn.secondary{background:#e8eee3!important;color:#214a35!important;border-color:#d7e0d2!important}
+.btn.ghost{background:transparent!important;color:#214a35!important;border-color:#d6ded2!important}
+.btn.danger{background:#f8eeeb!important;color:#914b40!important;border-color:#ead5cf!important}
+.supp,html body[data-cosmos-theme] .supp,
+html body[data-cosmos-theme='nebula'] .supp,
+html body[data-cosmos-theme='galaxy'] .supp,
+html body[data-cosmos-theme='forest'] .supp,
+html body[data-cosmos-theme='ocean'] .supp,
+html body[data-cosmos-theme='sunrise'] .supp{
+ background:#fffefa!important;color:#24362d!important;border:1px solid #e2e6de!important;
+ border-radius:13px!important;box-shadow:none!important
+}
+.supp.done{background:#f1f5ed!important}
+.supp-icon,html body[data-cosmos-theme] .supp-icon{background:#edf1e8!important;border-radius:11px!important}
+.stat,html body[data-cosmos-theme] .stat{background:#f1f3eb!important;border:1px solid #e5e8df!important;border-radius:12px!important}
+.stat strong{color:#214a35!important}
+.selected-day-result{background:#f3f5ee!important;border-color:#e1e6dc!important;border-radius:13px!important}
+.nav,nav.nav{
+ background:#faf9f4!important;border-top:1px solid #dfe4d9!important;
+ backdrop-filter:none!important;-webkit-backdrop-filter:none!important
+}
+body[data-cosmos-theme] nav.nav button{color:#68766c!important}
+body[data-cosmos-theme] nav.nav button.active{
+ color:#214a35!important;background:#e8eee3!important;
+ border-radius:10px!important;font-weight:600!important
+}
+.avatar{box-shadow:none!important;border-color:#dce3d8!important}
+.field input,.field select,.ai-form textarea{
+ border-color:#d7dfd4!important;border-radius:10px!important;
+ box-shadow:none!important;background:#fffefa!important;color:#24362d!important
+}
+.dialog{background:#f8f7f0!important;border:1px solid #dfe4d9!important;border-radius:18px!important;box-shadow:0 12px 36px rgba(25,45,31,.12)!important}
+.ai-modal{backdrop-filter:none!important;-webkit-backdrop-filter:none!important;background:rgba(15,31,22,.58)!important}
+.ai-window{
+ background:#f8f7f0!important;border:1px solid #d9e1d5!important;
+ border-radius:20px!important;box-shadow:0 16px 48px rgba(18,38,25,.2)!important
+}
+.ai-head{background:#214a35!important;background-image:none!important}
+.ai-head-symbol{border-radius:11px!important;background:transparent!important}
+.ai-head-actions button{background:rgba(255,255,255,.06)!important;border-color:rgba(229,237,224,.34)!important;border-radius:10px!important}
+.ai-status{background:#edf1e9!important;color:#53685a!important;border-bottom-color:#dde4d9!important}
+.ai-message{
+ background:#fffefa!important;border-color:#e0e5dc!important;border-radius:15px!important;
+ box-shadow:none!important;color:#24362d!important
+}
+.ai-assistant{border-bottom-left-radius:5px!important}
+.ai-user{background:#e8eee3!important;border-color:#d6e1d1!important;border-bottom-right-radius:5px!important}
+.ai-message-label{
+ color:#778479!important;font-size:11px!important;letter-spacing:.02em!important;
+ font-weight:600!important;text-transform:none!important
+}
+.ai-message-content{font-size:15px!important;line-height:1.55!important}
+.ai-message-content h4{font-size:15px!important;font-weight:650!important;color:#214a35!important}
+.ai-message-content strong{font-weight:650!important;color:#214a35!important}
+.ai-topics button{
+ background:#fffefa!important;border:1px solid #dce3d8!important;
+ color:#34543e!important;border-radius:9px!important;font-weight:550!important
+}
+.ai-form,.ai-privacy{background:#eef1e9!important}
+.ai-form{border-top-color:#dfe5da!important}
+.ai-form textarea{font:15px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif!important}
+.ai-form button{background:#214a35!important;border-radius:10px!important;font-weight:600!important}
+.ai-privacy{color:#6f7b72!important}
+.ai-table-wrap{border-color:#dfe5dc!important;box-shadow:none!important}
+.ai-table-wrap th{background:#f0f3eb!important;color:#34543e!important;font-weight:600!important}
+.waywhales-signature{color:#69776d!important;font-weight:550!important;letter-spacing:.12em!important}
+.waywhales-signature-mark{border-color:#cbd5c7!important;color:#54715a!important;border-radius:7px!important}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,a:focus-visible{
+ outline:2px solid #527a58!important;outline-offset:2px!important
+}
+@media(max-width:720px){
+ main.shell{padding-left:14px!important;padding-right:14px!important}
+ .hero{padding:20px!important;border-radius:18px!important}
+ .panel{border-radius:16px!important}
+ .ai-window{border-radius:0!important}
+ .ai-form textarea{font-size:16px!important}
+}
+@media(prefers-reduced-motion:reduce){
+ *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.01ms!important}
+}
 </style>
 
 </body></html>
