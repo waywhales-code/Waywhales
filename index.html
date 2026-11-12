@@ -2406,4 +2406,40 @@ body main.shell{padding-bottom:calc(124px + env(safe-area-inset-bottom,0px))!imp
  body nav.nav button,body nav.nav button.active{transition:none!important}
 }
 </style>
+
+<style id="waywhales-iphone-viewport-clean">
+/* iPhone viewport sizing and transparent app canvas — remove the unwanted cream page backing. */
+html,body{
+ width:100%!important;max-width:100%!important;
+ min-height:100%!important;height:100%!important;
+ margin:0!important;background:#071b19!important;
+}
+body{background-color:#071b19!important;overscroll-behavior:none!important}
+#cosmosScene{
+ position:fixed!important;inset:0!important;width:100vw!important;height:100dvh!important;
+ min-height:100svh!important;z-index:0!important;pointer-events:none!important
+}
+main.shell{
+ width:100%!important;max-width:1080px!important;
+ height:100dvh!important;min-height:0!important;max-height:100dvh!important;
+ margin:0 auto!important;background:transparent!important;
+}
+main.shell>.view,main.shell>.view.active{
+ background:transparent!important;
+}
+@media(max-width:720px){
+ html,body{overflow:hidden!important}
+ main.shell{
+  width:100vw!important;max-width:100vw!important;
+  height:100dvh!important;min-height:0!important;max-height:100dvh!important;
+  padding-left:13px!important;padding-right:13px!important;
+  padding-bottom:calc(124px + env(safe-area-inset-bottom,0px))!important;
+  background:transparent!important;
+ }
+ body nav.nav{
+  left:0!important;right:0!important;bottom:0!important;width:100vw!important;
+  padding-bottom:calc(9px + env(safe-area-inset-bottom,0px))!important;
+ }
+}
+</style>
 </body></html>
