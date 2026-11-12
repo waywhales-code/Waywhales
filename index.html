@@ -2593,4 +2593,64 @@ body{
  }
 }
 </style>
+
+<style id="waywhales-cosmos-header-polish">
+/* COSMOS wordmark: clear contrast below the iPhone Dynamic Island, without crowding the status area. */
+main.shell>.top{
+ position:relative!important;z-index:5!important;
+ display:flex!important;align-items:center!important;justify-content:space-between!important;
+ gap:12px!important;
+ padding:8px 3px 12px!important;
+ margin-bottom:18px!important;
+ min-height:68px!important;
+}
+main.shell>.top .brand{
+ display:flex!important;align-items:center!important;gap:13px!important;
+ color:#f5fbf7!important;
+ font-size:clamp(24px,6vw,28px)!important;
+ font-weight:800!important;letter-spacing:.055em!important;line-height:1.05!important;
+ text-shadow:0 2px 16px rgba(0,0,0,.42),0 0 22px rgba(126,211,213,.18)!important;
+}
+main.shell>.top .brand-name{
+ display:flex!important;flex-direction:column!important;
+ color:#f5fbf7!important;line-height:1.05!important;
+}
+main.shell>.top .brand-name small{
+ display:block!important;margin-top:6px!important;
+ color:rgba(211,237,229,.82)!important;
+ font-size:10px!important;font-weight:650!important;
+ letter-spacing:.28em!important;opacity:1!important;
+ text-shadow:0 1px 10px rgba(0,0,0,.32)!important;
+}
+main.shell>.top .brand-mark{
+ width:54px!important;height:54px!important;flex:0 0 54px!important;
+ display:grid!important;place-items:center!important;
+ border-radius:18px!important;
+ background:linear-gradient(145deg,rgba(206,235,224,.30),rgba(30,91,99,.42))!important;
+ color:#e8d9a9!important;
+ border:1px solid rgba(225,247,239,.42)!important;
+ box-shadow:0 8px 22px rgba(0,10,20,.22),inset 0 1px 0 rgba(255,255,255,.22)!important;
+ font-size:29px!important;
+}
+#cosmosLanguageToggle{
+ min-height:42px!important;padding:0 14px!important;
+ background:rgba(15,44,54,.62)!important;
+ color:#f0f8f4!important;border:1px solid rgba(218,242,233,.34)!important;
+ border-radius:999px!important;
+ -webkit-backdrop-filter:blur(18px) saturate(1.35)!important;
+ backdrop-filter:blur(18px) saturate(1.35)!important;
+ box-shadow:0 5px 18px rgba(0,12,20,.18)!important;
+}
+#cosmosLanguageToggle *{color:inherit!important}
+@media(max-width:720px){
+ main.shell{padding-top:calc(env(safe-area-inset-top,0px) + 8px)!important}
+ main.shell>.top{
+  min-height:68px!important;padding:7px 2px 10px!important;
+  margin-bottom:16px!important;
+ }
+ main.shell>.top .brand{font-size:24px!important;gap:12px!important}
+ main.shell>.top .brand-mark{width:52px!important;height:52px!important;flex-basis:52px!important}
+ #cosmosLanguageToggle{top:9px!important;right:2px!important}
+}
+</style>
 </body></html>
