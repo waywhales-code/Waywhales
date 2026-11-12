@@ -2083,4 +2083,56 @@ body.ai-chat-open .nav{visibility:hidden!important}
 }
 </style>
 
+
+<style id="cosmos-profile-flat-background">
+/* Profile: remove the decorative full-screen backdrop and reduce the tall monthly progress panel. */
+@media(max-width:720px){
+  body:has(#profileView.active){
+    background:#f4f5ef!important;
+    background-image:none!important;
+    color:#20372e!important;
+  }
+  body:has(#profileView.active)::before,
+  body:has(#profileView.active)::after{
+    content:none!important;
+    display:none!important;
+    background:none!important;
+  }
+  body:has(#profileView.active) .cosmos-scene{display:none!important}
+  body:has(#profileView.active) main.shell{background:transparent!important}
+  #profileView .profile-intro{color:#244435!important}
+  #profileView .profile-intro .eyebrow{color:#71856e!important}
+  #profileView .profile-intro h2{color:#244435!important}
+  #profileView .profile-intro p{color:#586f60!important}
+  #profileView>.profile-card{
+    box-sizing:border-box!important;
+    height:auto!important;
+    min-height:0!important;
+    align-self:start!important;
+    margin-block:0!important;
+  }
+  #profileView>.profile-card:has(.month-result){
+    padding:12px!important;
+  }
+  #profileView .month-result{
+    display:block!important;
+    box-sizing:border-box!important;
+    width:100%!important;
+    height:auto!important;
+    min-height:0!important;
+    max-height:none!important;
+    padding:10px!important;
+    margin:8px 0 6px!important;
+    border-radius:14px!important;
+  }
+  #profileView .month-result-top{margin-bottom:6px!important}
+  #profileView .month-result .progress-track{height:8px!important;min-height:8px!important}
+  #profileView .month-result .sub{
+    margin:6px 0 0!important;
+    font-size:12px!important;
+    line-height:1.35!important;
+  }
+}
+</style>
+
 </body></html>
