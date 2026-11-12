@@ -2881,4 +2881,46 @@ main.shell>.top .brand-mark{
  main.shell{padding-bottom:calc(70px + env(safe-area-inset-bottom,0px))!important}
 }
 </style>
+
+<style id="waywhales-final-nav-60-40-15">
+/* Approved iPhone navigation dimensions: 60px glass bar, 40px icons, 15px labels. */
+@media(max-width:720px){
+ body nav.nav{
+  box-sizing:border-box!important;
+  height:calc(60px + env(safe-area-inset-bottom,0px))!important;
+  min-height:calc(60px + env(safe-area-inset-bottom,0px))!important;
+  max-height:calc(60px + env(safe-area-inset-bottom,0px))!important;
+  padding:0 12px env(safe-area-inset-bottom,0px)!important;
+  background:rgba(23,49,61,.82)!important;
+  background-image:linear-gradient(135deg,rgba(183,213,216,.16),rgba(13,35,49,.34))!important;
+  -webkit-backdrop-filter:blur(26px) saturate(1.55)!important;
+  backdrop-filter:blur(26px) saturate(1.55)!important;
+  border:0!important;border-top:1px solid rgba(221,240,238,.22)!important;
+  border-radius:0!important;box-shadow:0 -5px 18px rgba(0,10,18,.16)!important;
+ }
+ body nav.nav button,body nav.nav button.active,
+ body[data-cosmos-theme] nav.nav button,
+ body[data-cosmos-theme] nav.nav button.active{
+  box-sizing:border-box!important;
+  height:60px!important;min-height:60px!important;max-height:60px!important;
+  padding:0 3px!important;margin:0!important;gap:0!important;
+  display:flex!important;flex-direction:column!important;
+  align-items:center!important;justify-content:center!important;
+  font-size:15px!important;line-height:16px!important;
+  border:0!important;border-radius:0!important;
+  background:transparent!important;background-image:none!important;box-shadow:none!important;
+ }
+ body nav.nav .nav-icon{
+  display:grid!important;place-items:center!important;
+  width:40px!important;height:40px!important;flex:0 0 40px!important;
+  margin:0!important;transform:none!important;top:0!important;
+ }
+ body nav.nav .nav-icon svg{
+  display:block!important;width:40px!important;height:40px!important;
+ }
+ body nav.nav button > span:not(.nav-icon){position:static!important;top:auto!important}
+ body nav.nav button.active::after{bottom:0!important;height:2px!important}
+ main.shell{padding-bottom:calc(70px + env(safe-area-inset-bottom,0px))!important}
+}
+</style>
 </body></html>
