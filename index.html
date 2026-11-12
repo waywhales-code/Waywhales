@@ -889,6 +889,7 @@ function persistPushReminderTime(){
 }
 async function restorePushReminderTimeFromServer(deviceId){
  if(!deviceId)return false;
+ try{const local=localStorage.getItem(PUSH_TIME_KEY);if(validPushReminderTime(local))return false}catch(error){}
  const response=await fetch(PUSH_API+'/settings?deviceId='+encodeURIComponent(deviceId),{method:'GET',cache:'no-store',credentials:'omit'});
  const settings=await response.json().catch(()=>({}));
  if(!response.ok||!settings.configured||!validPushReminderTime(settings.reminderTime))return false;
@@ -965,7 +966,7 @@ async function enablePush(){
   await savePushSubscription(subscription);
   toggle.checked=true;
   $('pushTestButton').disabled=false;
-  pushStatus('Готово! Ежедневное напоминание настроено на '+$('pushReminderTime').value+'.');
+  pushStatus('Готово! Напоминание будет повторяться каждый день в '+$('pushReminderTime').value+'.');
   return true;
  }catch(error){
   toggle.checked=false;
@@ -1000,7 +1001,7 @@ async function updatePushTime(){
   const subscription=await registration.pushManager.getSubscription();
   if(!subscription)throw new Error('Подписка браузера не найдена. Выключите и снова включите уведомления.');
   await savePushSubscription(subscription);
-  pushStatus('Время напоминания обновлено: '+$('pushReminderTime').value+'.');
+  pushStatus('Время сохранено на сервере: каждый день в '+$('pushReminderTime').value+'.');
  }catch(error){pushStatus(error&&error.message?error.message:'Не удалось обновить время уведомления.')}
  finally{pushBusy=false;$('pushReminderTime').disabled=false;$('pushEnabled').disabled=false;$('pushTestButton').disabled=false}
 }
@@ -1077,7 +1078,8 @@ $('pushEnabled').addEventListener('change',function(){if(this.checked)enablePush
 $('pushReminderTime').addEventListener('input',persistPushReminderTime);
 $('pushReminderTime').addEventListener('change',function(){
  if(!persistPushReminderTime()){pushStatus('Выберите корректное время напоминания.');return}
- updatePushTime();
+ if($('pushEnabled').checked)updatePushTime();
+ else pushStatus('Время сохранено на устройстве. Включите ежедневное напоминание, чтобы получать уведомления каждый день.');
 });
 window.cosmosEnableAndTestPush=enableAndTestPush;
 window.cosmosEnablePush=enablePush;
