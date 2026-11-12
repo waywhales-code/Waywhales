@@ -2456,4 +2456,42 @@ body.ai-chat-open .nav{visibility:hidden!important}
 }
 </style>
 
+
+<style id="cosmos-nav-lower-larger-icons">
+/* Lower the tab controls into the dock and use larger, clearer icons. */
+@media(max-width:720px){
+  main.shell{padding-bottom:calc(86px + env(safe-area-inset-bottom,0px))!important}
+  nav.nav{
+    height:calc(76px + env(safe-area-inset-bottom,0px))!important;
+    min-height:calc(76px + env(safe-area-inset-bottom,0px))!important;
+    max-height:calc(76px + env(safe-area-inset-bottom,0px))!important;
+    align-items:flex-start!important;
+    padding:7px 8px calc(2px + env(safe-area-inset-bottom,0px))!important;
+  }
+  nav.nav button{
+    height:68px!important;min-height:68px!important;max-height:68px!important;
+    justify-content:center!important;gap:3px!important;padding:3px 2px!important;
+    font-size:15px!important;line-height:1.1!important;
+  }
+  nav.nav .nav-icon{
+    width:35px!important;height:35px!important;flex:0 0 35px!important;
+  }
+  nav.nav .nav-icon svg{
+    width:34px!important;height:34px!important;stroke-width:1.9!important;
+  }
+  nav.nav button.active .nav-icon svg{stroke-width:2.05!important}
+  #cosmosLanguageToggle{
+    bottom:calc(84px + env(safe-area-inset-bottom,0px))!important;
+  }
+  #cosmosLanguageMenu{
+    bottom:calc(132px + env(safe-area-inset-bottom,0px))!important;
+  }
+}
+@media(max-width:390px){
+  nav.nav{padding-left:6px!important;padding-right:6px!important}
+  nav.nav button{font-size:14px!important}
+  nav.nav .nav-icon,nav.nav .nav-icon svg{width:32px!important;height:32px!important;flex-basis:32px!important}
+}
+</style>
+
 </body></html>
