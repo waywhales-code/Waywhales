@@ -7,6 +7,7 @@ on:
       - "sw.js"
       - "manifest.webmanifest"
       - "push/**"
+      - "cloudflare/**"
       - ".github/workflows/cosmos-validation.yml"
   push:
     branches:
@@ -37,6 +38,7 @@ jobs:
       - name: Check JavaScript syntax
         run: |
           node --input-type=module --check < push/worker.js
+          node --input-type=module --check < cloudflare/cosmos-ai/worker.js
           node --check sw.js
 
       - name: Parse inline scripts in the PWA
