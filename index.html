@@ -881,6 +881,22 @@ aiSetReady();
 const PUSH_API=(document.querySelector('meta[name="cosmos-push-endpoint"]')?.content||'https://cosmos-push.waywhales.workers.dev').replace(/\/+$/,'');
 const PUSH_DEVICE_KEY='cosmos.push.deviceId';
 const PUSH_TIME_KEY='cosmos.push.reminderTime';
+function validPushReminderTime(value){return typeof value==='string'&&/^([01]\d|2[0-3]):[0-5]\d$/.test(value)}
+function persistPushReminderTime(){
+ const value=$('pushReminderTime').value;
+ if(!validPushReminderTime(value))return false;
+ try{localStorage.setItem(PUSH_TIME_KEY,value);return localStorage.getItem(PUSH_TIME_KEY)===value}catch(error){return false}
+}
+async function restorePushReminderTimeFromServer(deviceId){
+ if(!deviceId)return false;
+ try{const local=localStorage.getItem(PUSH_TIME_KEY);if(validPushReminderTime(local))return false}catch(error){}
+ const response=await fetch(PUSH_API+'/settings?deviceId='+encodeURIComponent(deviceId),{method:'GET',cache:'no-store',credentials:'omit'});
+ const settings=await response.json().catch(()=>({}));
+ if(!response.ok||!settings.configured||!validPushReminderTime(settings.reminderTime))return false;
+ $('pushReminderTime').value=settings.reminderTime;
+ try{localStorage.setItem(PUSH_TIME_KEY,settings.reminderTime)}catch(error){}
+ return true;
+}
 let pushRegistration=null;
 let pushBusy=false;
 function pushStatus(message){const el=$('pushStatus');if(el)el.textContent=message}
@@ -950,7 +966,7 @@ async function enablePush(){
   await savePushSubscription(subscription);
   toggle.checked=true;
   $('pushTestButton').disabled=false;
-  pushStatus('Готово! Ежедневное напоминание настроено на '+$('pushReminderTime').value+'.');
+  pushStatus('Готово! Напоминание будет повторяться каждый день в '+$('pushReminderTime').value+'.');
   return true;
  }catch(error){
   toggle.checked=false;
@@ -985,7 +1001,7 @@ async function updatePushTime(){
   const subscription=await registration.pushManager.getSubscription();
   if(!subscription)throw new Error('Подписка браузера не найдена. Выключите и снова включите уведомления.');
   await savePushSubscription(subscription);
-  pushStatus('Время напоминания обновлено: '+$('pushReminderTime').value+'.');
+  pushStatus('Время сохранено на сервере: каждый день в '+$('pushReminderTime').value+'.');
  }catch(error){pushStatus(error&&error.message?error.message:'Не удалось обновить время уведомления.')}
  finally{pushBusy=false;$('pushReminderTime').disabled=false;$('pushEnabled').disabled=false;$('pushTestButton').disabled=false}
 }
@@ -1024,7 +1040,7 @@ async function testPushNotification(){
 }
 async function initializePush(){
  const toggle=$('pushEnabled'),time=$('pushReminderTime');
- try{const saved=localStorage.getItem(PUSH_TIME_KEY);if(saved&&/^([01]\\d|2[0-3]):[0-5]\\d$/.test(saved))time.value=saved}catch(error){}
+ try{const saved=localStorage.getItem(PUSH_TIME_KEY);if(validPushReminderTime(saved))time.value=saved}catch(error){}
  const isIOS=/iPhone|iPad|iPod/i.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
  const isStandalone=window.matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
  if(isIOS&&!isStandalone){
@@ -1043,6 +1059,9 @@ async function initializePush(){
   const subscription=await registration.pushManager.getSubscription();
   const notificationGranted=Notification.permission==='granted';
   const existingDeviceId=(()=>{try{return localStorage.getItem(PUSH_DEVICE_KEY)}catch(error){return null}})();
+  if(subscription&&notificationGranted&&existingDeviceId){
+   try{await restorePushReminderTimeFromServer(existingDeviceId)}catch(error){console.warn('Could not restore push reminder time from server',error)}
+  }
   if((!subscription||!notificationGranted)&&existingDeviceId){
    try{await removeServerPushSubscription(subscription&&subscription.endpoint,existingDeviceId);if(subscription)await subscription.unsubscribe()}
    catch(error){pushStatus('Не удалось синхронизировать отключение уведомлений: '+(error.message||'ошибка сервера.'))}
@@ -1056,7 +1075,12 @@ async function initializePush(){
  }catch(error){pushStatus(error&&error.message?error.message:'Не удалось подготовить фоновое приложение.')}
 }
 $('pushEnabled').addEventListener('change',function(){if(this.checked)enablePush();else disablePush()});
-$('pushReminderTime').addEventListener('change',updatePushTime);
+$('pushReminderTime').addEventListener('input',persistPushReminderTime);
+$('pushReminderTime').addEventListener('change',function(){
+ if(!persistPushReminderTime()){pushStatus('Выберите корректное время напоминания.');return}
+ if($('pushEnabled').checked)updatePushTime();
+ else pushStatus('Время сохранено на устройстве. Включите ежедневное напоминание, чтобы получать уведомления каждый день.');
+});
 window.cosmosEnableAndTestPush=enableAndTestPush;
 window.cosmosEnablePush=enablePush;
 window.cosmosDisablePush=disablePush;
