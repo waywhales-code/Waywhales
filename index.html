@@ -2344,7 +2344,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 /* iPhone: compact full-width translucent glass tab bar, flush to the physical screen edge. */
 body nav.nav{
  position:fixed!important;left:0!important;right:0!important;top:auto!important;
- bottom:calc(-1 * env(safe-area-inset-bottom,0px))!important;
+ bottom:0!important;
  transform:none!important;width:100vw!important;max-width:none!important;
  height:calc(94px + env(safe-area-inset-bottom,0px))!important;
  min-height:calc(94px + env(safe-area-inset-bottom,0px))!important;
@@ -2435,6 +2435,30 @@ main.shell>.view,main.shell>.view.active{background:transparent!important}
   padding-left:13px!important;padding-right:13px!important;
   padding-bottom:calc(110px + env(safe-area-inset-bottom,0px))!important;
   background:transparent!important;
+ }
+}
+</style>
+
+<style id="waywhales-nav-final-safearea-fix">
+/* Final override: glass dock reaches the screen edge and theme styles cannot add a tab tile. */
+@media(max-width:720px){
+ html,body{background:transparent!important}
+ body nav.nav{
+  position:fixed!important;left:0!important;right:0!important;bottom:0!important;top:auto!important;
+  height:calc(94px + env(safe-area-inset-bottom,0px))!important;
+  min-height:calc(94px + env(safe-area-inset-bottom,0px))!important;
+  max-height:calc(94px + env(safe-area-inset-bottom,0px))!important;
+  background:rgba(151,178,182,.28)!important;
+  -webkit-backdrop-filter:blur(24px) saturate(1.65)!important;
+  backdrop-filter:blur(24px) saturate(1.65)!important;
+ }
+ body[data-cosmos-theme] nav.nav button,
+ body[data-cosmos-theme] nav.nav button.active{
+  background:transparent!important;background-image:none!important;
+  box-shadow:none!important;border-radius:0!important
+ }
+ body[data-cosmos-theme] nav.nav button.active::after{
+  background:rgba(235,248,242,.9)!important
  }
 }
 </style>
